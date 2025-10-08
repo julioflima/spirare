@@ -1,32 +1,20 @@
 # Spirare - Meditação Guiada Interativa# Spirare - Gerador de Meditações
 
-
-
 Uma aplicação Next.js que oferece meditações guiadas com timer, narração automática e metrônomo de relaxamento.Uma aplicação Next.js que gera meditações personalizadas com base em temas escolhidos pelo usuário.
-
-
 
 ## 🎯 Sobre o Projeto## 🎯 Sobre o Projeto
 
-
-
 Spirare é uma aplicação de meditação guiada que proporciona uma experiência imersiva e interativa. A meditação segue uma estrutura de 4 etapas com 16 momentos únicos de reflexão:Spirare é um gerador de meditações que cria experiências contemplativas personalizadas seguindo uma estrutura de 4 etapas:
-
-
 
 1. **Acolhimento** - Preparação e conexão com o momento presente1. **Acolhimento** - Preparação e conexão com o momento presente
 
-2. **Respiração e presença** - Técnicas de respiração e mindfulness  2. **Respiração e presença** - Técnicas de respiração e mindfulness
+2. **Respiração e presença** - Técnicas de respiração e mindfulness 2. **Respiração e presença** - Técnicas de respiração e mindfulness
 
 3. **Exploração do tema** - Desenvolvimento do tema "Paz Interior"3. **Exploração do tema** - Desenvolvimento do tema escolhido pelo usuário
 
 4. **Encerramento e reflexão** - Conclusão e integração da prática4. **Encerramento e reflexão** - Conclusão e integração da prática
 
-
-
 ## ✨ Funcionalidades Principais## 🚀 Tecnologias Utilizadas
-
-
 
 - 🎧 **Narração Automática** - Cada etapa é lida automaticamente usando Text-to-Speech- **Next.js 15** - Framework React com App Router
 
@@ -41,8 +29,6 @@ Spirare é uma aplicação de meditação guiada que proporciona uma experiênci
 - 📱 **Interface Responsiva** - Design otimizado para todos os dispositivos
 
 - 🌈 **Design Calmante** - Gradientes suaves e cores relaxantes## 📱 Funcionalidades
-
-
 
 ## 🚀 Tecnologias Utilizadas- ✨ Geração de meditações personalizadas
 
@@ -66,19 +52,19 @@ src/
 
 ## 🎮 Como Usar├── app/
 
-│   ├── components/
+│ ├── components/
 
-1. **Clique em "Começar Meditação"** para iniciar│   │   ├── MeditationGenerator.tsx  # Componente principal
+1. **Clique em "Começar Meditação"** para iniciar│ │ ├── MeditationGenerator.tsx # Componente principal
 
-2. **Feche os olhos e relaxe** - o texto será narrado automaticamente│   │   └── MeditationStep.tsx       # Componente de etapa
+2. **Feche os olhos e relaxe** - o texto será narrado automaticamente│ │ └── MeditationStep.tsx # Componente de etapa
 
-3. **Acompanhe o progresso** através do gráfico circular e timer│   ├── layout.tsx                   # Layout da aplicação
+3. **Acompanhe o progresso** através do gráfico circular e timer│ ├── layout.tsx # Layout da aplicação
 
-4. **Use os controles** para pausar/retomar se necessário│   └── page.tsx                     # Página principal
+4. **Use os controles** para pausar/retomar se necessário│ └── page.tsx # Página principal
 
 5. **Aproveite o metrônomo** ao final para relaxamento profundo├── prompts/
 
-│   └── meditationPrompt.ts          # Prompt para geração de meditações
+│ └── meditationPrompt.ts # Prompt para geração de meditações
 
 ## 📱 Funcionalidades da Interface└── types/
 
@@ -90,35 +76,37 @@ src/
 
 - Descrição clara da experiência## 🛠️ Como Executar
 
+### Durante a Meditação 1. **Instalar dependências:**
 
+- **Timer visual** com contagem regressiva ```bash
 
-### Durante a Meditação  1. **Instalar dependências:**
+- **Gráfico circular** mostrando progresso da etapa atual npm install
 
-- **Timer visual** com contagem regressiva   ```bash
-
-- **Gráfico circular** mostrando progresso da etapa atual   npm install
-
-- **Indicador de progresso geral** (X de 16 momentos)   ```
+- **Indicador de progresso geral** (X de 16 momentos) ```
 
 - **Texto atual** sendo narrado
 
 - **Controles de pausa/play e reiniciar**2. **Executar em modo de desenvolvimento:**
 
-   ```bash
+  ```bash
 
-### Metrônomo Final   npm run dev
+  ```
 
-- **Som rítmico** para relaxamento profundo   ```
+### Metrônomo Final npm run dev
+
+- **Som rítmico** para relaxamento profundo ```
 
 - **Interface dedicada** com animações visuais
 
 - **Controle para parar** quando desejar3. **Abrir no navegador:**
 
-   ```
+  ```
 
-## 🏗️ Estrutura do Projeto   http://localhost:3000
+  ```
 
-   ```
+## 🏗️ Estrutura do Projeto http://localhost:3000
+
+```
 
 ```
 
@@ -126,23 +114,23 @@ src/## 🎨 Como Usar
 
 ├── app/
 
-│   ├── components/1. Digite um tema para sua meditação (ex: "Gratidão", "Perdão", "Sono tranquilo")
+│ ├── components/1. Digite um tema para sua meditação (ex: "Gratidão", "Perdão", "Sono tranquilo")
 
-│   │   └── MeditationGenerator.tsx  # Componente principal com toda a lógica2. Clique em "Gerar Meditação"
+│ │ └── MeditationGenerator.tsx # Componente principal com toda a lógica2. Clique em "Gerar Meditação"
 
-│   ├── layout.tsx                   # Layout da aplicação3. Siga as 4 etapas da meditação gerada
+│ ├── layout.tsx # Layout da aplicação3. Siga as 4 etapas da meditação gerada
 
-│   └── page.tsx                     # Página principal4. Suas meditações ficam salvas no navegador para acesso posterior
+│ └── page.tsx # Página principal4. Suas meditações ficam salvas no navegador para acesso posterior
 
 ├── prompts/
 
-│   └── meditationPrompt.ts          # Prompt original (para referência)## 🔮 Próximas Funcionalidades
+│ └── meditationPrompt.ts # Prompt original (para referência)## 🔮 Próximas Funcionalidades
 
 └── types/
 
     └── meditation.ts                # Tipos TypeScript- [ ] Integração com APIs de IA para geração dinâmica
 
-```- [ ] Audio guiado para as meditações
+````- [ ] Audio guiado para as meditações
 
 - [ ] Compartilhamento de meditações
 
@@ -179,9 +167,10 @@ src/## 🎨 Como Usar
 1. **Instalar dependências:**
    ```bash
    npm install
-   ```
+````
 
 2. **Executar em modo de desenvolvimento:**
+
    ```bash
    npm run dev
    ```
@@ -193,11 +182,12 @@ src/## 🎨 Como Usar
 
 ## 🎨 Design e UX
 
-- **Gradientes suaves** em tons de azul, roxo e rosa
+- **Tipo** deve ser pensado como um app, se em desktop um app arredondado deve ficar no meio.
+- **Gradientes suaves** em tons de branco, verde → amarelo, liquid glass
 - **Tipografia clara** e legível
 - **Espaçamento generoso** para facilitar a leitura
 - **Animações sutis** que não distraem
-- **Cores semânticas** (azul → roxo → verde conforme progresso)
+- **Cores semânticas** (verde → amarelo conforme progresso)
 
 ## 🌟 Diferenciais
 
