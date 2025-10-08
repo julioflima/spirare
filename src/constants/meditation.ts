@@ -12,9 +12,9 @@ export const defaultMeditation: Meditation = {
       encerramento:
         "Fim da etapa: Aterramento Luminoso concluído. Sinta o corpo repousar com segurança e acolhimento.",
       trilha: {
-        title: "Forest Lullaby",
-        artist: "Lexin Music (Pixabay)",
-        src: "https://cdn.pixabay.com/download/audio/2021/09/23/audio_1614538d85.mp3?filename=deep-relaxation-11275.mp3",
+        title: "Weightless Atmosphere",
+        artist: "AmbiNet (Pixabay)",
+        src: "https://cdn.pixabay.com/download/audio/2025/03/18/audio_edb18178a5.mp3?filename=weightless-atmosphere-315424.mp3",
         fadeInMs: 2000,
         fadeOutMs: 1800,
         volume: 0.55,

@@ -39,14 +39,6 @@ export const TimerPanel: FC<TimerPanelProps> = ({
 }) => {
     return (
         <section className="relative mb-8 grid gap-8 rounded-[32px] border border-white/30 bg-white/25 p-8 shadow-[0_30px_70px_-45px_rgba(132,204,22,0.45)] backdrop-blur-2xl lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <div className="absolute mb-4 right-0 top-2 hidden items-center gap-2 rounded-full border border-white/30 bg-white/35 px-4 py-1 text-xs uppercase tracking-[0.35em] text-emerald-700/70 shadow-[0_12px_30px_-24px_rgba(52,211,153,0.6)] backdrop-blur-lg md:flex">
-                <span
-                    className={`inline-flex h-2.5 w-2.5 rounded-full transition-all duration-200 ${ledActive ? 'bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.65)]' : 'bg-emerald-200/70'}`}
-                    aria-hidden="true"
-                />
-                Ritmo
-            </div>
-
             <div className="flex flex-col items-center justify-center gap-6">
                 {!isFinalStage ? (
                     <div className="flex flex-col items-center gap-6">

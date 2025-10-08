@@ -297,7 +297,7 @@ export const MeditationGenerator = () => {
                             <button
                                 type="button"
                                 onClick={handleSkip}
-                                className="inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/35 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-[0_18px_45px_-28px_rgba(132,204,22,0.55)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.025]"
+                                className="inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/35 px-4 py-4 text-sm font-semibold text-emerald-900 shadow-[0_18px_45px_-28px_rgba(132,204,22,0.55)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.025]"
                             >
                                 Avançar Etapa
                                 <ChevronsRight size={18} />
@@ -305,14 +305,6 @@ export const MeditationGenerator = () => {
                         )}
                     </div>
 
-                    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-white/30 bg-white/24 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-800/70 shadow-[0_24px_55px_-40px_rgba(132,204,22,0.5)] backdrop-blur-2xl">
-                        <span>
-                            Momento {flatIndex} de {totalMoments}
-                        </span>
-                        <span>
-                            Etapa {currentStep + 1} · {SUBSTEPS_PER_STEP - currentSubStep} instruções restantes
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>

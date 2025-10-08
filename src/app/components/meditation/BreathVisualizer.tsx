@@ -15,10 +15,6 @@ export const BreathVisualizer: FC<BreathVisualizerProps> = ({ isActive }) => {
             const level = Number.isFinite(sample) ? Math.min(Math.max(sample, 0), 1) : 0;
             const result = 12 + level * 2004;
 
-            const threshold = 140;
-
-            if (result > threshold) return threshold + level / 10
-
             return result;
         });
     }, [samples]);

@@ -38,24 +38,27 @@ export const MetronomeSlider: FC<MetronomeSliderProps> = ({ periodMs, min, max, 
 
     return (
         <div className="w-full max-w-sm space-y-4">
-            <div className="relative h-24 rounded-3xl border border-white/45 bg-white/40 px-6 py-5 shadow-[0_24px_65px_-42px_rgba(34,197,94,0.55)] backdrop-blur-xl">
+            <div className="relative rounded-3xl border border-white/45 bg-white/40 px-6 py-5 shadow-[0_24px_65px_-42px_rgba(34,197,94,0.55)] backdrop-blur-xl">
                 <div
                     className={`pointer-events-none absolute left-1/2 top-4 h-20 w-20 -translate-x-1/2 rounded-full bg-gradient-to-br from-emerald-200/40 via-lime-200/30 to-amber-200/25 blur-xl transition-all duration-300 ${haloClasses}`}
                     aria-hidden="true"
                 />
-                <div className="flex items-baseline justify-between text-emerald-900">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700/75">Ritmo</p>
-                        <p className="mt-1 text-3xl font-semibold leading-none">{bpmValue}</p>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-emerald-700/60">BPM</p>
-                    </div>
-                    <div className="text-right text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-700/60">
-                        <p>{bpmRange.minBpm} bpm</p>
-                        <p className="mt-1">{bpmRange.maxBpm} bpm</p>
+                <div>
+                    <div className="flex items-baseline justify-between text-emerald-900">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700/75">Ritmo</p>
+                            <p className="mt-1 text-3xl font-semibold leading-none">{bpmValue}</p>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-emerald-700/60">BPM</p>
+                        </div>
+                        <div className="text-right text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-700/60">
+                            <p>min {bpmRange.minBpm} bpm</p>
+                            <p className="mt-1">max {bpmRange.maxBpm} bpm</p>
+                        </div>
                     </div>
                 </div>
+
                 <SliderPrimitive.Root
-                    className="relative mt-6 flex h-5 w-full touch-none select-none items-center"
+                    className="mt-6 flex h-5 w-full touch-none select-none items-center"
                     orientation="horizontal"
                     value={[bpmValue]}
                     min={bpmRange.minBpm}
@@ -71,6 +74,7 @@ export const MetronomeSlider: FC<MetronomeSliderProps> = ({ periodMs, min, max, 
                         <span className="absolute h-8 w-[2px] rounded-full bg-emerald-500" aria-hidden="true" />
                     </SliderPrimitive.Thumb>
                 </SliderPrimitive.Root>
+
             </div>
         </div>
     );

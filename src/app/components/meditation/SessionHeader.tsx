@@ -20,7 +20,7 @@ export const SessionHeader: FC<SessionHeaderProps> = ({
     steps,
 }) => {
     return (
-        <header className="relative text-center">
+        <header className="relative text-center mb-4">
             <h1 className="mb-2 text-2xl font-semibold tracking-tight text-emerald-900 md:text-3xl">
                 {title}
             </h1>
