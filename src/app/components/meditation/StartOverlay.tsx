@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Sparkles, Wind } from 'lucide-react';
+import { Play, Sparkles } from 'lucide-react';
 import { FC } from 'react';
 
 interface StartOverlayProps {

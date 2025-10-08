@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { BreathVisualizer } from './BreathVisualizer';
-import { MetronomeKnob } from './MetronomeKnob';
+import { MetronomeSlider } from './MetronomeSlider';
 
 interface TimerPanelProps {
     isFinalStage: boolean;
@@ -82,8 +82,8 @@ export const TimerPanel: FC<TimerPanelProps> = ({
 
             <div className="flex flex-col gap-6">
                 <BreathVisualizer isActive={isSessionActive} />
-                <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <MetronomeKnob
+                <div className="flex flex-col items-center justify-center gap-6">
+                    <MetronomeSlider
                         periodMs={metronomePeriodMs}
                         min={metronomeMin}
                         max={metronomeMax}

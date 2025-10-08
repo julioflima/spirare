@@ -13,10 +13,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Texto inválido." }, { status: 400 });
     }
 
+    const instructions = `
+Affect:
+Sua voz continua jovem, convidativa, mas agora com um toque de ternura que envolve o ouvinte como um abraço caloroso. Cada palavra transmite cuidado e gentileza, mantendo a grandiosidade, mas tornando-a acessível e afetuosa.
+
+Tone:
+Nobre e heroica, mas com suavidade. A cadência de uma fada, fina permanece, porém temperada com delicadeza. Cada frase soa como um sussurro épico que conduz o ouvinte com amor e paciência.
+
+Emotion:
+Mistura de ternura, calma e um leve encantamento. A meiguice profunda faz o ouvinte sentir que está sendo guiado por uma guardiã sábia, protetora e afetuosa. O senso de aventura e destino permanece, mas sem rigidez — tudo é acolhido com carinho.
+
+Pronunciation:
+As palavras arcaicas são pronunciadas de forma clara e suave, com ênfase delicada. A formalidade existe, mas de maneira gentil e melodiosa, quase cantando as palavras para o coração do ouvinte.
+
+Pause:
+Pausas estratégicas continuam, mas agora transmitem aconchego. 
+`;
+
     const response = await openai.audio.speech.create({
       model: "gpt-4o-mini-tts",
-      voice: "verse",
+      voice: "coral",
       input: text,
+      instructions,
     });
 
     const buffer = Buffer.from(await response.arrayBuffer());

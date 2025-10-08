@@ -9,9 +9,8 @@ import { StepContent } from './StepContent';
 import { TimerPanel } from './TimerPanel';
 import { useMetronome, MAX_METRONOME_PERIOD_MS, MIN_METRONOME_PERIOD_MS } from './hooks/useMetronome';
 import { useSpeech } from './hooks/useSpeech';
-import { ChevronsRight } from 'lucide-react';
-
-const FINAL_MESSAGE = 'Meditação concluída. Permaneça presente enquanto o metrônomo conduz sua respiração por alguns instantes.';
+import { useStageMusic } from './hooks/useStageMusic';
+import { ChevronsRight, Music } from 'lucide-react';
 
 export const MeditationGenerator = () => {
     const [hasStarted, setHasStarted] = useState(false);
@@ -25,7 +24,7 @@ export const MeditationGenerator = () => {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const {
-        speak,
+        speakSequence,
         pause: pauseSpeech,
         resume: resumeSpeech,
         stop: stopSpeech,
@@ -39,11 +38,14 @@ export const MeditationGenerator = () => {
         stop: stopMetronome,
         beatActive,
     } = useMetronome(1080);
+    const { playTrack: playStageTrack, stopTrack, pauseTrack, resumeTrack } = useStageMusic();
 
     const totalSteps = defaultMeditation.etapas.length;
     const totalMoments = totalSteps * SUBSTEPS_PER_STEP;
     const flatIndex = currentStep * SUBSTEPS_PER_STEP + currentSubStep + 1;
     const stepNames = useMemo(() => defaultMeditation.etapas.map((etapa) => etapa.nome), []);
+
+    const currentStage = defaultMeditation.etapas[currentStep];
 
     const clearTimer = useCallback(() => {
         if (timerRef.current) {
@@ -52,19 +54,47 @@ export const MeditationGenerator = () => {
         }
     }, []);
 
+    const queueNarration = useCallback(
+        (stepIndex: number, subStepIndex: number, isStageStart: boolean) => {
+            const etapa = defaultMeditation.etapas[stepIndex];
+            if (!etapa) {
+                return;
+            }
+
+            const messages: string[] = [];
+            if (isStageStart && etapa.introducao) {
+                messages.push(etapa.introducao);
+            }
+
+            const subStepText = etapa.subetapas[subStepIndex];
+            if (subStepText) {
+                messages.push(subStepText);
+            }
+
+            if (!messages.length) {
+                return;
+            }
+
+            void speakSequence(messages, { replace: !isStageStart });
+        },
+        [speakSequence]
+    );
+
     const goToSubStep = useCallback(
-        (stepIndex: number, subStepIndex: number) => {
+        (stepIndex: number, subStepIndex: number, isStageStart: boolean) => {
             setCurrentStep(stepIndex);
             setCurrentSubStep(subStepIndex);
             setTimeRemaining(STEP_DURATION_SECONDS);
             setTotalStepTime(STEP_DURATION_SECONDS);
 
-            const nextText = defaultMeditation.etapas[stepIndex]?.subetapas[subStepIndex];
-            if (nextText) {
-                void speak(nextText);
+            const etapa = defaultMeditation.etapas[stepIndex];
+            if (isStageStart) {
+                void playStageTrack(etapa?.trilha ?? null);
             }
+
+            queueNarration(stepIndex, subStepIndex, isStageStart);
         },
-        [speak],
+        [playStageTrack, queueNarration]
     );
 
     const enterFinalStage = useCallback(() => {
@@ -73,27 +103,33 @@ export const MeditationGenerator = () => {
         setIsPaused(true);
         setTimeRemaining(0);
         setTotalStepTime(0);
-        void speak(FINAL_MESSAGE);
+        void speakSequence([defaultMeditation.congratulacaoFinal], { replace: false });
         startMetronome();
-    }, [clearTimer, speak, startMetronome]);
+    }, [clearTimer, speakSequence, startMetronome]);
 
     const advanceSubStep = useCallback((): boolean => {
         const isLastSubStep = currentSubStep >= SUBSTEPS_PER_STEP - 1;
         const isLastStep = currentStep >= defaultMeditation.etapas.length - 1;
+        const stageData = defaultMeditation.etapas[currentStep];
 
         if (!isLastSubStep) {
-            goToSubStep(currentStep, currentSubStep + 1);
+            goToSubStep(currentStep, currentSubStep + 1, false);
             return false;
+        }
+
+        if (stageData?.encerramento) {
+            void speakSequence([stageData.encerramento], { replace: false });
         }
 
         if (!isLastStep) {
-            goToSubStep(currentStep + 1, 0);
+            goToSubStep(currentStep + 1, 0, true);
             return false;
         }
 
+        void stopTrack(stageData?.trilha.fadeOutMs);
         enterFinalStage();
         return true;
-    }, [currentStep, currentSubStep, enterFinalStage, goToSubStep]);
+    }, [currentStep, currentSubStep, enterFinalStage, goToSubStep, speakSequence, stopTrack]);
 
     const startTimer = useCallback(() => {
         clearTimer();
@@ -113,6 +149,7 @@ export const MeditationGenerator = () => {
         clearTimer();
         stopMetronome();
         stopSpeech();
+        void stopTrack();
         setHasStarted(false);
         setIsFinalStage(false);
         setIsPaused(false);
@@ -120,14 +157,14 @@ export const MeditationGenerator = () => {
         setCurrentSubStep(0);
         setTimeRemaining(STEP_DURATION_SECONDS);
         setTotalStepTime(STEP_DURATION_SECONDS);
-    }, [clearTimer, stopMetronome, stopSpeech]);
+    }, [clearTimer, stopMetronome, stopSpeech, stopTrack]);
 
     const handleStart = useCallback(() => {
         resetSessionState();
         setHasStarted(true);
         setIsPaused(false);
         setIsFinalStage(false);
-        goToSubStep(0, 0);
+        goToSubStep(0, 0, true);
         startMetronome();
         startTimer();
     }, [goToSubStep, resetSessionState, startMetronome, startTimer]);
@@ -138,15 +175,17 @@ export const MeditationGenerator = () => {
         if (isPaused) {
             setIsPaused(false);
             resumeSpeech();
+            resumeTrack();
             startMetronome();
             startTimer();
         } else {
             setIsPaused(true);
             pauseSpeech();
+            pauseTrack();
             stopMetronome();
             clearTimer();
         }
-    }, [clearTimer, isFinalStage, isPaused, pauseSpeech, resumeSpeech, startMetronome, startTimer, stopMetronome]);
+    }, [clearTimer, isFinalStage, isPaused, pauseSpeech, pauseTrack, resumeSpeech, resumeTrack, startMetronome, startTimer, stopMetronome]);
 
     const handleSkip = useCallback(() => {
         if (isFinalStage) return;
@@ -169,8 +208,9 @@ export const MeditationGenerator = () => {
             clearTimer();
             stopMetronome();
             stopSpeech();
+            void stopTrack(0);
         };
-    }, [clearTimer, stopMetronome, stopSpeech]);
+    }, [clearTimer, stopMetronome, stopSpeech, stopTrack]);
 
     const progressPercent = totalStepTime > 0 ? ((totalStepTime - timeRemaining) / totalStepTime) * 100 : 0;
 
@@ -208,7 +248,6 @@ export const MeditationGenerator = () => {
                         </div>
                     )}
 
-
                     <SessionHeader
                         title={currentTitle}
                         currentStepIndex={currentStep}
@@ -216,30 +255,8 @@ export const MeditationGenerator = () => {
                         totalSubSteps={SUBSTEPS_PER_STEP}
                         isFinalStage={isFinalStage}
                         steps={stepNames}
-                        text={currentText}
                     />
 
-                    <div className='flex justify-center gap-4'>
-                        <Controls
-                            isFinalStage={isFinalStage}
-                            isPaused={isPaused}
-                            onTogglePlay={handleTogglePlay}
-                            onFinish={handleFinish}
-                            onRestart={handleRestart}
-                        />
-                        {!isFinalStage && (
-                            <div className="my-8 flex justify-center">
-                                <button
-                                    type="button"
-                                    onClick={handleSkip}
-                                    className="p-4 inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/50 bg-white/35 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-[0_18px_45px_-28px_rgba(132,204,22,0.55)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.025]"
-                                >
-                                    Avançar Etapa
-                                    <ChevronsRight size={18} />
-                                </button>
-                            </div>
-                        )}
-                    </div>
                     <TimerPanel
                         isFinalStage={isFinalStage}
                         timeRemaining={timeRemaining}
@@ -253,12 +270,48 @@ export const MeditationGenerator = () => {
                         ledActive={isMetronomePlaying && beatActive}
                     />
 
-
-
-                    <div className='flex justify-center'>
-                        <div className="mt-8 w-fit flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-white/30 bg-white/24 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-800/70 shadow-[0_24px_55px_-40px_rgba(132,204,22,0.5)] backdrop-blur-2xl">
-                            <span>Momento {flatIndex} de {totalMoments}</span>
+                    {!isFinalStage && currentText && (
+                        <div className="mt-6 space-y-4">
+                            <StepContent text={currentText} isFinalStage={false} />
+                            {currentStage?.trilha && (
+                                <div className="flex items-center gap-2 rounded-[20px] border border-white/35 bg-white/25 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-800/70 shadow-[0_18px_45px_-34px_rgba(132,204,22,0.5)] backdrop-blur-xl">
+                                    <Music size={14} className="text-emerald-500" />
+                                    <span>
+                                        {currentStage.trilha.title} · {currentStage.trilha.artist}
+                                    </span>
+                                </div>
+                            )}
                         </div>
+                    )}
+
+                    <div className="mt-8 flex flex-col items-center gap-6 md:flex-row md:justify-between">
+                        <Controls
+                            isFinalStage={isFinalStage}
+                            isPaused={isPaused}
+                            onTogglePlay={handleTogglePlay}
+                            onFinish={handleFinish}
+                            onRestart={handleRestart}
+                        />
+
+                        {!isFinalStage && (
+                            <button
+                                type="button"
+                                onClick={handleSkip}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/35 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-[0_18px_45px_-28px_rgba(132,204,22,0.55)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.025]"
+                            >
+                                Avançar Etapa
+                                <ChevronsRight size={18} />
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[24px] border border-white/30 bg-white/24 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-800/70 shadow-[0_24px_55px_-40px_rgba(132,204,22,0.5)] backdrop-blur-2xl">
+                        <span>
+                            Momento {flatIndex} de {totalMoments}
+                        </span>
+                        <span>
+                            Etapa {currentStep + 1} · {SUBSTEPS_PER_STEP - currentSubStep} instruções restantes
+                        </span>
                     </div>
                 </div>
             </div>

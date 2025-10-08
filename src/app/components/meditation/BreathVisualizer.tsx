@@ -13,7 +13,13 @@ export const BreathVisualizer: FC<BreathVisualizerProps> = ({ isActive }) => {
     const bars = useMemo(() => {
         return samples.map((sample) => {
             const level = Number.isFinite(sample) ? Math.min(Math.max(sample, 0), 1) : 0;
-            return 12 + level * 104;
+            const result = 12 + level * 2004;
+
+            const threshold = 140;
+
+            if (result > threshold) return threshold + level / 10
+
+            return result;
         });
     }, [samples]);
 
@@ -24,7 +30,7 @@ export const BreathVisualizer: FC<BreathVisualizerProps> = ({ isActive }) => {
                 {bars.map((height, index) => (
                     <span
                         key={`breath-bar-${index}`}
-                        className="flex-1 rounded-full bg-gradient-to-tr from-emerald-300/80 via-lime-200/85 to-amber-200/75 shadow-[0_8px_18px_-12px_rgba(56,189,248,0.35)] transition-[height] duration-150 ease-out"
+                        className="flex-1 mb-8 rounded-full bg-gradient-to-tr from-emerald-300/80 via-lime-200/85 to-amber-200/75 shadow-[0_8px_18px_-12px_rgba(56,189,248,0.35)] transition-[height] duration-150 ease-out"
                         style={{ height }}
                     />
                 ))}
