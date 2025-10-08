@@ -1,5 +1,5 @@
-declare module 'react-rotary-knob' {
-  import * as React from 'react';
+declare module "react-rotary-knob" {
+  import * as React from "react";
 
   export interface KnobSkin {
     svg: string;

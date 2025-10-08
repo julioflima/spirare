@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const MIN_METRONOME_PERIOD_MS = 600;
 export const MAX_METRONOME_PERIOD_MS = 1800;
@@ -28,22 +28,29 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   const periodRef = useRef(initialPeriod);
 
   const ensureAudioContext = useCallback(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     if (!contextRef.current) {
-      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
       contextRef.current = new AudioContextClass();
     }
 
-    if (contextRef.current.state === 'suspended') {
+    if (contextRef.current.state === "suspended") {
       void contextRef.current.resume();
     }
   }, []);
 
   const computeFrequency = useCallback((period: number) => {
-    const normalized = (period - MIN_METRONOME_PERIOD_MS) / (MAX_METRONOME_PERIOD_MS - MIN_METRONOME_PERIOD_MS);
+    const normalized =
+      (period - MIN_METRONOME_PERIOD_MS) /
+      (MAX_METRONOME_PERIOD_MS - MIN_METRONOME_PERIOD_MS);
     const inverted = 1 - Math.min(Math.max(normalized, 0), 1);
-    return MIN_BEEP_FREQUENCY + inverted * (MAX_BEEP_FREQUENCY - MIN_BEEP_FREQUENCY);
+    return (
+      MIN_BEEP_FREQUENCY + inverted * (MAX_BEEP_FREQUENCY - MIN_BEEP_FREQUENCY)
+    );
   }, []);
 
   const tick = useCallback(() => {
@@ -57,7 +64,7 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
     const oscillator = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
-    oscillator.type = 'triangle';
+    oscillator.type = "triangle";
     const frequency = computeFrequency(periodRef.current);
     oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
 
@@ -109,7 +116,14 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
       intervalRef.current = setInterval(tick, periodMs);
     }
     return stop;
-  }, [clearCurrentInterval, ensureAudioContext, isPlaying, periodMs, stop, tick]);
+  }, [
+    clearCurrentInterval,
+    ensureAudioContext,
+    isPlaying,
+    periodMs,
+    stop,
+    tick,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -119,7 +133,10 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   }, [clearCurrentInterval]);
 
   const setPeriodMs = useCallback((value: number) => {
-    const clamped = Math.min(MAX_METRONOME_PERIOD_MS, Math.max(MIN_METRONOME_PERIOD_MS, value));
+    const clamped = Math.min(
+      MAX_METRONOME_PERIOD_MS,
+      Math.max(MIN_METRONOME_PERIOD_MS, value)
+    );
     internalSetPeriod(clamped);
   }, []);
 

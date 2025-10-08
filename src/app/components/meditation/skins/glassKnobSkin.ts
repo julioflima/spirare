@@ -1,4 +1,4 @@
-import type { KnobSkin } from 'react-rotary-knob';
+import type { KnobSkin } from "react-rotary-knob";
 
 const glassKnobSkin: KnobSkin = {
   knobX: 110,

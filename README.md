@@ -13,12 +13,12 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 
 ## 🧱 Arquitetura
 
-| Área | Descrição |
-| --- | --- |
-| `src/constants/meditation.ts` | Conteúdo canônico da sessão (tema “Paz Interior”, etapas e duração padrão de 120 s por subetapa). |
-| `src/app/components/meditation/` | Conjunto modular de componentes (StartOverlay, SessionHeader, TimerPanel, BreathVisualizer, Controles etc.). |
-| `src/app/components/meditation/hooks/` | Hooks dedicados para fala (`useSpeech`) e metrônomo (`useMetronome`). |
-| `src/app/api/speech/route.ts` | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real. |
+| Área                                   | Descrição                                                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `src/constants/meditation.ts`          | Conteúdo canônico da sessão (tema “Paz Interior”, etapas e duração padrão de 120 s por subetapa).            |
+| `src/app/components/meditation/`       | Conjunto modular de componentes (StartOverlay, SessionHeader, TimerPanel, BreathVisualizer, Controles etc.). |
+| `src/app/components/meditation/hooks/` | Hooks dedicados para fala (`useSpeech`) e metrônomo (`useMetronome`).                                        |
+| `src/app/api/speech/route.ts`          | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real.                           |
 
 > Todos os elementos interativos recebem `cursor: pointer`, garantindo consistência com a diretriz de interação do produto.
 

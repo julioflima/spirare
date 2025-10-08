@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface UseAudioWaveformOptions {
   isActive: boolean;
@@ -8,7 +8,11 @@ interface UseAudioWaveformOptions {
   smoothing?: number;
 }
 
-export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAudioWaveformOptions) {
+export function useAudioWaveform({
+  isActive,
+  bars = 24,
+  smoothing = 0.6,
+}: UseAudioWaveformOptions) {
   const [levels, setLevels] = useState<number[]>(() => new Array(bars).fill(0));
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -18,7 +22,11 @@ export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAu
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
   useEffect(() => {
-    if (!isActive || typeof window === 'undefined' || !navigator?.mediaDevices?.getUserMedia) {
+    if (
+      !isActive ||
+      typeof window === "undefined" ||
+      !navigator?.mediaDevices?.getUserMedia
+    ) {
       setLevels(new Array(bars).fill(0));
       return;
     }
@@ -27,7 +35,10 @@ export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAu
 
     const setup = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        });
         if (cancelled) {
           stream.getTracks().forEach((track) => track.stop());
           return;
@@ -41,8 +52,10 @@ export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAu
         const source = context.createMediaStreamSource(stream);
         source.connect(analyser);
 
-    const bufferLength = analyser.fftSize;
-  const dataArray = new Uint8Array(bufferLength) as Uint8Array<ArrayBuffer>;
+        const bufferLength = analyser.fftSize;
+        const dataArray = new Uint8Array(
+          bufferLength
+        ) as Uint8Array<ArrayBuffer>;
 
         audioContextRef.current = context;
         analyserRef.current = analyser;
@@ -57,7 +70,10 @@ export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAu
 
           analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
 
-          const sliceSize = Math.max(1, Math.floor(dataArrayRef.current.length / bars));
+          const sliceSize = Math.max(
+            1,
+            Math.floor(dataArrayRef.current.length / bars)
+          );
 
           const amplitudes: number[] = [];
           for (let barIndex = 0; barIndex < bars; barIndex += 1) {
@@ -74,17 +90,22 @@ export function useAudioWaveform({ isActive, bars = 24, smoothing = 0.6 }: UseAu
             amplitudes.push(average / 128);
           }
 
-          setLevels((previous) => previous.map((value, index) => {
-            const next = amplitudes[index] ?? 0;
-            return value * 0.35 + next * 0.65;
-          }));
+          setLevels((previous) =>
+            previous.map((value, index) => {
+              const next = amplitudes[index] ?? 0;
+              return value * 0.35 + next * 0.65;
+            })
+          );
 
           rafRef.current = requestAnimationFrame(sample);
         };
 
         sample();
       } catch (error) {
-        console.error('Não foi possível acessar o microfone para o gráfico de respiração.', error);
+        console.error(
+          "Não foi possível acessar o microfone para o gráfico de respiração.",
+          error
+        );
         setLevels(new Array(bars).fill(0));
       }
     };

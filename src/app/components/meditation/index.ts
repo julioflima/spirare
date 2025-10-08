@@ -1,1 +1,1 @@
-export { MeditationGenerator } from './MeditationGenerator';
+export { MeditationGenerator } from "./MeditationGenerator";
