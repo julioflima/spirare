@@ -27,6 +27,9 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Erro ao gerar áudio:", error);
-    return NextResponse.json({ error: "Não foi possível gerar o áudio." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Não foi possível gerar o áudio." },
+      { status: 500 }
+    );
   }
 }
