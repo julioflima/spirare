@@ -9,7 +9,10 @@ interface QueueSpeechOptions {
 
 interface SpeechControls {
   speak: (text: string, options?: QueueSpeechOptions) => Promise<void>;
-  speakSequence: (texts: string[], options?: QueueSpeechOptions) => Promise<void>;
+  speakSequence: (
+    texts: string[],
+    options?: QueueSpeechOptions
+  ) => Promise<void>;
   stop: () => void;
   pause: () => void;
   resume: () => void;
@@ -121,7 +124,9 @@ export function useSpeech(): SpeechControls {
             audio?.removeEventListener("ended", handleEnded);
             audio?.removeEventListener("error", handleError);
             rejectPlaybackRef.current = null;
-            const playbackError = new Error("Erro ao reproduzir áudio da meditação.");
+            const playbackError = new Error(
+              "Erro ao reproduzir áudio da meditação."
+            );
             cleanupAudio();
             reject(playbackError);
           };
@@ -156,7 +161,11 @@ export function useSpeech(): SpeechControls {
         });
       } catch (playError) {
         if (cancelTokenRef.current === token) {
-          setError(playError instanceof Error ? playError : new Error("Erro desconhecido ao gerar áudio."));
+          setError(
+            playError instanceof Error
+              ? playError
+              : new Error("Erro desconhecido ao gerar áudio.")
+          );
         }
         setIsGenerating(false);
         throw playError;
@@ -192,11 +201,18 @@ export function useSpeech(): SpeechControls {
           try {
             await playText(textItem, executionToken);
           } catch (playError) {
-            if (playError instanceof Error && playError.message === "Playback interrompido.") {
+            if (
+              playError instanceof Error &&
+              playError.message === "Playback interrompido."
+            ) {
               break;
             }
             if (cancelTokenRef.current === executionToken) {
-              setError(playError instanceof Error ? playError : new Error("Erro desconhecido ao gerar áudio."));
+              setError(
+                playError instanceof Error
+                  ? playError
+                  : new Error("Erro desconhecido ao gerar áudio.")
+              );
             }
             break;
           }
@@ -218,7 +234,8 @@ export function useSpeech(): SpeechControls {
   }, []);
 
   return {
-    speak: (text, options) => queueSpeechInternal(text, { replace: options?.replace ?? true }),
+    speak: (text, options) =>
+      queueSpeechInternal(text, { replace: options?.replace ?? true }),
     speakSequence: (texts, options) => queueSpeechInternal(texts, options),
     stop,
     pause,

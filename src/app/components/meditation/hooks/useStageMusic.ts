@@ -52,7 +52,9 @@ export function useStageMusic() {
 
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / duration, 1);
-          audioRef.current.volume = clampVolume(startVolume + volumeDelta * progress);
+          audioRef.current.volume = clampVolume(
+            startVolume + volumeDelta * progress
+          );
 
           if (progress < 1) {
             fadeFrameRef.current = requestAnimationFrame(step);
@@ -102,8 +104,8 @@ export function useStageMusic() {
 
       await stopCurrentTrack(fadeOutMs);
 
-  const audio = new Audio(src);
-  audio.crossOrigin = "anonymous";
+      const audio = new Audio(src);
+      audio.crossOrigin = "anonymous";
       audio.loop = true;
       audio.volume = 0;
 

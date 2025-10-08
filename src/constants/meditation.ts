@@ -7,8 +7,10 @@ export const defaultMeditation: Meditation = {
   etapas: [
     {
       nome: "Aterramento Luminoso",
-      introducao: "Agora vamos começar a Etapa 1: Aterramento Luminoso. Permita que a mente se prepare para encontrar um ponto de apoio suave.",
-      encerramento: "Fim da etapa: Aterramento Luminoso concluído. Sinta o corpo repousar com segurança e acolhimento.",
+      introducao:
+        "Agora vamos começar a Etapa 1: Aterramento Luminoso. Permita que a mente se prepare para encontrar um ponto de apoio suave.",
+      encerramento:
+        "Fim da etapa: Aterramento Luminoso concluído. Sinta o corpo repousar com segurança e acolhimento.",
       trilha: {
         title: "Forest Lullaby",
         artist: "Lexin Music (Pixabay)",
@@ -26,8 +28,10 @@ export const defaultMeditation: Meditation = {
     },
     {
       nome: "Respiração em Marés",
-      introducao: "Agora entramos na Etapa 2: Respiração em Marés. Imagine o vai-e-vem do oceano guiando cada inspiração.",
-      encerramento: "Fim da etapa: Respiração em Marés concluída. Observe como o fluxo da vida permanece calmo dentro de você.",
+      introducao:
+        "Agora entramos na Etapa 2: Respiração em Marés. Imagine o vai-e-vem do oceano guiando cada inspiração.",
+      encerramento:
+        "Fim da etapa: Respiração em Marés concluída. Observe como o fluxo da vida permanece calmo dentro de você.",
       trilha: {
         title: "Calm Sea Ambient",
         artist: "Lesfm (Pixabay)",
@@ -45,8 +49,10 @@ export const defaultMeditation: Meditation = {
     },
     {
       nome: "Paisagem Interior",
-      introducao: "Chegamos à Etapa 3: Paisagem Interior. Permita que a imaginação revele um cenário de beleza serena.",
-      encerramento: "Fim da etapa: Paisagem Interior concluída. Leve consigo as imagens suaves que emergiram agora pouco.",
+      introducao:
+        "Chegamos à Etapa 3: Paisagem Interior. Permita que a imaginação revele um cenário de beleza serena.",
+      encerramento:
+        "Fim da etapa: Paisagem Interior concluída. Leve consigo as imagens suaves que emergiram agora pouco.",
       trilha: {
         title: "Gentle Breeze",
         artist: "RomanBelov (Pixabay)",
@@ -64,8 +70,10 @@ export const defaultMeditation: Meditation = {
     },
     {
       nome: "Integração e Retorno",
-      introducao: "Avançamos para a Etapa 4: Integração e Retorno. Reúna tudo o que experienciou e traga para o coração.",
-      encerramento: "Fim da etapa: Integração e Retorno concluída. Perceba como você retorna renovado ao presente.",
+      introducao:
+        "Avançamos para a Etapa 4: Integração e Retorno. Reúna tudo o que experienciou e traga para o coração.",
+      encerramento:
+        "Fim da etapa: Integração e Retorno concluída. Perceba como você retorna renovado ao presente.",
       trilha: {
         title: "Glowing Light",
         artist: "SergePavkinMusic (Pixabay)",
