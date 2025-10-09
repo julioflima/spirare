@@ -4,7 +4,7 @@ import {
   Audio,
   CreateAudio,
   UpdateAudio,
-  audioCollectionSchema,
+  audioSchema,
   createAudioSchema,
   updateAudioSchema,
 } from "@/types/database";
@@ -108,6 +108,6 @@ export class AudioService {
   }
 
   static async validateData(data: unknown): Promise<Audio> {
-    return audioCollectionSchema.parse(data);
+    return audioSchema.parse(data);
   }
 }
