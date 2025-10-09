@@ -1,0 +1,88 @@
+{
+  "general": {
+    "opening": {
+      "psychoeducation": [],
+      "intention": [],
+      "posture_and_environment": [],
+      "initial_breathing": [],
+      "attention_orientation": []
+    },
+    "concentration": {
+      "guided_breathing_rhythm": [],
+      "progressive_body_relaxation": [],
+      "non_judgmental_observation": [],
+      "functional_silence": []
+    },
+    "exploration": {
+      "main_focus": [],
+      "narrative_guidance_or_visualization": [],
+      "subtle_reflection_or_insight": [],
+      "emotional_integration": []
+    },
+    "awakening": {
+      "body_reorientation": [],
+      "final_breathing": [],
+      "intention_for_the_rest_of_the_day": [],
+      "closing": []
+    }
+  },
+  "structure": {
+    "opening": [
+      "psychoeducation",
+      "intention",
+      "posture_and_environment",
+      "initial_breathing",
+      "attention_orientation"
+    ],
+    "concentration": [
+      "guided_breathing_rhythm",
+      "progressive_body_relaxation",
+      "non_judgmental_observation",
+      "functional_silence"
+    ],
+    "exploration": [
+      "main_focus",
+      "narrative_guidance_or_visualization",
+      "subtle_reflection_or_insight",
+      "emotional_integration"
+    ],
+    "awakening": [
+      "body_reorientation",
+      "final_breathing",
+      "intention_for_the_rest_of_the_day",
+      "closing"
+    ]
+  },
+  "themes": {
+    "anxiety": {
+      "title": "Ansiedade",
+      "structure": {
+        "opening": {
+          "psychoeducation": []
+        },
+        "exploration": {
+          "narrative_guidance_or_visualization": [],
+          "subtle_reflection_or_insight": []
+        }
+      }
+    }
+  },
+  "audios": {
+    "ambient-waves": {
+      "title": "Ambient Waves",
+      "artist": "Nature Sounds",
+      "src": "/audio/ambient-waves.mp3",
+      "fadeInMs": 3000,
+      "fadeOutMs": 2000,
+      "volume": 0.3
+    },
+    "peaceful-mind": {
+      "title": "Peaceful Mind",
+      "artist": "Meditation Masters",
+      "src": "/audio/peaceful-mind.mp3",
+      "fadeInMs": 2000,
+      "fadeOutMs": 2500,
+      "volume": 0.25
+    }
+  }
+}
