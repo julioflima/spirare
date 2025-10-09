@@ -1,8 +1,8 @@
 import { getDatabase } from "@/lib/mongodb";
-import { ThemesService } from "./themesService";
+import { ThemeService } from "./themesService";
 import { AudioService } from "./audiosService";
 import { StructureService } from "./structureService";
-import { MeditationService } from "./meditationsService";
+import { MeditationsService } from "./meditationsService";
 import fs from "fs/promises";
 import path from "path";
 
@@ -24,7 +24,7 @@ export class DatabaseService {
       // Seed themes with embedded meditations
       if (data.themes && Array.isArray(data.themes)) {
         for (const theme of data.themes) {
-          await ThemesService.create(theme);
+          await ThemeService.create(theme);
         }
       }
 
@@ -35,25 +35,25 @@ export class DatabaseService {
         }
       }
 
-      // Seed structure
-      if (data.structure && Array.isArray(data.structure)) {
-        for (const structureItem of data.structure) {
-          await StructureService.create(structureItem);
-        }
+      // Seed structure document
+      if (data.structure) {
+        await StructureService.set(data.structure);
+      } else {
+        await StructureService.initializeDefault();
       }
 
-      // Seed individual meditations if they exist
-      if (data.meditations && Array.isArray(data.meditations)) {
-        for (const meditation of data.meditations) {
-          await MeditationService.create(meditation);
-        }
+      // Seed meditations document
+      if (data.meditations) {
+        await MeditationsService.update(data.meditations);
+      } else {
+        await MeditationsService.initializeDefault();
       }
 
       return {
         themes: data.themes?.length || 0,
         audios: data.audios?.length || 0,
-        structure: data.structure?.length || 0,
-        meditations: data.meditations?.length || 0,
+        structure: data.structure ? 1 : 0,
+        meditations: data.meditations ? 1 : 0,
       };
     } catch (error) {
       console.error("Error seeding database:", error);
@@ -63,15 +63,15 @@ export class DatabaseService {
 
   static async backupDatabase() {
     try {
-      const themes = await ThemesService.getAll();
+      const themes = await ThemeService.getAll();
       const audios = await AudioService.getAll();
-      const structures = await StructureService.getAll();
-      const meditations = await MeditationService.getAll();
+      const structure = await StructureService.get();
+      const meditations = await MeditationsService.get();
 
       return {
         themes,
         audios,
-        structure: structures,
+        structure,
         meditations,
         timestamp: new Date().toISOString(),
       };

@@ -46,7 +46,7 @@ async function seedDatabase() {
             category: themeData.category,
             title: themeData.title,
             description: themeData.description,
-            structure: themeData.structure,
+            meditations: themeData.meditations,
             isActive: themeData.isActive !== false,
           });
           console.log(`✅ Theme "${themeData.category}" created`);
@@ -61,23 +61,9 @@ async function seedDatabase() {
 
     // Seed structure collection
     console.log("📚 Seeding structure collection...");
-    if (dbData.structure && Array.isArray(dbData.structure)) {
-      for (const structureData of dbData.structure) {
-        try {
-          await StructureService.create({
-            opening: structureData.opening || [],
-            concentration: structureData.concentration || [],
-            exploration: structureData.exploration || [],
-            awakening: structureData.awakening || [],
-          });
-          console.log(`✅ Structure item created`);
-        } catch (error) {
-          console.log(
-            `⚠️  Structure item already exists or failed to create:`,
-            error
-          );
-        }
-      }
+    if (dbData.structure) {
+      console.log("📚 Setting structure document...");
+      await StructureService.set(dbData.structure);
     } else {
       // Initialize with default structure if no structure data provided
       console.log("📚 Initializing default structure...");
@@ -107,7 +93,7 @@ async function seedDatabase() {
 
     const audiosCount = dbData.audios?.length || 0;
     const themesCount = dbData.themes?.length || 0;
-    const structureCount = dbData.structure?.length || 0;
+  const structureCount = dbData.structure ? 1 : 0;
 
     return {
       success: true,

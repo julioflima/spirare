@@ -1,185 +1,171 @@
 import { ObjectId, Document } from "mongodb";
 import { getDatabase } from "@/lib/mongodb";
 import {
-  StructureItem,
-  CreateStructureItem,
-  UpdateStructureItem,
-  structureItemSchema,
-  createStructureItemSchema,
-  updateStructureItemSchema,
+  Structure,
+  CreateStructure,
+  UpdateStructure,
+  structureSchema,
+  createStructureSchema,
+  updateStructureSchema,
 } from "@/types/database";
 
 const COLLECTION_NAME = "structure";
 
 interface StructureDocument extends Document {
   _id?: ObjectId;
-  opening?: string[];
-  concentration?: string[];
-  exploration?: string[];
-  awakening?: string[];
+  method?: CreateStructure["method"];
+  specifics?: CreateStructure["specifics"];
   createdAt?: Date;
   updatedAt?: Date;
 }
 
+const DEFAULT_STRUCTURE: CreateStructure = {
+  method: [
+    {
+      opening: [
+        "psychoeducation",
+        "intention",
+        "posture_and_environment",
+        "initial_breathing",
+        "attention_orientation",
+      ],
+    },
+    {
+      concentration: [
+        "guided_breathing_rhythm",
+        "progressive_body_relaxation",
+        "non_judgmental_observation",
+        "functional_silence",
+      ],
+    },
+    {
+      exploration: [
+        "main_focus",
+        "narrative_guidance_or_visualization",
+        "subtle_reflection_or_insight",
+        "emotional_integration",
+      ],
+    },
+    {
+      awakening: [
+        "body_reorientation",
+        "final_breathing",
+        "intention_for_the_rest_of_the_day",
+        "closing",
+      ],
+    },
+  ],
+  specifics: {
+    opening: {
+      psychoeducation: true,
+      intention: false,
+      posture_and_environment: false,
+      initial_breathing: false,
+      attention_orientation: false,
+    },
+    concentration: {
+      guided_breathing_rhythm: false,
+      progressive_body_relaxation: false,
+      non_judgmental_observation: false,
+      functional_silence: false,
+    },
+    exploration: {
+      main_focus: false,
+      narrative_guidance_or_visualization: true,
+      subtle_reflection_or_insight: true,
+      emotional_integration: false,
+    },
+    awakening: {
+      body_reorientation: false,
+      final_breathing: false,
+      intention_for_the_rest_of_the_day: false,
+      closing: false,
+    },
+  },
+};
+
+function mapStructure(document: StructureDocument | null): Structure | null {
+  if (!document) return null;
+  return {
+    ...document,
+    _id: document._id?.toString(),
+  } as Structure;
+}
+
 export class StructureService {
-  static async getAll(): Promise<StructureItem[]> {
+  static async get(): Promise<Structure | null> {
     const db = await getDatabase();
     const collection = db.collection<StructureDocument>(COLLECTION_NAME);
 
-    const structures = await collection.find({}).toArray();
-
-    return structures.map((structure) => ({
-      ...structure,
-      _id: structure._id?.toString(),
-    })) as StructureItem[];
+    const structure = await collection.findOne({});
+    return mapStructure(structure);
   }
 
-  static async getById(id: string): Promise<StructureItem | null> {
-    const db = await getDatabase();
-    const collection = db.collection<StructureDocument>(COLLECTION_NAME);
-
-    const structure = await collection.findOne({ _id: new ObjectId(id) });
-
-    if (!structure) return null;
-
-    return {
-      ...structure,
-      _id: structure._id?.toString(),
-    } as StructureItem;
-  }
-
-  static async create(data: CreateStructureItem): Promise<StructureItem> {
-    const validatedData = createStructureItemSchema.parse(data);
+  static async set(data: CreateStructure): Promise<Structure> {
+    const validatedData = createStructureSchema.parse(data);
 
     const db = await getDatabase();
     const collection = db.collection<StructureDocument>(COLLECTION_NAME);
 
-    const structureToInsert: StructureDocument = {
-      ...validatedData,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const result = await collection.insertOne(structureToInsert);
-
-    return {
-      ...structureToInsert,
-      _id: result.insertedId.toString(),
-    } as StructureItem;
-  }
-
-  static async updateById(
-    id: string,
-    data: UpdateStructureItem
-  ): Promise<StructureItem | null> {
-    const validatedData = updateStructureItemSchema.parse(data);
-
-    const db = await getDatabase();
-    const collection = db.collection<StructureDocument>(COLLECTION_NAME);
-
-    const updateData = {
-      ...validatedData,
-      updatedAt: new Date(),
-    };
-
-    const result = await collection.findOneAndUpdate(
-      { _id: new ObjectId(id) },
-      { $set: updateData },
-      { returnDocument: "after" }
+    await collection.updateOne(
+      {},
+      {
+        $set: {
+          ...validatedData,
+          updatedAt: new Date(),
+        },
+        $setOnInsert: {
+          createdAt: new Date(),
+        },
+      },
+      { upsert: true }
     );
 
-    if (!result) return null;
-
-    return {
-      ...result,
-      _id: result._id?.toString(),
-    } as StructureItem;
+    const updated = await collection.findOne({});
+    return mapStructure(updated)!;
   }
 
-  static async deleteById(id: string): Promise<boolean> {
+  static async update(data: UpdateStructure): Promise<Structure | null> {
+    const validatedData = updateStructureSchema.parse(data);
+
     const db = await getDatabase();
     const collection = db.collection<StructureDocument>(COLLECTION_NAME);
 
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    const updatePayload: Record<string, unknown> = {
+      ...validatedData,
+      updatedAt: new Date(),
+    };
 
-    return result.deletedCount > 0;
+    await collection.updateOne(
+      {},
+      {
+        $set: updatePayload,
+        $setOnInsert: {
+          createdAt: new Date(),
+        },
+      },
+      { upsert: true }
+    );
+
+    const updated = await collection.findOne({});
+    return mapStructure(updated);
   }
 
-  static async initializeDefault(): Promise<StructureItem[]> {
-    const db = await getDatabase();
-    const collection = db.collection<StructureDocument>(COLLECTION_NAME);
-
-    // Check if structure already exists
-    const existing = await collection.find({}).toArray();
-    if (existing.length > 0) {
-      return existing.map((structure) => ({
-        ...structure,
-        _id: structure._id?.toString(),
-      })) as StructureItem[];
+  static async initializeDefault(): Promise<Structure> {
+    const existing = await this.get();
+    if (existing) {
+      return existing;
     }
-
-    // Create default structure items based on db.json
-    const defaultStructures: StructureDocument[] = [
-      {
-        opening: [
-          "psychoeducation",
-          "intention",
-          "posture_and_environment",
-          "initial_breathing",
-          "attention_orientation",
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        concentration: [
-          "guided_breathing_rhythm",
-          "progressive_body_relaxation",
-          "non_judgmental_observation",
-          "functional_silence",
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        exploration: [
-          "main_focus",
-          "narrative_guidance_or_visualization",
-          "subtle_reflection_or_insight",
-          "emotional_integration",
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        awakening: [
-          "body_reorientation",
-          "final_breathing",
-          "intention_for_the_rest_of_the_day",
-          "closing",
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
-    const result = await collection.insertMany(defaultStructures);
-
-    return defaultStructures.map((structure, index) => ({
-      ...structure,
-      _id: result.insertedIds[index].toString(),
-    })) as StructureItem[];
+    return this.set(DEFAULT_STRUCTURE);
   }
 
-  static async delete(id: string): Promise<boolean> {
+  static async deleteAll(): Promise<void> {
     const db = await getDatabase();
     const collection = db.collection<StructureDocument>(COLLECTION_NAME);
-
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
-    return result.deletedCount > 0;
+    await collection.deleteMany({});
   }
 
-  static async validateData(data: unknown): Promise<StructureItem> {
-    return structureItemSchema.parse(data);
+  static async validateData(data: unknown): Promise<Structure> {
+    return structureSchema.parse(data);
   }
 }

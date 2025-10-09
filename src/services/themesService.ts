@@ -4,9 +4,9 @@ import {
   Theme,
   CreateTheme,
   UpdateTheme,
-  themeCollectionSchema,
   createThemeSchema,
   updateThemeSchema,
+  themeSchema,
 } from "@/types/database";
 
 const COLLECTION_NAME = "themes";
@@ -17,8 +17,7 @@ interface ThemeDocument extends Document {
   category: string;
   title: string;
   description?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  structure?: any; // Complex nested structure that varies in format
+  meditations?: Theme["meditations"];
   isActive?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -181,6 +180,6 @@ export class ThemeService {
   }
 
   static async validateData(data: unknown): Promise<Theme> {
-    return themeCollectionSchema.parse(data);
+    return themeSchema.parse(data);
   }
 }

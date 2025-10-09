@@ -57,13 +57,35 @@ export const meditationsSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-// Structure Collection Schema (array of structure items)
-export const structureItemSchema = z.object({
+const structurePhaseListSchema = z.array(z.string()).optional();
+
+const structureMethodItemSchema = z.object({
+  opening: structurePhaseListSchema,
+  concentration: structurePhaseListSchema,
+  exploration: structurePhaseListSchema,
+  awakening: structurePhaseListSchema,
+});
+
+const structurePhaseSpecificsSchema = z
+  .record(z.string(), z.boolean())
+  .default({});
+
+export const structureSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
-  opening: z.array(z.string()).optional(),
-  concentration: z.array(z.string()).optional(),
-  exploration: z.array(z.string()).optional(),
-  awakening: z.array(z.string()).optional(),
+  method: z.array(structureMethodItemSchema).default([]),
+  specifics: z
+    .object({
+      opening: structurePhaseSpecificsSchema,
+      concentration: structurePhaseSpecificsSchema,
+      exploration: structurePhaseSpecificsSchema,
+      awakening: structurePhaseSpecificsSchema,
+    })
+    .default({
+      opening: {},
+      concentration: {},
+      exploration: {},
+      awakening: {},
+    }),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -127,12 +149,12 @@ export const updateThemeSchema = themeSchema
   .omit({ _id: true, createdAt: true })
   .partial();
 
-export const createStructureItemSchema = structureItemSchema.omit({
+export const createStructureSchema = structureSchema.omit({
   _id: true,
   createdAt: true,
   updatedAt: true,
 });
-export const updateStructureItemSchema = structureItemSchema
+export const updateStructureSchema = structureSchema
   .omit({ _id: true, createdAt: true })
   .partial();
 
@@ -143,19 +165,19 @@ export const updateMeditationsSchema = meditationsSchema
 // Collection schemas for validation
 export const audioCollectionSchema = z.array(audioSchema);
 export const themeCollectionSchema = z.array(themeSchema);
-export const structureCollectionSchema = z.array(structureItemSchema);
+export const structureCollectionSchema = z.array(structureSchema);
 
 // Type exports
 export type ContentItem = z.infer<typeof contentItemSchema>;
 export type Audio = z.infer<typeof audioSchema>;
 export type Meditations = z.infer<typeof meditationsSchema>;
-export type StructureItem = z.infer<typeof structureItemSchema>;
+export type Structure = z.infer<typeof structureSchema>;
 export type Theme = z.infer<typeof themeSchema>;
 
 export type CreateAudio = z.infer<typeof createAudioSchema>;
 export type UpdateAudio = z.infer<typeof updateAudioSchema>;
 export type CreateTheme = z.infer<typeof createThemeSchema>;
 export type UpdateTheme = z.infer<typeof updateThemeSchema>;
-export type CreateStructureItem = z.infer<typeof createStructureItemSchema>;
-export type UpdateStructureItem = z.infer<typeof updateStructureItemSchema>;
+export type CreateStructure = z.infer<typeof createStructureSchema>;
+export type UpdateStructure = z.infer<typeof updateStructureSchema>;
 export type UpdateMeditations = z.infer<typeof updateMeditationsSchema>;

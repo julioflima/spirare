@@ -17,11 +17,12 @@ export default function SuperAdminPage() {
     
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database/seed', { 
+      const response = await fetch('/api/database', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({ action: 'seed' })
       });
       
       const data = await response.json();
@@ -31,7 +32,7 @@ export default function SuperAdminPage() {
       } else {
         showMessage('error', data.message || 'Erro ao popular base de dados');
       }
-    } catch (error) {
+    } catch {
       showMessage('error', 'Erro ao conectar com o servidor');
     } finally {
       setIsProcessing(false);
@@ -45,11 +46,12 @@ export default function SuperAdminPage() {
     
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database/drop', { 
-        method: 'DELETE',
+      const response = await fetch('/api/database', { 
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({ action: 'drop' })
       });
       
       const data = await response.json();
@@ -59,7 +61,7 @@ export default function SuperAdminPage() {
       } else {
         showMessage('error', data.message || 'Erro ao excluir base de dados');
       }
-    } catch (error) {
+    } catch {
       showMessage('error', 'Erro ao conectar com o servidor');
     } finally {
       setIsProcessing(false);
@@ -69,7 +71,7 @@ export default function SuperAdminPage() {
   const handleGetDatabaseStatus = async () => {
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database/status');
+      const response = await fetch('/api/database');
       const data = await response.json();
 
       if (response.ok) {
@@ -77,7 +79,7 @@ export default function SuperAdminPage() {
       } else {
         showMessage('error', data.message || 'Erro ao obter status da base de dados');
       }
-    } catch (error) {
+    } catch {
       showMessage('error', 'Erro ao conectar com o servidor');
     } finally {
       setIsProcessing(false);
@@ -87,11 +89,12 @@ export default function SuperAdminPage() {
   const handleBackupDatabase = async () => {
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database/backup', {
+      const response = await fetch('/api/database', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({ action: 'backup' })
       });
       
       if (response.ok) {
@@ -109,7 +112,7 @@ export default function SuperAdminPage() {
         const data = await response.json();
         showMessage('error', data.message || 'Erro ao criar backup da base de dados');
       }
-    } catch (error) {
+    } catch {
       showMessage('error', 'Erro ao conectar com o servidor');
     } finally {
       setIsProcessing(false);
