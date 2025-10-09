@@ -84,12 +84,24 @@ export class DatabaseService {
   static async dropDatabase() {
     try {
       const db = await getDatabase();
-      
+
       // Drop all collections
-      await db.collection("themes").drop().catch(() => {});
-      await db.collection("audios").drop().catch(() => {});
-      await db.collection("structure").drop().catch(() => {});
-      await db.collection("meditations").drop().catch(() => {});
+      await db
+        .collection("themes")
+        .drop()
+        .catch(() => {});
+      await db
+        .collection("audios")
+        .drop()
+        .catch(() => {});
+      await db
+        .collection("structure")
+        .drop()
+        .catch(() => {});
+      await db
+        .collection("meditations")
+        .drop()
+        .catch(() => {});
 
       return true;
     } catch (error) {
@@ -101,11 +113,13 @@ export class DatabaseService {
   static async getStatus() {
     try {
       const db = await getDatabase();
-      
+
       const themesCount = await db.collection("themes").countDocuments();
       const audiosCount = await db.collection("audios").countDocuments();
       const structureCount = await db.collection("structure").countDocuments();
-      const meditationsCount = await db.collection("meditations").countDocuments();
+      const meditationsCount = await db
+        .collection("meditations")
+        .countDocuments();
 
       return {
         collections: {

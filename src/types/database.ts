@@ -90,7 +90,9 @@ export const themeSchema = z.object({
     }),
     exploration: z.object({
       main_focus: z.array(contentItemSchema).default([]),
-      narrative_guidance_or_visualization: z.array(contentItemSchema).default([]),
+      narrative_guidance_or_visualization: z
+        .array(contentItemSchema)
+        .default([]),
       subtle_reflection_or_insight: z.array(contentItemSchema).default([]),
       emotional_integration: z.array(contentItemSchema).default([]),
     }),
