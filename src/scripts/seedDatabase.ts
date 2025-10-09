@@ -1,14 +1,9 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { MeditationDatabaseService } from "@/services/meditationDatabaseService";
-import { AudioService } from "@/services/audioService";
-import { ThemeService } from "@/services/themeService";
-
-interface ContentItem {
-  text?: string;
-  duration?: number;
-  audioId?: string;
-}
+import { MeditationsService } from "@/services/meditationsService";
+import { StructureService } from "@/services/structureService";
+import { AudioService } from "@/services/audiosService";
+import { ThemeService } from "@/services/themesService";
 
 async function seedDatabase() {
   try {
@@ -19,13 +14,8 @@ async function seedDatabase() {
     const dbJsonContent = await fs.readFile(dbJsonPath, "utf-8");
     const dbData = JSON.parse(dbJsonContent);
 
-    // Initialize the main meditation database
-    console.log("📋 Initializing meditation database...");
-    const database = await MeditationDatabaseService.initializeDefault();
-    console.log("✅ Meditation database initialized");
-
-    // Seed audios
-    console.log("🎵 Seeding audio data...");
+    // Seed audios collection
+    console.log("🎵 Seeding audios collection...");
     if (dbData.audios && Array.isArray(dbData.audios)) {
       for (const audioData of dbData.audios) {
         try {
@@ -47,16 +37,17 @@ async function seedDatabase() {
       }
     }
 
-    // Seed themes
-    console.log("🎨 Seeding theme data...");
+    // Seed themes collection
+    console.log("🎨 Seeding themes collection...");
     if (dbData.themes && Array.isArray(dbData.themes)) {
       for (const themeData of dbData.themes) {
         try {
           await ThemeService.create({
             category: themeData.category,
             title: themeData.title,
+            description: themeData.description,
             structure: themeData.structure,
-            isActive: true,
+            isActive: themeData.isActive !== false,
           });
           console.log(`✅ Theme "${themeData.category}" created`);
         } catch (error) {
@@ -68,66 +59,61 @@ async function seedDatabase() {
       }
     }
 
-    // Update the main database with the structure from JSON
-    console.log("📚 Updating database structure...");
-    // Note: Structure is now embedded in themes as arrays, skipping separate structure update
-    console.log("✅ Database structure is now managed through themes");
-
-    // Update general content if provided
-    if (dbData.general) {
-      console.log("📝 Updating general content...");
-      const phases = [
-        "opening",
-        "concentration",
-        "exploration",
-        "awakening",
-      ] as const;
-
-      for (const phase of phases) {
-        if (dbData.general[phase]) {
-          const contentTypes = Object.keys(dbData.general[phase]);
-
-          for (const contentType of contentTypes) {
-            const content = dbData.general[phase][contentType];
-            if (Array.isArray(content) && content.length > 0) {
-              await MeditationDatabaseService.updateGeneral({
-                phase,
-                contentType,
-                content: content.map((item: unknown, index: number) => {
-                  const contentItem = item as ContentItem | string;
-                  return {
-                    text:
-                      typeof contentItem === "string"
-                        ? contentItem
-                        : contentItem?.text || "",
-                    order: index,
-                    duration:
-                      typeof contentItem === "object"
-                        ? contentItem?.duration
-                        : undefined,
-                    audioId:
-                      typeof contentItem === "object"
-                        ? contentItem?.audioId
-                        : undefined,
-                  };
-                }),
-              });
-              console.log(`✅ Updated ${phase}.${contentType}`);
-            }
-          }
+    // Seed structure collection
+    console.log("📚 Seeding structure collection...");
+    if (dbData.structure && Array.isArray(dbData.structure)) {
+      for (const structureData of dbData.structure) {
+        try {
+          await StructureService.create({
+            opening: structureData.opening || [],
+            concentration: structureData.concentration || [],
+            exploration: structureData.exploration || [],
+            awakening: structureData.awakening || [],
+          });
+          console.log(`✅ Structure item created`);
+        } catch (error) {
+          console.log(
+            `⚠️  Structure item already exists or failed to create:`,
+            error
+          );
         }
       }
+    } else {
+      // Initialize with default structure if no structure data provided
+      console.log("📚 Initializing default structure...");
+      await StructureService.initializeDefault();
+    }
+
+    // Seed meditations collection
+    console.log("📝 Seeding meditations collection...");
+    if (dbData.meditations) {
+      try {
+        await MeditationsService.update(dbData.meditations);
+        console.log("✅ Meditations data updated");
+      } catch (error) {
+        console.log("⚠️  Failed to update meditations, initializing default:", error);
+        await MeditationsService.initializeDefault();
+      }
+    } else {
+      // Initialize with default meditations if no data provided
+      console.log("📝 Initializing default meditations...");
+      await MeditationsService.initializeDefault();
     }
 
     console.log("🎉 Database seeding completed successfully!");
+
+    const audiosCount = dbData.audios?.length || 0;
+    const themesCount = dbData.themes?.length || 0;
+    const structureCount = dbData.structure?.length || 0;
 
     return {
       success: true,
       message: "Database seeded successfully",
       data: {
-        audios: dbData.audios?.length || 0,
-        themes: dbData.themes?.length || 0,
-        database: database._id,
+        audios: audiosCount,
+        themes: themesCount,
+        structure: structureCount,
+        meditations: "initialized",
       },
     };
   } catch (error) {

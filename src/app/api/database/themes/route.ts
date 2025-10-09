@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ThemeService } from "@/services/themeService";
+import { ThemeService } from "@/services/themesService";
 import { createThemeSchema, updateThemeSchema } from "@/types/database";
 
 // GET /api/database/themes - Get all themes

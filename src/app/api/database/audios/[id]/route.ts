@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AudioService } from "@/services/audioService";
+import { AudioService } from "@/services/audiosService";
 import { updateAudioSchema } from "@/types/database";
 
 // GET /api/database/audios/[id] - Get audio by ID
