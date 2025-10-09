@@ -6,7 +6,10 @@ interface UpdateStructureParams {
 }
 
 // GET /api/structure/[id] - Get structure item by ID
-export async function GET(request: NextRequest, context: UpdateStructureParams) {
+export async function GET(
+  request: NextRequest,
+  context: UpdateStructureParams
+) {
   try {
     const { id } = await context.params;
     const structure = await StructureService.getById(id);
@@ -29,11 +32,14 @@ export async function GET(request: NextRequest, context: UpdateStructureParams) 
 }
 
 // PUT /api/structure/[id] - Update structure item
-export async function PUT(request: NextRequest, context: UpdateStructureParams) {
+export async function PUT(
+  request: NextRequest,
+  context: UpdateStructureParams
+) {
   try {
     const { id } = await context.params;
     const body = await request.json();
-    
+
     const structure = await StructureService.updateById(id, body);
 
     if (!structure) {
@@ -65,7 +71,10 @@ export async function PUT(request: NextRequest, context: UpdateStructureParams) 
 }
 
 // DELETE /api/structure/[id] - Delete structure item
-export async function DELETE(request: NextRequest, context: UpdateStructureParams) {
+export async function DELETE(
+  request: NextRequest,
+  context: UpdateStructureParams
+) {
   try {
     const { id } = await context.params;
     const success = await StructureService.delete(id);

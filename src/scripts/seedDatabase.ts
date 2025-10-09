@@ -91,7 +91,10 @@ async function seedDatabase() {
         await MeditationsService.update(dbData.meditations);
         console.log("✅ Meditations data updated");
       } catch (error) {
-        console.log("⚠️  Failed to update meditations, initializing default:", error);
+        console.log(
+          "⚠️  Failed to update meditations, initializing default:",
+          error
+        );
         await MeditationsService.initializeDefault();
       }
     } else {

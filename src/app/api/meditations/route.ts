@@ -25,7 +25,7 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     const meditations = await MeditationsService.update(body);
 
     if (!meditations) {

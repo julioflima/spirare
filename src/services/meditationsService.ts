@@ -1,14 +1,14 @@
-import { ObjectId, Document } from 'mongodb';
-import { getDatabase } from '@/lib/mongodb';
+import { ObjectId, Document } from "mongodb";
+import { getDatabase } from "@/lib/mongodb";
 import {
   Meditations,
   UpdateMeditations,
   meditationsSchema,
   updateMeditationsSchema,
-  ContentItem
-} from '@/types/database';
+  ContentItem,
+} from "@/types/database";
 
-const COLLECTION_NAME = 'meditations';
+const COLLECTION_NAME = "meditations";
 
 interface MeditationsDocument extends Document {
   _id?: ObjectId;
@@ -45,11 +45,11 @@ export class MeditationsService {
   static async get(): Promise<Meditations | null> {
     const db = await getDatabase();
     const collection = db.collection<MeditationsDocument>(COLLECTION_NAME);
-    
+
     const meditations = await collection.findOne({});
-    
+
     if (!meditations) return null;
-    
+
     return {
       ...meditations,
       _id: meditations._id?.toString(),
@@ -59,7 +59,7 @@ export class MeditationsService {
   static async initializeDefault(): Promise<Meditations> {
     const db = await getDatabase();
     const collection = db.collection<MeditationsDocument>(COLLECTION_NAME);
-    
+
     // Check if meditations already exist
     const existing = await collection.findOne({});
     if (existing) {
@@ -101,7 +101,7 @@ export class MeditationsService {
     };
 
     const result = await collection.insertOne(defaultMeditations);
-    
+
     return {
       ...defaultMeditations,
       _id: result.insertedId.toString(),
@@ -110,23 +110,23 @@ export class MeditationsService {
 
   static async update(data: UpdateMeditations): Promise<Meditations | null> {
     const validatedData = updateMeditationsSchema.parse(data);
-    
+
     const db = await getDatabase();
     const collection = db.collection<MeditationsDocument>(COLLECTION_NAME);
-    
-    const updateData: Record<string, unknown> = { 
+
+    const updateData: Record<string, unknown> = {
       ...validatedData,
-      updatedAt: new Date() 
+      updatedAt: new Date(),
     };
 
     const result = await collection.findOneAndUpdate(
       {},
       { $set: updateData },
-      { returnDocument: 'after', upsert: true }
+      { returnDocument: "after", upsert: true }
     );
-    
+
     if (!result) return null;
-    
+
     return {
       ...result,
       _id: result._id?.toString(),
@@ -134,26 +134,26 @@ export class MeditationsService {
   }
 
   static async updatePhaseContent(
-    phase: 'opening' | 'concentration' | 'exploration' | 'awakening',
+    phase: "opening" | "concentration" | "exploration" | "awakening",
     contentType: string,
     content: ContentItem[]
   ): Promise<Meditations | null> {
     const db = await getDatabase();
     const collection = db.collection<MeditationsDocument>(COLLECTION_NAME);
-    
+
     const result = await collection.findOneAndUpdate(
       {},
-      { 
-        $set: { 
+      {
+        $set: {
           [`${phase}.${contentType}`]: content,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       },
-      { returnDocument: 'after' }
+      { returnDocument: "after" }
     );
-    
+
     if (!result) return null;
-    
+
     return {
       ...result,
       _id: result._id?.toString(),

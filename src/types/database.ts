@@ -74,45 +74,79 @@ export const themeSchema = z.object({
   category: z.string().min(1, "Categoria é obrigatória"),
   title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
-  structure: z.object({
-    opening: z.object({
-      psychoeducation: z.array(contentItemSchema).default([]),
-    }).optional(),
-    concentration: z.object({
-      guided_breathing_rhythm: z.array(contentItemSchema).default([]),
-      progressive_body_relaxation: z.array(contentItemSchema).default([]),
-      non_judgmental_observation: z.array(contentItemSchema).default([]),
-      functional_silence: z.array(contentItemSchema).default([]),
-    }).optional(),
-    exploration: z.object({
-      main_focus: z.array(contentItemSchema).default([]),
-      narrative_guidance_or_visualization: z.array(contentItemSchema).default([]),
-      subtle_reflection_or_insight: z.array(contentItemSchema).default([]),
-      emotional_integration: z.array(contentItemSchema).default([]),
-    }).optional(),
-    awakening: z.object({
-      body_reorientation: z.array(contentItemSchema).default([]),
-      final_breathing: z.array(contentItemSchema).default([]),
-      intention_for_the_rest_of_the_day: z.array(contentItemSchema).default([]),
-      closing: z.array(contentItemSchema).default([]),
-    }).optional(),
-  }).optional(),
+  structure: z
+    .object({
+      opening: z
+        .object({
+          psychoeducation: z.array(contentItemSchema).default([]),
+        })
+        .optional(),
+      concentration: z
+        .object({
+          guided_breathing_rhythm: z.array(contentItemSchema).default([]),
+          progressive_body_relaxation: z.array(contentItemSchema).default([]),
+          non_judgmental_observation: z.array(contentItemSchema).default([]),
+          functional_silence: z.array(contentItemSchema).default([]),
+        })
+        .optional(),
+      exploration: z
+        .object({
+          main_focus: z.array(contentItemSchema).default([]),
+          narrative_guidance_or_visualization: z
+            .array(contentItemSchema)
+            .default([]),
+          subtle_reflection_or_insight: z.array(contentItemSchema).default([]),
+          emotional_integration: z.array(contentItemSchema).default([]),
+        })
+        .optional(),
+      awakening: z
+        .object({
+          body_reorientation: z.array(contentItemSchema).default([]),
+          final_breathing: z.array(contentItemSchema).default([]),
+          intention_for_the_rest_of_the_day: z
+            .array(contentItemSchema)
+            .default([]),
+          closing: z.array(contentItemSchema).default([]),
+        })
+        .optional(),
+    })
+    .optional(),
   isActive: z.boolean().default(true),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
 
 // Create schemas for API operations
-export const createAudioSchema = audioSchema.omit({ _id: true, createdAt: true, updatedAt: true });
-export const updateAudioSchema = audioSchema.omit({ _id: true, createdAt: true }).partial();
+export const createAudioSchema = audioSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const updateAudioSchema = audioSchema
+  .omit({ _id: true, createdAt: true })
+  .partial();
 
-export const createThemeSchema = themeSchema.omit({ _id: true, createdAt: true, updatedAt: true });
-export const updateThemeSchema = themeSchema.omit({ _id: true, createdAt: true }).partial();
+export const createThemeSchema = themeSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const updateThemeSchema = themeSchema
+  .omit({ _id: true, createdAt: true })
+  .partial();
 
-export const createStructureItemSchema = structureItemSchema.omit({ _id: true, createdAt: true, updatedAt: true });
-export const updateStructureItemSchema = structureItemSchema.omit({ _id: true, createdAt: true }).partial();
+export const createStructureItemSchema = structureItemSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const updateStructureItemSchema = structureItemSchema
+  .omit({ _id: true, createdAt: true })
+  .partial();
 
-export const updateMeditationsSchema = meditationsSchema.omit({ _id: true, createdAt: true }).partial();
+export const updateMeditationsSchema = meditationsSchema
+  .omit({ _id: true, createdAt: true })
+  .partial();
 
 // Collection schemas for validation
 export const audioCollectionSchema = z.array(audioSchema);
