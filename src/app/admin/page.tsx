@@ -328,6 +328,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
+            
+            // Remove _id, createdAt, updatedAt before sending
+            delete updatedMeditations._id;
+            delete updatedMeditations.createdAt;
+            delete updatedMeditations.updatedAt;
+            
             const phaseData = updatedMeditations[editingItem.phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[editingItem.section][editingItem.index].text = editText;
 
@@ -347,7 +353,8 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao atualizar' });
             }
-        } catch {
+        } catch (err) {
+            console.error('Error saving meditation:', err);
             setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
         } finally {
             setIsSaving(false);
@@ -360,6 +367,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
+            
+            // Remove _id, createdAt, updatedAt before sending
+            delete updatedMeditations._id;
+            delete updatedMeditations.createdAt;
+            delete updatedMeditations.updatedAt;
+            
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[section].splice(index, 1);
 
@@ -378,7 +391,8 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao excluir' });
             }
-        } catch {
+        } catch (err) {
+            console.error('Error deleting meditation:', err);
             setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
         } finally {
             setIsSaving(false);
@@ -392,6 +406,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
+            
+            // Remove _id, createdAt, updatedAt before sending
+            delete updatedMeditations._id;
+            delete updatedMeditations.createdAt;
+            delete updatedMeditations.updatedAt;
+            
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             const newOrder = phaseData[section].length;
             phaseData[section].push({ text, order: newOrder });
@@ -411,7 +431,8 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao adicionar' });
             }
-        } catch {
+        } catch (err) {
+            console.error('Error adding meditation:', err);
             setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
         } finally {
             setIsSaving(false);
