@@ -300,13 +300,55 @@ export default function AdminPage() {
     );
 }
 
+// Modal Component
+function Modal({ 
+    isOpen, 
+    onClose, 
+    title, 
+    children 
+}: { 
+    isOpen: boolean; 
+    onClose: () => void; 
+    title: string; 
+    children: React.ReactNode;
+}) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+                    <button
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                    >
+                        ×
+                    </button>
+                </div>
+                <div className="p-4">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // Meditations Tab Component
-function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
+function MeditationsTab({ meditations: initialMeditations }: { meditations: Meditations | null }) {
+    const [meditations, setMeditations] = useState<Meditations | null>(initialMeditations);
     const [expandedPhase, setExpandedPhase] = useState<string | null>(null);
     const [editingItem, setEditingItem] = useState<{ phase: string; section: string; index: number } | null>(null);
     const [editText, setEditText] = useState('');
+    const [showAddModal, setShowAddModal] = useState<{ phase: string; section: string } | null>(null);
+    const [newMeditationText, setNewMeditationText] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    // Update local state when prop changes
+    useEffect(() => {
+        setMeditations(initialMeditations);
+    }, [initialMeditations]);
 
     if (!meditations) {
         return (
@@ -344,11 +386,11 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
             });
 
             if (response.ok) {
+                const result = await response.json();
+                setMeditations(result.meditations);
                 setMessage({ type: 'success', text: 'Meditação atualizada com sucesso!' });
                 setEditingItem(null);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao atualizar' });
@@ -383,10 +425,10 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
             });
 
             if (response.ok) {
+                const result = await response.json();
+                setMeditations(result.meditations);
                 setMessage({ type: 'success', text: 'Item excluído com sucesso!' });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao excluir' });
@@ -399,10 +441,10 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         }
     };
 
-    const handleAdd = async (phase: string, section: string) => {
-        const text = prompt('Digite o texto da nova meditação:');
-        if (!text) return;
+    const handleAdd = async () => {
+        if (!showAddModal || !newMeditationText.trim()) return;
 
+        const { phase, section } = showAddModal;
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
@@ -414,7 +456,7 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
 
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             const newOrder = phaseData[section].length;
-            phaseData[section].push({ text, order: newOrder });
+            phaseData[section].push({ text: newMeditationText, order: newOrder });
 
             const response = await fetch('/api/database/meditations', {
                 method: 'PUT',
@@ -423,10 +465,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
             });
 
             if (response.ok) {
+                const result = await response.json();
+                setMeditations(result.meditations);
                 setMessage({ type: 'success', text: 'Meditação adicionada com sucesso!' });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setShowAddModal(null);
+                setNewMeditationText('');
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao adicionar' });
@@ -451,6 +495,49 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
                     {message.text}
                 </div>
             )}
+
+            <Modal
+                isOpen={showAddModal !== null}
+                onClose={() => {
+                    setShowAddModal(null);
+                    setNewMeditationText('');
+                }}
+                title="Adicionar Nova Meditação"
+            >
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-800 mb-2">
+                            Texto da Meditação
+                        </label>
+                        <textarea
+                            value={newMeditationText}
+                            onChange={(e) => setNewMeditationText(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-md text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            rows={5}
+                            placeholder="Digite o texto da meditação..."
+                            autoFocus
+                        />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                        <button
+                            onClick={() => {
+                                setShowAddModal(null);
+                                setNewMeditationText('');
+                            }}
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleAdd}
+                            disabled={isSaving || !newMeditationText.trim()}
+                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white rounded-md transition-colors"
+                        >
+                            {isSaving ? 'Adicionando...' : 'Adicionar'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
 
             <div className="space-y-4">
                 {Object.entries(meditations).map(([phase, content]) => {
@@ -478,7 +565,7 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
                                             <div className="flex justify-between items-center mb-2">
                                                 <h4 className="font-medium text-gray-800">{section.replace(/_/g, ' ')}</h4>
                                                 <button
-                                                    onClick={() => handleAdd(phase, section)}
+                                                    onClick={() => setShowAddModal({ phase, section })}
                                                     disabled={isSaving}
                                                     className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded"
                                                 >
@@ -753,26 +840,48 @@ function StructureTab({ structure }: { structure: Structure | null }) {
 
 // Themes List Component with Accordion
 function ThemesList({
-    themes,
+    themes: initialThemes,
+    structure,
     onDelete,
     isSaving
 }: {
     themes: Theme[];
+    structure: Structure | null;
     onDelete: (id: string) => void;
     isSaving: boolean;
 }) {
+    const [themes, setThemes] = useState<Theme[]>(initialThemes);
     const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
     const [editingTheme, setEditingTheme] = useState<string | null>(null);
     const [editingPhrase, setEditingPhrase] = useState<{ themeId: string; phase: string; section: string; index: number } | null>(null);
+    const [showAddPhraseModal, setShowAddPhraseModal] = useState<{ themeId: string; phase: string; section: string } | null>(null);
+    const [newPhraseText, setNewPhraseText] = useState('');
     const [phraseText, setPhraseText] = useState('');
     const [themeData, setThemeData] = useState<{ category: string; title: string; description: string; isActive: boolean } | null>(null);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [saving, setSaving] = useState(false);
 
-    const handleAddPhrase = async (themeId: string, phase: string, section: string) => {
-        const text = prompt('Digite o texto da nova frase:');
-        if (!text) return;
+    // Sync local state with prop changes
+    useEffect(() => {
+        setThemes(initialThemes);
+    }, [initialThemes]);
 
+    const refreshThemes = async () => {
+        try {
+            const response = await fetch('/api/database/themes');
+            if (response.ok) {
+                const data = await response.json();
+                setThemes(data.themes || []);
+            }
+        } catch (error) {
+            console.error('Error refreshing themes:', error);
+        }
+    };
+
+    const handleAddPhrase = async () => {
+        if (!showAddPhraseModal || !newPhraseText.trim()) return;
+
+        const { themeId, phase, section } = showAddPhraseModal;
         setSaving(true);
         try {
             const theme = themes.find(t => t._id?.toString() === themeId);
@@ -781,7 +890,7 @@ function ThemesList({
             const updatedMeditations = JSON.parse(JSON.stringify(theme.meditations));
             const phaseData = updatedMeditations[phase as keyof Theme['meditations']] as Record<string, Array<{ text: string; order: number }>>;
             const newOrder = phaseData[section].length;
-            phaseData[section].push({ text, order: newOrder });
+            phaseData[section].push({ text: newPhraseText, order: newOrder });
 
             const response = await fetch(`/api/database/themes/${themeId}`, {
                 method: 'PUT',
@@ -791,7 +900,10 @@ function ThemesList({
 
             if (response.ok) {
                 setMessage({ type: 'success', text: 'Frase adicionada com sucesso!' });
-                setTimeout(() => window.location.reload(), 1000);
+                setShowAddPhraseModal(null);
+                setNewPhraseText('');
+                await refreshThemes();
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao adicionar frase' });
@@ -829,7 +941,8 @@ function ThemesList({
             if (response.ok) {
                 setMessage({ type: 'success', text: 'Frase atualizada com sucesso!' });
                 setEditingPhrase(null);
-                setTimeout(() => window.location.reload(), 1000);
+                await refreshThemes();
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao atualizar frase' });
@@ -861,7 +974,8 @@ function ThemesList({
 
             if (response.ok) {
                 setMessage({ type: 'success', text: 'Frase excluída com sucesso!' });
-                setTimeout(() => window.location.reload(), 1000);
+                await refreshThemes();
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao excluir frase' });
@@ -900,63 +1014,11 @@ function ThemesList({
             if (response.ok) {
                 setMessage({ type: 'success', text: 'Tema atualizado com sucesso!' });
                 setEditingTheme(null);
-                setTimeout(() => window.location.reload(), 1000);
+                await refreshThemes();
+                setTimeout(() => setMessage(null), 3000);
             } else {
                 const error = await response.json();
                 setMessage({ type: 'error', text: error.message || 'Erro ao atualizar tema' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleAddMeditationSection = async (themeId: string, phase: string) => {
-        const theme = themes.find(t => t._id?.toString() === themeId);
-        if (!theme) return;
-
-        // Get available sections from structure.method
-        const availableSections = [
-            'psychoeducation', 'intention', 'posture_and_environment', 'initial_breathing', 'attention_orientation',
-            'guided_breathing_rhythm', 'progressive_body_relaxation', 'non_judgmental_observation', 'functional_silence',
-            'main_focus', 'narrative_guidance_or_visualization', 'subtle_reflection_or_insight', 'emotional_integration',
-            'body_reorientation', 'final_breathing', 'intention_for_the_rest_of_the_day', 'closing'
-        ];
-
-        const currentPhaseData = theme.meditations[phase as keyof Theme['meditations']] as Record<string, unknown[]>;
-        const existingSections = Object.keys(currentPhaseData);
-        const newSections = availableSections.filter(s => !existingSections.includes(s));
-
-        if (newSections.length === 0) {
-            alert('Todas as seções já foram adicionadas!');
-            return;
-        }
-
-        const section = prompt(`Digite o nome da seção:\n\nDisponíveis: ${newSections.join(', ')}`);
-        if (!section || !newSections.includes(section)) {
-            alert('Seção inválida!');
-            return;
-        }
-
-        setSaving(true);
-        try {
-            const updatedMeditations = JSON.parse(JSON.stringify(theme.meditations));
-            const phaseData = updatedMeditations[phase as keyof Theme['meditations']] as Record<string, unknown[]>;
-            phaseData[section] = [];
-
-            const response = await fetch(`/api/database/themes/${themeId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ meditations: updatedMeditations }),
-            });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Seção adicionada com sucesso!' });
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao adicionar seção' });
             }
         } catch {
             setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
@@ -1011,17 +1073,6 @@ function ThemesList({
                                             className="w-full p-2 border border-gray-300 rounded-md text-gray-800"
                                             rows={2}
                                         />
-                                    </div>
-                                    <div>
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={themeData.isActive}
-                                                onChange={(e) => setThemeData({ ...themeData, isActive: e.target.checked })}
-                                                className="w-4 h-4 text-indigo-600 border-gray-400 rounded focus:ring-indigo-500"
-                                            />
-                                            <span className="text-sm font-medium text-gray-800">Tema Ativo</span>
-                                        </label>
                                     </div>
                                     <div className="flex gap-2">
                                         <button
@@ -1083,6 +1134,17 @@ function ThemesList({
                                 <h4 className="font-semibold text-gray-800 mb-3">Meditações do Tema</h4>
                                 {Object.entries(theme.meditations).map(([phase, sections]) => {
                                     const sectionEntries = Object.entries(sections as Record<string, Array<{ text: string; order: number }>>);
+                                    
+                                    // Filter sections based on structure.specifics active status
+                                    const activeSectionEntries = sectionEntries.filter(([section]) => {
+                                        if (!structure?.specifics) return true;
+                                        const phaseKey = phase as keyof typeof structure.specifics;
+                                        const phaseData = structure.specifics[phaseKey];
+                                        if (!phaseData) return true;
+                                        return phaseData[section as keyof typeof phaseData] === true;
+                                    });
+
+                                    if (activeSectionEntries.length === 0) return null;
 
                                     return (
                                         <div key={phase} className="mb-4 last:mb-0">
@@ -1090,22 +1152,15 @@ function ThemesList({
                                                 <h5 className="font-medium text-gray-800 capitalize text-sm bg-indigo-50 p-2 rounded flex-1">
                                                     {phase.replace(/_/g, ' ')}
                                                 </h5>
-                                                <button
-                                                    onClick={() => handleAddMeditationSection(themeId, phase)}
-                                                    disabled={saving}
-                                                    className="ml-2 text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
-                                                >
-                                                    + Seção
-                                                </button>
                                             </div>
-                                            {sectionEntries.map(([section, items]) => (
+                                            {activeSectionEntries.map(([section, items]) => (
                                                 <div key={section} className="ml-4 mb-3">
                                                     <div className="flex justify-between items-center mb-1">
                                                         <h6 className="text-xs font-medium text-gray-700">
                                                             {section.replace(/_/g, ' ')}
                                                         </h6>
                                                         <button
-                                                            onClick={() => handleAddPhrase(themeId, phase, section)}
+                                                            onClick={() => setShowAddPhraseModal({ themeId, phase, section })}
                                                             disabled={saving}
                                                             className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded"
                                                         >
@@ -1180,6 +1235,55 @@ function ThemesList({
                     </div>
                 );
             })}
+
+            {/* Modal for adding phrase */}
+            {showAddPhraseModal && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => {
+                        setShowAddPhraseModal(null);
+                        setNewPhraseText('');
+                    }}
+                    title="Adicionar Nova Frase"
+                >
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Texto da Frase
+                            </label>
+                            <textarea
+                                value={newPhraseText}
+                                onChange={(e) => setNewPhraseText(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                rows={5}
+                                placeholder="Digite o texto da nova frase..."
+                                disabled={saving}
+                            />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setShowAddPhraseModal(null);
+                                    setNewPhraseText('');
+                                }}
+                                className="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md"
+                                disabled={saving}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleAddPhrase}
+                                disabled={saving || !newPhraseText.trim()}
+                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            >
+                                {saving ? 'Adicionando...' : 'Adicionar'}
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }
@@ -1257,60 +1361,6 @@ function ThemesTab({
                         />
                     </div>
 
-                    {structure && structure.specifics && (
-                        <div className="mt-6 p-4 border border-indigo-200 rounded-lg bg-indigo-50">
-                            <h4 className="font-semibold text-gray-800 mb-3">Selecione as Meditações Disponíveis</h4>
-                            <p className="text-sm text-gray-600 mb-4">Escolha quais meditações estarão disponíveis neste tema:</p>
-
-                            {Object.entries(structure.specifics).map(([phase, items]) => {
-                                const phaseKey = phase as keyof Theme['meditations'];
-                                const activeItems = Object.entries(items).filter(([, isActive]) => isActive);
-
-                                if (activeItems.length === 0) return null;
-
-                                return (
-                                    <div key={phase} className="mb-4 last:mb-0">
-                                        <h5 className="font-medium text-gray-800 capitalize mb-2 text-sm">
-                                            {phase.replace(/_/g, ' ')}
-                                        </h5>
-                                        <div className="space-y-2 ml-3">
-                                            {activeItems.map(([itemKey]) => {
-                                                const meditationKey = itemKey as string;
-                                                const phaseData = newTheme.meditations[phaseKey] as Record<string, unknown[]>;
-                                                const hasContent = Array.isArray(phaseData[meditationKey]) && phaseData[meditationKey].length > 0;
-
-                                                return (
-                                                    <label key={itemKey} className="flex items-center gap-2 cursor-pointer">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={hasContent}
-                                                            onChange={(e) => {
-                                                                setNewTheme(prev => ({
-                                                                    ...prev,
-                                                                    meditations: {
-                                                                        ...prev.meditations,
-                                                                        [phaseKey]: {
-                                                                            ...prev.meditations[phaseKey],
-                                                                            [meditationKey]: e.target.checked ? [{ text: '', order: 0 }] : []
-                                                                        }
-                                                                    }
-                                                                }));
-                                                            }}
-                                                            className="w-4 h-4 text-indigo-600 border-gray-400 rounded focus:ring-indigo-500"
-                                                        />
-                                                        <span className="text-sm text-gray-700">
-                                                            {itemKey.replace(/_/g, ' ')}
-                                                        </span>
-                                                    </label>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
                     <button
                         type="submit"
                         disabled={isSaving}
@@ -1321,7 +1371,7 @@ function ThemesTab({
                 </form>
             )}
 
-            <ThemesList themes={themes} onDelete={onDelete} isSaving={isSaving} />
+            <ThemesList themes={themes} structure={structure} onDelete={onDelete} isSaving={isSaving} />
             {themes.length === 0 && (
                 <p className="text-gray-600 text-center py-8">Nenhum tema encontrado</p>
             )}
