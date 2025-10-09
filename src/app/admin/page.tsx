@@ -611,57 +611,6 @@ function StructureTab({ structure }: { structure: Structure | null }) {
                 </div>
             )}
 
-            <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-3 text-gray-800">Fluxo do Método (por seção)</h3>
-                {methodSteps.length === 0 ? (
-                    <p className="text-gray-600 text-sm">Nenhum passo configurado</p>
-                ) : (
-                    <div className="space-y-4">
-                        {/* Collect all phases/sections from all steps */}
-                        {(() => {
-                            const allPhases = new Set<string>();
-                            methodSteps.forEach(step => {
-                                Object.keys(step).forEach(phase => allPhases.add(phase));
-                            });
-
-                            return Array.from(allPhases).map(phase => {
-                                // Collect all items for this phase across all steps
-                                const allItemsForPhase: Array<{ step: number; item: string; index: number }> = [];
-                                methodSteps.forEach((step, stepIndex) => {
-                                    const items = step[phase as keyof typeof step];
-                                    if (Array.isArray(items)) {
-                                        items.forEach((item, itemIndex) => {
-                                            allItemsForPhase.push({ step: stepIndex, item, index: itemIndex });
-                                        });
-                                    }
-                                });
-
-                                return (
-                                    <div key={phase} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
-                                        <h4 className="font-semibold mb-3 text-gray-800 capitalize">
-                                            {phase.replace(/_/g, ' ')}
-                                        </h4>
-                                        {allItemsForPhase.length > 0 ? (
-                                            <ol className="list-decimal list-inside space-y-1.5">
-                                                {allItemsForPhase.map((entry, idx) => (
-                                                    <li key={idx} className="text-sm text-gray-700">
-                                                        <span className="font-mono text-xs text-indigo-600">[Etapa {entry.step + 1}]</span>{' '}
-                                                        <span className="font-mono text-xs text-gray-500">[{entry.index}]</span>{' '}
-                                                        {entry.item}
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        ) : (
-                                            <p className="text-sm text-gray-500">Nenhum item</p>
-                                        )}
-                                    </div>
-                                );
-                            });
-                        })()}
-                    </div>
-                )}
-            </div>
-
             <div>
                 <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-semibold text-gray-800">Especificidades Ativas</h3>
@@ -724,6 +673,59 @@ function StructureTab({ structure }: { structure: Structure | null }) {
                     })}
                 </div>
             </div>
+
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-3 text-gray-800">Fluxo do Método (por seção)</h3>
+                {methodSteps.length === 0 ? (
+                    <p className="text-gray-600 text-sm">Nenhum passo configurado</p>
+                ) : (
+                    <div className="space-y-4">
+                        {/* Collect all phases/sections from all steps */}
+                        {(() => {
+                            const allPhases = new Set<string>();
+                            methodSteps.forEach(step => {
+                                Object.keys(step).forEach(phase => allPhases.add(phase));
+                            });
+
+                            return Array.from(allPhases).map(phase => {
+                                // Collect all items for this phase across all steps
+                                const allItemsForPhase: Array<{ step: number; item: string; index: number }> = [];
+                                methodSteps.forEach((step, stepIndex) => {
+                                    const items = step[phase as keyof typeof step];
+                                    if (Array.isArray(items)) {
+                                        items.forEach((item, itemIndex) => {
+                                            allItemsForPhase.push({ step: stepIndex, item, index: itemIndex });
+                                        });
+                                    }
+                                });
+
+                                return (
+                                    <div key={phase} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                        <h4 className="font-semibold mb-3 text-gray-800 capitalize">
+                                            {phase.replace(/_/g, ' ')}
+                                        </h4>
+                                        {allItemsForPhase.length > 0 ? (
+                                            <ol className="list-decimal list-inside space-y-1.5">
+                                                {allItemsForPhase.map((entry, idx) => (
+                                                    <li key={idx} className="text-sm text-gray-700">
+                                                        <span className="font-mono text-xs text-indigo-600">[Etapa {entry.step + 1}]</span>{' '}
+                                                        <span className="font-mono text-xs text-gray-500">[{entry.index}]</span>{' '}
+                                                        {entry.item}
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        ) : (
+                                            <p className="text-sm text-gray-500">Nenhum item</p>
+                                        )}
+                                    </div>
+                                );
+                            });
+                        })()}
+                    </div>
+                )}
+            </div>
+
+
         </div>
     );
 }
