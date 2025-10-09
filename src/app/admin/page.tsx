@@ -328,12 +328,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
-            
+
             // Remove _id, createdAt, updatedAt before sending
             delete updatedMeditations._id;
             delete updatedMeditations.createdAt;
             delete updatedMeditations.updatedAt;
-            
+
             const phaseData = updatedMeditations[editingItem.phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[editingItem.section][editingItem.index].text = editText;
 
@@ -367,12 +367,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
-            
+
             // Remove _id, createdAt, updatedAt before sending
             delete updatedMeditations._id;
             delete updatedMeditations.createdAt;
             delete updatedMeditations.updatedAt;
-            
+
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[section].splice(index, 1);
 
@@ -406,12 +406,12 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
         setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
-            
+
             // Remove _id, createdAt, updatedAt before sending
             delete updatedMeditations._id;
             delete updatedMeditations.createdAt;
             delete updatedMeditations.updatedAt;
-            
+
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             const newOrder = phaseData[section].length;
             phaseData[section].push({ text, order: newOrder });
