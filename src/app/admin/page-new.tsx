@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MeditationDatabase } from '@/types/database';
+import { MeditationDatabase, Audio, Theme } from '@/types/database';
 
 export default function AdminPage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +117,7 @@ export default function AdminPage() {
                         ].map((tab) => (
                             <button
                                 key={tab.key}
-                                onClick={() => setActiveTab(tab.key as 'general' | 'structure' | 'themes' | 'audios')}
+                                onClick={() => setActiveTab(tab.key as any)}
                                 className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                                     activeTab === tab.key
                                         ? 'border-emerald-500 text-emerald-600'
@@ -134,16 +134,16 @@ export default function AdminPage() {
                 {database && (
                     <div className="bg-white rounded-lg shadow-sm border border-stone-200">
                         {activeTab === 'general' && (
-                            <GeneralContentTab database={database} />
+                            <GeneralContentTab database={database} onUpdate={setDatabase} />
                         )}
                         {activeTab === 'structure' && (
-                            <StructureTab database={database} />
+                            <StructureTab database={database} onUpdate={setDatabase} />
                         )}
                         {activeTab === 'themes' && (
-                            <ThemesTab database={database} />
+                            <ThemesTab database={database} onUpdate={setDatabase} />
                         )}
                         {activeTab === 'audios' && (
-                            <AudiosTab database={database} />
+                            <AudiosTab database={database} onUpdate={setDatabase} />
                         )}
                     </div>
                 )}
@@ -153,7 +153,10 @@ export default function AdminPage() {
 }
 
 // General Content Tab Component
-function GeneralContentTab({ database }: { database: MeditationDatabase }) {
+function GeneralContentTab({ database, onUpdate }: { 
+    database: MeditationDatabase; 
+    onUpdate: (db: MeditationDatabase) => void;
+}) {
     return (
         <div className="p-6">
             <h2 className="text-xl font-medium text-stone-900 mb-4">Conteúdo Geral</h2>
@@ -183,7 +186,10 @@ function GeneralContentTab({ database }: { database: MeditationDatabase }) {
 }
 
 // Structure Tab Component
-function StructureTab({ database }: { database: MeditationDatabase }) {
+function StructureTab({ database, onUpdate }: { 
+    database: MeditationDatabase; 
+    onUpdate: (db: MeditationDatabase) => void;
+}) {
     return (
         <div className="p-6">
             <h2 className="text-xl font-medium text-stone-900 mb-4">Estrutura das Fases</h2>
@@ -209,7 +215,10 @@ function StructureTab({ database }: { database: MeditationDatabase }) {
 }
 
 // Themes Tab Component
-function ThemesTab({ database }: { database: MeditationDatabase }) {
+function ThemesTab({ database, onUpdate }: { 
+    database: MeditationDatabase; 
+    onUpdate: (db: MeditationDatabase) => void;
+}) {
     return (
         <div className="p-6">
             <h2 className="text-xl font-medium text-stone-900 mb-4">Temas de Meditação</h2>
@@ -242,7 +251,10 @@ function ThemesTab({ database }: { database: MeditationDatabase }) {
 }
 
 // Audios Tab Component
-function AudiosTab({ database }: { database: MeditationDatabase }) {
+function AudiosTab({ database, onUpdate }: { 
+    database: MeditationDatabase; 
+    onUpdate: (db: MeditationDatabase) => void;
+}) {
     return (
         <div className="p-6">
             <h2 className="text-xl font-medium text-stone-900 mb-4">Áudios de Fundo</h2>

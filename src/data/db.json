@@ -26,36 +26,47 @@
       "closing": []
     }
   },
-  "structure": {
-    "opening": [
-      "psychoeducation",
-      "intention",
-      "posture_and_environment",
-      "initial_breathing",
-      "attention_orientation"
-    ],
-    "concentration": [
-      "guided_breathing_rhythm",
-      "progressive_body_relaxation",
-      "non_judgmental_observation",
-      "functional_silence"
-    ],
-    "exploration": [
-      "main_focus",
-      "narrative_guidance_or_visualization",
-      "subtle_reflection_or_insight",
-      "emotional_integration"
-    ],
-    "awakening": [
-      "body_reorientation",
-      "final_breathing",
-      "intention_for_the_rest_of_the_day",
-      "closing"
-    ]
-  },
-  "themes": {
-    "anxiety": {
+  "structure": [
+    {
+      "opening": [
+        "psychoeducation",
+        "intention",
+        "posture_and_environment",
+        "initial_breathing",
+        "attention_orientation"
+      ]
+    },
+    {
+      "concentration": [
+        "guided_breathing_rhythm",
+        "progressive_body_relaxation",
+        "non_judgmental_observation",
+        "functional_silence"
+      ]
+    },
+    {
+      "exploration": [
+        "main_focus",
+        "narrative_guidance_or_visualization",
+        "subtle_reflection_or_insight",
+        "emotional_integration"
+      ]
+    },
+    {
+      "awakening": [
+        "body_reorientation",
+        "final_breathing",
+        "intention_for_the_rest_of_the_day",
+        "closing"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "_id": "64b8f0f5e4b0c8a1f0d6c9b1",
+      "category": "anxiety",
       "title": "Ansiedade",
+      "description": "Meditações focadas em aliviar a ansiedade e promover calma.",
       "structure": {
         "opening": {
           "psychoeducation": []
@@ -66,23 +77,16 @@
         }
       }
     }
-  },
-  "audios": {
-    "ambient-waves": {
-      "title": "Ambient Waves",
-      "artist": "Nature Sounds",
-      "src": "/audio/ambient-waves.mp3",
+  ],
+  "audios": [
+    {
+      "_id": "64b8f1a2e4b0c8a1f0d6c9b2",
+      "title": "Weightless Atmosphere",
+      "artist": "AmbiNet (Pixabay)",
+      "src": "https://cdn.pixabay.com/download/audio/2025/03/18/audio_edb18178a5.mp3?filename=weightless-atmosphere-315424.mp3",
       "fadeInMs": 3000,
       "fadeOutMs": 2000,
       "volume": 0.3
-    },
-    "peaceful-mind": {
-      "title": "Peaceful Mind",
-      "artist": "Meditation Masters",
-      "src": "/audio/peaceful-mind.mp3",
-      "fadeInMs": 2000,
-      "fadeOutMs": 2500,
-      "volume": 0.25
     }
-  }
+  ]
 }
