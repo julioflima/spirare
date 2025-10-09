@@ -14,17 +14,17 @@ export default function SuperAdminPage() {
 
   const handleSeedDatabase = async () => {
     if (!confirm('⚠️ Tem certeza que deseja popular a base de dados? Isso irá adicionar dados padrão.')) return;
-    
+
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database', { 
+      const response = await fetch('/api/database', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ action: 'seed' })
       });
-      
+
       const data = await response.json();
 
       if (response.ok) {
@@ -41,19 +41,19 @@ export default function SuperAdminPage() {
 
   const handleDropDatabase = async () => {
     if (!confirm('🚨 ATENÇÃO: Tem certeza que deseja EXCLUIR TODA a base de dados? Esta ação é IRREVERSÍVEL!')) return;
-    
+
     if (!confirm('🚨 ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente. Continuar?')) return;
-    
+
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/database', { 
+      const response = await fetch('/api/database', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ action: 'drop' })
       });
-      
+
       const data = await response.json();
 
       if (response.ok) {
@@ -96,7 +96,7 @@ export default function SuperAdminPage() {
         },
         body: JSON.stringify({ action: 'backup' })
       });
-      
+
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -140,13 +140,12 @@ export default function SuperAdminPage() {
 
         {/* Message Display */}
         {message && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            message.type === 'success' 
-              ? 'bg-green-100 text-green-700 border-green-300' 
+          <div className={`mb-6 p-4 rounded-lg border ${message.type === 'success'
+              ? 'bg-green-100 text-green-700 border-green-300'
               : message.type === 'warning'
-              ? 'bg-yellow-100 text-yellow-700 border-yellow-300'
-              : 'bg-red-100 text-red-700 border-red-300'
-          }`}>
+                ? 'bg-yellow-100 text-yellow-700 border-yellow-300'
+                : 'bg-red-100 text-red-700 border-red-300'
+            }`}>
             <pre className="whitespace-pre-wrap font-mono text-xs">{message.text}</pre>
           </div>
         )}
@@ -254,7 +253,7 @@ export default function SuperAdminPage() {
               <strong>Popular:</strong> Adiciona dados iniciais às coleções. Não remove dados existentes.
             </div>
             <div>
-              <strong className="text-red-600">Excluir Tudo:</strong> Remove completamente todas as coleções e dados. 
+              <strong className="text-red-600">Excluir Tudo:</strong> Remove completamente todas as coleções e dados.
               <span className="text-red-700 font-medium"> Esta operação NÃO pode ser desfeita!</span>
             </div>
           </div>

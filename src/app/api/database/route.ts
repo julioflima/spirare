@@ -6,7 +6,6 @@ export async function GET() {
   try {
     const status = await DatabaseService.getStatus();
     return NextResponse.json({ success: true, status });
-
   } catch (error) {
     console.error("Error fetching database status:", error);
     return NextResponse.json(
@@ -56,7 +55,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: "Invalid action. Supported actions: seed, backup, drop, status",
+            error:
+              "Invalid action. Supported actions: seed, backup, drop, status",
           },
           { status: 400 }
         );
@@ -66,7 +66,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: `Failed to execute database operation: ${error instanceof Error ? error.message : "Unknown error"}`,
+        error: `Failed to execute database operation: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
       },
       { status: 500 }
     );

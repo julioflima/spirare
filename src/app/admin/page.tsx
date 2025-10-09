@@ -421,7 +421,7 @@ function MeditationsTab({ meditations }: { meditations: Meditations | null }) {
     return (
         <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Conteúdo das Meditações</h2>
-            
+
             {message && (
                 <div className={`mb-4 p-3 rounded-lg ${message.type === 'success'
                     ? 'bg-green-100 text-green-800 border border-green-300'
@@ -729,13 +729,13 @@ function StructureTab({ structure }: { structure: Structure | null }) {
 }
 
 // Themes List Component with Accordion
-function ThemesList({ 
-    themes, 
-    onDelete, 
-    isSaving 
-}: { 
-    themes: Theme[]; 
-    onDelete: (id: string) => void; 
+function ThemesList({
+    themes,
+    onDelete,
+    isSaving
+}: {
+    themes: Theme[];
+    onDelete: (id: string) => void;
     isSaving: boolean;
 }) {
     const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
@@ -853,7 +853,7 @@ function ThemesList({
     const handleEditTheme = (themeId: string) => {
         const theme = themes.find(t => t._id?.toString() === themeId);
         if (!theme) return;
-        
+
         setEditingTheme(themeId);
         setThemeData({
             category: theme.category,
@@ -1024,9 +1024,8 @@ function ThemesList({
                                     >
                                         <div className="flex items-center gap-2 mb-2">
                                             <h3 className="text-lg font-semibold text-gray-800">{theme.title}</h3>
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                theme.isActive ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'
-                                            }`}>
+                                            <span className={`px-2 py-1 rounded text-xs font-medium ${theme.isActive ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'
+                                                }`}>
                                                 {theme.isActive ? 'Ativo' : 'Inativo'}
                                             </span>
                                             <span className="text-2xl text-gray-500">{isExpanded ? '−' : '+'}</span>
@@ -1061,7 +1060,7 @@ function ThemesList({
                                 <h4 className="font-semibold text-gray-800 mb-3">Meditações do Tema</h4>
                                 {Object.entries(theme.meditations).map(([phase, sections]) => {
                                     const sectionEntries = Object.entries(sections as Record<string, Array<{ text: string; order: number }>>);
-                                    
+
                                     return (
                                         <div key={phase} className="mb-4 last:mb-0">
                                             <div className="flex justify-between items-center mb-2">
@@ -1095,56 +1094,56 @@ function ThemesList({
                                                             <p className="text-xs text-gray-500 italic ml-2">Nenhuma frase adicionada</p>
                                                         ) : (
                                                             items.map((item, index) => (
-                                                            <div key={index} className="border border-gray-300 rounded p-2 bg-white text-sm">
-                                                                {editingPhrase?.themeId === themeId && 
-                                                                 editingPhrase?.phase === phase && 
-                                                                 editingPhrase?.section === section && 
-                                                                 editingPhrase?.index === index ? (
-                                                                    <div>
-                                                                        <textarea
-                                                                            value={phraseText}
-                                                                            onChange={(e) => setPhraseText(e.target.value)}
-                                                                            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-800"
-                                                                            rows={2}
-                                                                        />
-                                                                        <div className="flex gap-2 mt-1">
-                                                                            <button
-                                                                                onClick={handleSavePhrase}
-                                                                                disabled={saving}
-                                                                                className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
-                                                                            >
-                                                                                Salvar
-                                                                            </button>
-                                                                            <button
-                                                                                onClick={() => setEditingPhrase(null)}
-                                                                                className="text-xs bg-gray-400 hover:bg-gray-500 text-white px-2 py-1 rounded"
-                                                                            >
-                                                                                Cancelar
-                                                                            </button>
+                                                                <div key={index} className="border border-gray-300 rounded p-2 bg-white text-sm">
+                                                                    {editingPhrase?.themeId === themeId &&
+                                                                        editingPhrase?.phase === phase &&
+                                                                        editingPhrase?.section === section &&
+                                                                        editingPhrase?.index === index ? (
+                                                                        <div>
+                                                                            <textarea
+                                                                                value={phraseText}
+                                                                                onChange={(e) => setPhraseText(e.target.value)}
+                                                                                className="w-full p-2 border border-gray-300 rounded text-sm text-gray-800"
+                                                                                rows={2}
+                                                                            />
+                                                                            <div className="flex gap-2 mt-1">
+                                                                                <button
+                                                                                    onClick={handleSavePhrase}
+                                                                                    disabled={saving}
+                                                                                    className="text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
+                                                                                >
+                                                                                    Salvar
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={() => setEditingPhrase(null)}
+                                                                                    className="text-xs bg-gray-400 hover:bg-gray-500 text-white px-2 py-1 rounded"
+                                                                                >
+                                                                                    Cancelar
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex justify-between items-start gap-2">
-                                                                        <p className="text-gray-700 flex-1">{item.text}</p>
-                                                                        <div className="flex gap-1">
-                                                                            <button
-                                                                                onClick={() => handleEditPhrase(themeId, phase, section, index, item.text)}
-                                                                                disabled={saving}
-                                                                                className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-0.5 rounded"
-                                                                            >
-                                                                                Editar
-                                                                            </button>
-                                                                            <button
-                                                                                onClick={() => handleDeletePhrase(themeId, phase, section, index)}
-                                                                                disabled={saving}
-                                                                                className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded"
-                                                                            >
-                                                                                Excluir
-                                                                            </button>
+                                                                    ) : (
+                                                                        <div className="flex justify-between items-start gap-2">
+                                                                            <p className="text-gray-700 flex-1">{item.text}</p>
+                                                                            <div className="flex gap-1">
+                                                                                <button
+                                                                                    onClick={() => handleEditPhrase(themeId, phase, section, index, item.text)}
+                                                                                    disabled={saving}
+                                                                                    className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-0.5 rounded"
+                                                                                >
+                                                                                    Editar
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={() => handleDeletePhrase(themeId, phase, section, index)}
+                                                                                    disabled={saving}
+                                                                                    className="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded"
+                                                                                >
+                                                                                    Excluir
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
+                                                                    )}
+                                                                </div>
                                                             ))
                                                         )}
                                                     </div>
@@ -1239,11 +1238,11 @@ function ThemesTab({
                         <div className="mt-6 p-4 border border-indigo-200 rounded-lg bg-indigo-50">
                             <h4 className="font-semibold text-gray-800 mb-3">Selecione as Meditações Disponíveis</h4>
                             <p className="text-sm text-gray-600 mb-4">Escolha quais meditações estarão disponíveis neste tema:</p>
-                            
+
                             {Object.entries(structure.specifics).map(([phase, items]) => {
                                 const phaseKey = phase as keyof Theme['meditations'];
                                 const activeItems = Object.entries(items).filter(([, isActive]) => isActive);
-                                
+
                                 if (activeItems.length === 0) return null;
 
                                 return (
@@ -1256,7 +1255,7 @@ function ThemesTab({
                                                 const meditationKey = itemKey as string;
                                                 const phaseData = newTheme.meditations[phaseKey] as Record<string, unknown[]>;
                                                 const hasContent = Array.isArray(phaseData[meditationKey]) && phaseData[meditationKey].length > 0;
-                                                
+
                                                 return (
                                                     <label key={itemKey} className="flex items-center gap-2 cursor-pointer">
                                                         <input

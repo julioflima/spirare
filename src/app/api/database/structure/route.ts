@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { StructureService } from "@/services/structureService";
-import {
-  createStructureSchema,
-  updateStructureSchema,
-} from "@/types/database";
+import { createStructureSchema, updateStructureSchema } from "@/types/database";
 
 // GET /api/database/structure - Get structure document
 export async function GET() {

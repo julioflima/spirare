@@ -93,7 +93,7 @@ async function seedDatabase() {
 
     const audiosCount = dbData.audios?.length || 0;
     const themesCount = dbData.themes?.length || 0;
-  const structureCount = dbData.structure ? 1 : 0;
+    const structureCount = dbData.structure ? 1 : 0;
 
     return {
       success: true,
