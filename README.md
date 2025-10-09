@@ -3,6 +3,7 @@
 Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScript e TailwindCSS. A experiência apresenta## 🧩 Funcionalidades
 
 ### Interface de Meditação
+
 - **Overlay inicial**: botão circular sem textos internos, apenas ícones (Play + Wind) com efeito líquido.
 - **Header**: badge de milestone, LED ritmado pelo metrônomo e botão "Avançar Etapa".
 - **Visualizador de respiração**: barras em glassmorphism pulsando conforme o período configurado.
@@ -10,6 +11,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 - **Controles finais**: opções para encerrar ou reiniciar a jornada; na fase final o metrônomo permanece ativo.
 
 ### Sistema Administrativo
+
 - **Gestão de Áudios**: upload, edição e controle de trilhas sonoras de fundo.
 - **Gestão de Temas**: criação e personalização de temas de meditação (ansiedade, foco, etc.).
 - **Edição de Conteúdo**: interface para modificar textos de cada fase da meditação.
@@ -17,6 +19,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 - **Validação Completa**: todos os dados são validados com Zod antes de serem salvos.
 
 ### API e Dados
+
 - **CRUD Completo**: endpoints REST para todas as operações de dados.
 - **Validação de Schema**: Zod assegura integridade dos dados em todos os níveis.
 - **Type Safety**: TypeScript garante consistência entre frontend e backend.
@@ -46,6 +49,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 ## 🧱 Arquitetura
 
 ### Frontend (Interface de Meditação)
+
 | Área                                   | Descrição                                                                                                    |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `src/constants/meditation.ts`          | Conteúdo canônico da sessão (tema "Paz Interior", etapas e duração padrão de 120 s por subetapa).            |
@@ -53,25 +57,28 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 | `src/app/components/meditation/hooks/` | Hooks dedicados para fala (`useSpeech`) e metrônomo (`useMetronome`).                                        |
 
 ### Backend (API e Banco de Dados)
-| Área                                   | Descrição                                                                                                    |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `src/app/api/speech/route.ts`          | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real.                           |
-| `src/app/api/database/`                | CRUD APIs para áudios, temas e conteúdos de meditação.                                                       |
-| `src/services/`                        | Camada de serviços para interação com MongoDB (AudioService, ThemeService, MeditationDatabaseService).      |
-| `src/types/database.ts`                | Schemas Zod para validação de dados e tipos TypeScript.                                                      |
+
+| Área                          | Descrição                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `src/app/api/speech/route.ts` | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real.                     |
+| `src/app/api/database/`       | CRUD APIs para áudios, temas e conteúdos de meditação.                                                 |
+| `src/services/`               | Camada de serviços para interação com MongoDB (AudioService, ThemeService, MeditationDatabaseService). |
+| `src/types/database.ts`       | Schemas Zod para validação de dados e tipos TypeScript.                                                |
 
 ### Sistema de Gestão
-| Área                                   | Descrição                                                                                                    |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `src/app/admin/`                       | Interface administrativa para gestão de conteúdos.                                                          |
-| `src/scripts/seedDatabase.ts`          | Script para popular o banco com dados iniciais.                                                              |
-| `DATABASE.md`                          | Documentação completa do sistema de banco de dados.                                                          |
+
+| Área                          | Descrição                                           |
+| ----------------------------- | --------------------------------------------------- |
+| `src/app/admin/`              | Interface administrativa para gestão de conteúdos.  |
+| `src/scripts/seedDatabase.ts` | Script para popular o banco com dados iniciais.     |
+| `DATABASE.md`                 | Documentação completa do sistema de banco de dados. |
 
 > Todos os elementos interativos recebem `cursor: pointer`, garantindo consistência com a diretriz de interação do produto.
 
 ## 🛠️ Tecnologias
 
 ### Frontend
+
 - Next.js 15 (App Router) + React 19
 - TypeScript estrito
 - TailwindCSS 4 (modo JIT)
@@ -81,6 +88,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 - OpenAI SDK (`gpt-4o-mini-tts`) para Text-to-Speech
 
 ### Backend & Database
+
 - MongoDB (nativo driver) para armazenamento de dados
 - Zod para validação de schemas
 - Next.js API Routes para endpoints REST
@@ -137,6 +145,7 @@ curl -X POST http://localhost:3000/api/database/seed
 ### Interface Administrativa
 
 Acesse a interface de gestão em:
+
 ```
 http://localhost:3000/admin
 ```

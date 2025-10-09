@@ -1,15 +1,15 @@
-import { z } from 'zod';
-import { ObjectId } from 'mongodb';
+import { z } from "zod";
+import { ObjectId } from "mongodb";
 
 // Audio Schema (without key field, using array structure)
 export const audioSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
-  title: z.string().min(1, 'Título é obrigatório'),
-  artist: z.string().min(1, 'Artista é obrigatório'),
-  src: z.string().url('URL deve ser válida'),
-  fadeInMs: z.number().min(0, 'Fade in deve ser positivo').optional(),
-  fadeOutMs: z.number().min(0, 'Fade out deve ser positivo').optional(),
-  volume: z.number().min(0).max(1, 'Volume deve estar entre 0 e 1').optional(),
+  title: z.string().min(1, "Título é obrigatório"),
+  artist: z.string().min(1, "Artista é obrigatório"),
+  src: z.string().url("URL deve ser válida"),
+  fadeInMs: z.number().min(0, "Fade in deve ser positivo").optional(),
+  fadeOutMs: z.number().min(0, "Fade out deve ser positivo").optional(),
+  volume: z.number().min(0).max(1, "Volume deve estar entre 0 e 1").optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -17,9 +17,9 @@ export const audioSchema = z.object({
 // Content Item Schema (for meditation content arrays)
 export const contentItemSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
-  text: z.string().min(1, 'Texto é obrigatório'),
-  order: z.number().min(0, 'Ordem deve ser positiva'),
-  duration: z.number().min(1, 'Duração deve ser positiva').optional(),
+  text: z.string().min(1, "Texto é obrigatório"),
+  order: z.number().min(0, "Ordem deve ser positiva"),
+  duration: z.number().min(1, "Duração deve ser positiva").optional(),
   audioId: z.union([z.string(), z.instanceof(ObjectId)]).optional(), // Reference to audio
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
@@ -77,38 +77,46 @@ export const meditationPhaseSchema = z.object({
 
 // Structure Schema (defines the order of elements in each phase)
 export const structureSchema = z.object({
-  opening: z.array(z.enum([
-    'psychoeducation',
-    'intention',
-    'posture_and_environment',
-    'initial_breathing',
-    'attention_orientation'
-  ])),
-  concentration: z.array(z.enum([
-    'guided_breathing_rhythm',
-    'progressive_body_relaxation',
-    'non_judgmental_observation',
-    'functional_silence'
-  ])),
-  exploration: z.array(z.enum([
-    'main_focus',
-    'narrative_guidance_or_visualization',
-    'subtle_reflection_or_insight',
-    'emotional_integration'
-  ])),
-  awakening: z.array(z.enum([
-    'body_reorientation',
-    'final_breathing',
-    'intention_for_the_rest_of_the_day',
-    'closing'
-  ])),
+  opening: z.array(
+    z.enum([
+      "psychoeducation",
+      "intention",
+      "posture_and_environment",
+      "initial_breathing",
+      "attention_orientation",
+    ])
+  ),
+  concentration: z.array(
+    z.enum([
+      "guided_breathing_rhythm",
+      "progressive_body_relaxation",
+      "non_judgmental_observation",
+      "functional_silence",
+    ])
+  ),
+  exploration: z.array(
+    z.enum([
+      "main_focus",
+      "narrative_guidance_or_visualization",
+      "subtle_reflection_or_insight",
+      "emotional_integration",
+    ])
+  ),
+  awakening: z.array(
+    z.enum([
+      "body_reorientation",
+      "final_breathing",
+      "intention_for_the_rest_of_the_day",
+      "closing",
+    ])
+  ),
 });
 
 // Theme Schema (using category instead of key, array structure)
 export const themeSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
-  category: z.string().min(1, 'Categoria é obrigatória'),
-  title: z.string().min(1, 'Título é obrigatório'),
+  category: z.string().min(1, "Categoria é obrigatória"),
+  title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
   structure: meditationPhaseSchema.partial(), // Partial because themes may not override all phases
   isActive: z.boolean().default(true),
@@ -123,7 +131,7 @@ export const meditationDatabaseSchema = z.object({
   structure: structureSchema,
   themes: z.array(themeSchema),
   audios: z.array(audioSchema),
-  version: z.string().default('1.0.0'),
+  version: z.string().default("1.0.0"),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -134,17 +142,29 @@ export const themeCollectionSchema = themeSchema;
 export const contentItemCollectionSchema = contentItemSchema;
 
 // API Request/Response Schemas
-export const createAudioSchema = audioSchema.omit({ _id: true, createdAt: true, updatedAt: true });
+export const createAudioSchema = audioSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const updateAudioSchema = createAudioSchema.partial();
 
-export const createThemeSchema = themeSchema.omit({ _id: true, createdAt: true, updatedAt: true });
+export const createThemeSchema = themeSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const updateThemeSchema = createThemeSchema.partial();
 
-export const createContentItemSchema = contentItemSchema.omit({ _id: true, createdAt: true, updatedAt: true });
+export const createContentItemSchema = contentItemSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const updateContentItemSchema = createContentItemSchema.partial();
 
 export const updateGeneralContentSchema = z.object({
-  phase: z.enum(['opening', 'concentration', 'exploration', 'awakening']),
+  phase: z.enum(["opening", "concentration", "exploration", "awakening"]),
   contentType: z.string(),
   content: z.array(contentItemSchema),
 });
@@ -170,13 +190,39 @@ export type UpdateGeneralContent = z.infer<typeof updateGeneralContentSchema>;
 export type UpdateStructure = z.infer<typeof updateStructureSchema>;
 
 // Enums for phase and content types
-export const MEDITATION_PHASES = ['opening', 'concentration', 'exploration', 'awakening'] as const;
+export const MEDITATION_PHASES = [
+  "opening",
+  "concentration",
+  "exploration",
+  "awakening",
+] as const;
 export const CONTENT_TYPES = {
-  opening: ['psychoeducation', 'intention', 'posture_and_environment', 'initial_breathing', 'attention_orientation'],
-  concentration: ['guided_breathing_rhythm', 'progressive_body_relaxation', 'non_judgmental_observation', 'functional_silence'],
-  exploration: ['main_focus', 'narrative_guidance_or_visualization', 'subtle_reflection_or_insight', 'emotional_integration'],
-  awakening: ['body_reorientation', 'final_breathing', 'intention_for_the_rest_of_the_day', 'closing'],
+  opening: [
+    "psychoeducation",
+    "intention",
+    "posture_and_environment",
+    "initial_breathing",
+    "attention_orientation",
+  ],
+  concentration: [
+    "guided_breathing_rhythm",
+    "progressive_body_relaxation",
+    "non_judgmental_observation",
+    "functional_silence",
+  ],
+  exploration: [
+    "main_focus",
+    "narrative_guidance_or_visualization",
+    "subtle_reflection_or_insight",
+    "emotional_integration",
+  ],
+  awakening: [
+    "body_reorientation",
+    "final_breathing",
+    "intention_for_the_rest_of_the_day",
+    "closing",
+  ],
 } as const;
 
-export type MeditationPhaseType = typeof MEDITATION_PHASES[number];
-export type ContentType = typeof CONTENT_TYPES[MeditationPhaseType][number];
+export type MeditationPhaseType = (typeof MEDITATION_PHASES)[number];
+export type ContentType = (typeof CONTENT_TYPES)[MeditationPhaseType][number];

@@ -41,7 +41,7 @@ export default function AdminPage() {
         try {
             const response = await fetch('/api/database/seed', { method: 'POST' });
             const data = await response.json();
-            
+
             if (response.ok) {
                 showMessage('success', 'Base de dados populada com sucesso!');
                 // Reload database
@@ -83,11 +83,10 @@ export default function AdminPage() {
 
                 {/* Message */}
                 {message && (
-                    <div className={`mb-6 p-4 rounded-lg ${
-                        message.type === 'success' 
-                            ? 'bg-green-50 text-green-700 border border-green-200' 
+                    <div className={`mb-6 p-4 rounded-lg ${message.type === 'success'
+                            ? 'bg-green-50 text-green-700 border border-green-200'
                             : 'bg-red-50 text-red-700 border border-red-200'
-                    }`}>
+                        }`}>
                         {message.text}
                     </div>
                 )}
@@ -118,11 +117,10 @@ export default function AdminPage() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key as any)}
-                                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                                    activeTab === tab.key
+                                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.key
                                         ? 'border-emerald-500 text-emerald-600'
                                         : 'border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300'
-                                }`}
+                                    }`}
                             >
                                 {tab.label}
                             </button>
@@ -153,8 +151,8 @@ export default function AdminPage() {
 }
 
 // General Content Tab Component
-function GeneralContentTab({ database, onUpdate }: { 
-    database: MeditationDatabase; 
+function GeneralContentTab({ database, onUpdate }: {
+    database: MeditationDatabase;
     onUpdate: (db: MeditationDatabase) => void;
 }) {
     return (
@@ -186,8 +184,8 @@ function GeneralContentTab({ database, onUpdate }: {
 }
 
 // Structure Tab Component
-function StructureTab({ database, onUpdate }: { 
-    database: MeditationDatabase; 
+function StructureTab({ database, onUpdate }: {
+    database: MeditationDatabase;
     onUpdate: (db: MeditationDatabase) => void;
 }) {
     return (
@@ -215,8 +213,8 @@ function StructureTab({ database, onUpdate }: {
 }
 
 // Themes Tab Component
-function ThemesTab({ database, onUpdate }: { 
-    database: MeditationDatabase; 
+function ThemesTab({ database, onUpdate }: {
+    database: MeditationDatabase;
     onUpdate: (db: MeditationDatabase) => void;
 }) {
     return (
@@ -251,8 +249,8 @@ function ThemesTab({ database, onUpdate }: {
 }
 
 // Audios Tab Component
-function AudiosTab({ database, onUpdate }: { 
-    database: MeditationDatabase; 
+function AudiosTab({ database, onUpdate }: {
+    database: MeditationDatabase;
     onUpdate: (db: MeditationDatabase) => void;
 }) {
     return (
