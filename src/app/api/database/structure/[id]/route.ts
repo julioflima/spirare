@@ -5,14 +5,14 @@ interface UpdateStructureParams {
   params: Promise<{ id: string }>;
 }
 
-// GET /api/structure/[id] - Get structure item by ID
+// GET /api/structure/[id] - Get structure (id parameter is ignored, returns singleton)
 export async function GET(
   request: NextRequest,
   context: UpdateStructureParams
 ) {
   try {
-    const { id } = await context.params;
-    const structure = await StructureService.getById(id);
+    await context.params; // Consume params to satisfy type
+    const structure = await StructureService.get();
 
     if (!structure) {
       return NextResponse.json(
@@ -31,16 +31,16 @@ export async function GET(
   }
 }
 
-// PUT /api/structure/[id] - Update structure item
+// PUT /api/structure/[id] - Update structure (id parameter is ignored, updates singleton)
 export async function PUT(
   request: NextRequest,
   context: UpdateStructureParams
 ) {
   try {
-    const { id } = await context.params;
+    await context.params; // Consume params to satisfy type
     const body = await request.json();
 
-    const structure = await StructureService.updateById(id, body);
+    const structure = await StructureService.update(body);
 
     if (!structure) {
       return NextResponse.json(
@@ -70,21 +70,14 @@ export async function PUT(
   }
 }
 
-// DELETE /api/structure/[id] - Delete structure item
+// DELETE /api/structure/[id] - Delete all structures (id parameter is ignored)
 export async function DELETE(
   request: NextRequest,
   context: UpdateStructureParams
 ) {
   try {
-    const { id } = await context.params;
-    const success = await StructureService.delete(id);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: "Structure not found" },
-        { status: 404 }
-      );
-    }
+    await context.params; // Consume params to satisfy type
+    await StructureService.deleteAll();
 
     return NextResponse.json({
       message: "Structure deleted successfully",

@@ -5,10 +5,11 @@ import { updateAudioSchema } from "@/types/database";
 // GET /api/database/audios/[id] - Get audio by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const audio = await AudioService.getById(params.id);
+    const { id } = await params;
+    const audio = await AudioService.getById(id);
 
     if (!audio) {
       return NextResponse.json({ error: "Audio not found" }, { status: 404 });
@@ -27,13 +28,14 @@ export async function GET(
 // PUT /api/database/audios/[id] - Update audio by ID
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateAudioSchema.parse(body);
 
-    const audio = await AudioService.update(params.id, validatedData);
+    const audio = await AudioService.update(id, validatedData);
 
     if (!audio) {
       return NextResponse.json({ error: "Audio not found" }, { status: 404 });
@@ -63,10 +65,11 @@ export async function PUT(
 // DELETE /api/database/audios/[id] - Delete audio by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const success = await AudioService.delete(params.id);
+    const { id } = await params;
+    const success = await AudioService.delete(id);
 
     if (!success) {
       return NextResponse.json({ error: "Audio not found" }, { status: 404 });
