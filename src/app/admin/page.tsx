@@ -301,15 +301,15 @@ export default function AdminPage() {
 }
 
 // Modal Component
-function Modal({ 
-    isOpen, 
-    onClose, 
-    title, 
-    children 
-}: { 
-    isOpen: boolean; 
-    onClose: () => void; 
-    title: string; 
+function Modal({
+    isOpen,
+    onClose,
+    title,
+    children
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
     children: React.ReactNode;
 }) {
     if (!isOpen) return null;
@@ -1134,7 +1134,7 @@ function ThemesList({
                                 <h4 className="font-semibold text-gray-800 mb-3">Meditações do Tema</h4>
                                 {Object.entries(theme.meditations).map(([phase, sections]) => {
                                     const sectionEntries = Object.entries(sections as Record<string, Array<{ text: string; order: number }>>);
-                                    
+
                                     // Filter sections based on structure.specifics active status
                                     const activeSectionEntries = sectionEntries.filter(([section]) => {
                                         if (!structure?.specifics) return true;
@@ -1248,13 +1248,13 @@ function ThemesList({
                 >
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-800 mb-2">
                                 Texto da Frase
                             </label>
                             <textarea
                                 value={newPhraseText}
                                 onChange={(e) => setNewPhraseText(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800 placeholder-gray-500"
                                 rows={5}
                                 placeholder="Digite o texto da nova frase..."
                                 disabled={saving}
