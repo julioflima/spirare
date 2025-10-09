@@ -29,6 +29,7 @@ export const MeditationGenerator = () => {
         resume: resumeSpeech,
         stop: stopSpeech,
         isGenerating: isAudioLoading,
+        onAudioLoaded,
     } = useSpeech();
     const {
         periodMs: metronomePeriod,
@@ -166,8 +167,10 @@ export const MeditationGenerator = () => {
         setIsFinalStage(false);
         goToSubStep(0, 0, true);
         startMetronome();
-        startTimer();
-    }, [goToSubStep, resetSessionState, startMetronome, startTimer]);
+        onAudioLoaded(() => {
+            startTimer();
+        });
+    }, [goToSubStep, onAudioLoaded, resetSessionState, startMetronome, startTimer]);
 
     const handleTogglePlay = useCallback(() => {
         if (isFinalStage) return;

@@ -18,6 +18,7 @@ interface SpeechControls {
   resume: () => void;
   isGenerating: boolean;
   error: Error | null;
+  onAudioLoaded: (callback: () => void) => void;
 }
 
 export function useSpeech(): SpeechControls {
@@ -29,6 +30,7 @@ export function useSpeech(): SpeechControls {
   const sequenceRef = useRef<Promise<void>>(Promise.resolve());
   const cancelTokenRef = useRef(0);
   const rejectPlaybackRef = useRef<((reason: Error) => void) | null>(null);
+  const audioLoadedCallbackRef = useRef<(() => void) | null>(null);
 
   const cleanupAudio = useCallback(() => {
     if (audioElementRef.current) {
@@ -112,6 +114,14 @@ export function useSpeech(): SpeechControls {
         audio.volume = 1;
 
         await new Promise<void>((resolve, reject) => {
+          const handleLoaded = () => {
+            audio?.removeEventListener("loadeddata", handleLoaded);
+            if (audioLoadedCallbackRef.current) {
+              audioLoadedCallbackRef.current();
+              audioLoadedCallbackRef.current = null;
+            }
+          };
+
           const handleEnded = () => {
             audio?.removeEventListener("ended", handleEnded);
             audio?.removeEventListener("error", handleError);
@@ -121,6 +131,7 @@ export function useSpeech(): SpeechControls {
           };
 
           const handleError = () => {
+            audio?.removeEventListener("loadeddata", handleLoaded);
             audio?.removeEventListener("ended", handleEnded);
             audio?.removeEventListener("error", handleError);
             rejectPlaybackRef.current = null;
@@ -132,12 +143,14 @@ export function useSpeech(): SpeechControls {
           };
 
           rejectPlaybackRef.current = (reason) => {
+            audio?.removeEventListener("loadeddata", handleLoaded);
             audio?.removeEventListener("ended", handleEnded);
             audio?.removeEventListener("error", handleError);
             cleanupAudio();
             reject(reason);
           };
 
+          audio?.addEventListener("loadeddata", handleLoaded);
           audio?.addEventListener("ended", handleEnded);
           audio?.addEventListener("error", handleError);
 
@@ -147,6 +160,7 @@ export function useSpeech(): SpeechControls {
               setIsGenerating(false);
             })
             .catch((playbackStartError) => {
+              audio?.removeEventListener("loadeddata", handleLoaded);
               audio?.removeEventListener("ended", handleEnded);
               audio?.removeEventListener("error", handleError);
               rejectPlaybackRef.current = null;
@@ -233,6 +247,10 @@ export function useSpeech(): SpeechControls {
     audioElementRef.current?.play().catch(() => undefined);
   }, []);
 
+  const onAudioLoaded = useCallback((callback: () => void) => {
+    audioLoadedCallbackRef.current = callback;
+  }, []);
+
   return {
     speak: (text, options) =>
       queueSpeechInternal(text, { replace: options?.replace ?? true }),
@@ -242,5 +260,6 @@ export function useSpeech(): SpeechControls {
     resume,
     isGenerating,
     error,
+    onAudioLoaded,
   };
 }
