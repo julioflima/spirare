@@ -60,17 +60,6 @@ export async function GET(
       let pipeline: any[];
 
       if (collectionName === "themes") {
-        console.log(
-          await db
-            .collection(collectionName)
-            .findOne({ category })
-            .aggregate([
-              { $project: { phrases: `$meditations.${stage}.${practice}` } },
-              { $unwind: "$phrases" },
-              { $sample: { size: 1 } },
-            ])
-            .toArray()
-        );
         // For themes, filter by category and navigate to nested meditations
         pipeline = [
           { $match: { category } },
