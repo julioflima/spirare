@@ -38,7 +38,9 @@ src/app/
 export function ThemeCard() {
   const [theme, setTheme] = useState(null);
   useEffect(() => {
-    fetch("/api/themes").then(r => r.json()).then(setTheme);
+    fetch("/api/themes")
+      .then((r) => r.json())
+      .then(setTheme);
   }, []);
   return <div>{theme?.title}</div>;
 }
@@ -71,7 +73,7 @@ export function ThemesList() {
   const { data: themes } = useThemesQuery();
   return (
     <div>
-      {themes?.map(theme => (
+      {themes?.map((theme) => (
         <ThemeCard key={theme._id} theme={theme} />
       ))}
     </div>
@@ -85,11 +87,13 @@ export function ThemesList() {
 export default function AdminPage() {
   const { data: themes } = useThemesQuery();
   const createMutation = useCreateThemeMutation();
-  
+
   const handleCreate = () => {
-    createMutation.mutate({ /* data */ });
+    createMutation.mutate({
+      /* data */
+    });
   };
-  
+
   return <div>{/* JSX */}</div>;
 }
 ```
@@ -101,6 +105,7 @@ export default function AdminPage() {
 **Purpose:** Reusable UI components without side effects
 
 **Characteristics:**
+
 - No API calls
 - No direct database access
 - No React Query hooks
@@ -109,6 +114,7 @@ export default function AdminPage() {
 - Can use React hooks (useMemo, useCallback)
 
 **Examples:**
+
 - `Button.tsx` - Generic button component
 - `Card.tsx` - Card layout component
 - `Modal.tsx` - Modal dialog component
@@ -119,6 +125,7 @@ export default function AdminPage() {
 **Purpose:** Components tied to specific routes/features
 
 **Characteristics:**
+
 - CAN make API calls via React Query
 - CAN use providers and mutations
 - CAN have complex business logic
@@ -126,6 +133,7 @@ export default function AdminPage() {
 - Prefix folder with `_` to indicate private
 
 **Examples:**
+
 - `src/app/admin/_components/ThemeForm.tsx` - Theme editing form
 - `src/app/admin/_components/AudioUploader.tsx` - Audio upload widget
 - `src/app/[category]/_components/StageSelector.tsx` - Stage navigation
@@ -135,6 +143,7 @@ export default function AdminPage() {
 **Purpose:** Route entry points
 
 **Characteristics:**
+
 - CAN have inline logic
 - CAN use React Query hooks directly
 - CAN have useState, useEffect, etc.
@@ -142,6 +151,7 @@ export default function AdminPage() {
 - Complex logic → extract to `_components/`
 
 **When to extract:**
+
 - Component exceeds ~200 lines
 - Logic is reused in multiple places within the route
 - Component has complex state management
@@ -149,15 +159,18 @@ export default function AdminPage() {
 ## Naming Conventions
 
 ### File Names
+
 - PascalCase for components: `ThemeCard.tsx`
 - camelCase for hooks: `useThemeForm.ts`
 - camelCase for utils: `formatDate.ts`
 
 ### Component Names
+
 - Match file name: `ThemeCard.tsx` exports `ThemeCard`
 - Descriptive and specific: `AudioUploadButton` not `Button2`
 
 ### Folder Names
+
 - kebab-case for routes: `[category]`, `[stage]`
 - Prefix with `_` for private: `_components`, `_utils`
 
@@ -194,7 +207,12 @@ interface ThemeCardProps {
   className?: string;
 }
 
-export function ThemeCard({ theme, onEdit, onDelete, className }: ThemeCardProps) {
+export function ThemeCard({
+  theme,
+  onEdit,
+  onDelete,
+  className,
+}: ThemeCardProps) {
   return <div className={className}>{theme.title}</div>;
 }
 ```
@@ -202,7 +220,13 @@ export function ThemeCard({ theme, onEdit, onDelete, className }: ThemeCardProps
 ### ❌ WRONG - Inline props type
 
 ```typescript
-export function ThemeCard({ theme, onEdit }: { theme: Theme; onEdit: () => void }) {
+export function ThemeCard({
+  theme,
+  onEdit,
+}: {
+  theme: Theme;
+  onEdit: () => void;
+}) {
   return <div>{theme.title}</div>;
 }
 ```
@@ -210,6 +234,7 @@ export function ThemeCard({ theme, onEdit }: { theme: Theme; onEdit: () => void 
 ## State Management
 
 ### Local UI State
+
 Use `useState` for component-specific UI state:
 
 ```typescript
@@ -219,6 +244,7 @@ const [selectedTab, setSelectedTab] = useState("themes");
 ```
 
 ### Server State
+
 Use React Query for server data:
 
 ```typescript
@@ -228,6 +254,7 @@ const mutation = useCreateThemeMutation();
 ```
 
 ### Form State
+
 Use controlled components or form libraries:
 
 ```typescript

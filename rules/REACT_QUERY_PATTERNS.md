@@ -62,7 +62,10 @@ export const useCategoriesQuery = () => {
 ```typescript
 // src/providers/useMeditationSessionQuery.ts
 import { useQuery } from "@tanstack/react-query";
-import type { MeditationSession, GetMeditationSessionResponse } from "@/types/api";
+import type {
+  MeditationSession,
+  GetMeditationSessionResponse,
+} from "@/types/api";
 
 export const useMeditationSessionQuery = (category: string) => {
   return useQuery<MeditationSession>({
@@ -144,12 +147,20 @@ export const useCreateThemeMutation = () => {
 ```typescript
 // src/providers/useUpdateThemeMutation.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Theme, UpdateThemeRequest, UpdateThemeResponse } from "@/types/api";
+import type {
+  Theme,
+  UpdateThemeRequest,
+  UpdateThemeResponse,
+} from "@/types/api";
 
 export const useUpdateThemeMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<UpdateThemeResponse, Error, { id: string; data: UpdateThemeRequest }>({
+  return useMutation<
+    UpdateThemeResponse,
+    Error,
+    { id: string; data: UpdateThemeRequest }
+  >({
     mutationFn: async ({ id, data }) => {
       const response = await fetch(`/api/database/themes/${id}`, {
         method: "PUT",
@@ -249,7 +260,11 @@ export default function AdminPage() {
 
 ```typescript
 // src/app/admin/page.tsx
-import { useThemesQuery, useCreateThemeMutation, useDeleteThemeMutation } from "@/providers";
+import {
+  useThemesQuery,
+  useCreateThemeMutation,
+  useDeleteThemeMutation,
+} from "@/providers";
 
 export default function AdminPage() {
   const { data: themes } = useThemesQuery();
@@ -261,7 +276,9 @@ export default function AdminPage() {
       category: "focus",
       title: "Focus Enhancement",
       description: "Improve concentration",
-      meditations: { /* ... */ },
+      meditations: {
+        /* ... */
+      },
       isActive: true,
     });
   };
@@ -279,13 +296,18 @@ export default function AdminPage() {
       {themes?.map((theme) => (
         <div key={theme._id}>
           {theme.title}
-          <button onClick={() => handleDelete(theme._id)} disabled={deleteMutation.isPending}>
+          <button
+            onClick={() => handleDelete(theme._id)}
+            disabled={deleteMutation.isPending}
+          >
             Delete
           </button>
         </div>
       ))}
 
-      {createMutation.isError && <div>Error: {createMutation.error.message}</div>}
+      {createMutation.isError && (
+        <div>Error: {createMutation.error.message}</div>
+      )}
     </div>
   );
 }
@@ -328,16 +350,16 @@ export default function ThemesList() {
 
 ```typescript
 // Simple key
-["themes"]
-
-// With parameter
-["meditation", category]
-
-// Nested
-["themes", themeId, "meditations"]
-
-// With filters
-["themes", { active: true, category: "anxiety" }]
+["themes"][
+  // With parameter
+  ("meditation", category)
+][
+  // Nested
+  ("themes", themeId, "meditations")
+][
+  // With filters
+  ("themes", { active: true, category: "anxiety" })
+];
 ```
 
 ### Best Practices
@@ -371,7 +393,7 @@ queryClient.invalidateQueries();
 onSuccess: () => {
   queryClient.invalidateQueries({ queryKey: ["themes"] });
   queryClient.invalidateQueries({ queryKey: ["categories"] });
-}
+};
 ```
 
 ## Error Handling
@@ -384,12 +406,12 @@ export const useThemesQuery = () => {
     queryKey: ["themes"],
     queryFn: async () => {
       const response = await fetch("/api/database/themes");
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || "Failed to fetch themes");
       }
-      
+
       const data: GetThemesResponse = await response.json();
       return data.themes;
     },

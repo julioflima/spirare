@@ -23,6 +23,7 @@ Cada sessão de meditação segue uma jornada de **4 etapas científicas**:
 4. **Despertar (Awakening)** — reorientação corporal, respiração final e integração
 
 Dentro de cada etapa, há **práticas específicas** que podem ser:
+
 - **Gerais** — frases compartilhadas por todos os temas
 - **Específicas** — frases personalizadas para o tema escolhido (ex: ansiedade tem suas próprias visualizações)
 
@@ -31,6 +32,7 @@ O sistema seleciona **aleatoriamente** uma frase diferente a cada sessão, garan
 ## ✨ Recursos Principais
 
 ### Para Praticantes
+
 - 🎙️ **Narração por IA em tempo real** — Text-to-Speech natural que narra cada instrução
 - ⏱️ **Timer circular líquido** — visualização suave do progresso da sessão
 - 🌬️ **Gráfico de respiração** — barras pulsantes em glassmorphism que guiam a cadência
@@ -39,6 +41,7 @@ O sistema seleciona **aleatoriamente** uma frase diferente a cada sessão, garan
 - ⏭️ **Controles intuitivos** — play/pause, pular prática, encerrar ou reiniciar a qualquer momento
 
 ### Para Administradores
+
 - 📝 **Editor de conteúdos** — crie e edite frases para cada prática de meditação
 - 🎨 **Gestor de temas** — defina novos temas (ansiedade, foco, sono) com conteúdos específicos
 - 🔧 **Configurador de estrutura** — determine quais práticas usam conteúdo geral vs específico
