@@ -8,16 +8,21 @@ async function fetchMeditationSession(
   category: string
 ): Promise<MeditationSession> {
   const response = await fetch(`/api/meditation/${category}`);
-  
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(errorData.error || `Failed to fetch meditation session: ${response.status}`);
+    const errorData = await response
+      .json()
+      .catch(() => ({ error: "Unknown error" }));
+    throw new Error(
+      errorData.error ||
+        `Failed to fetch meditation session: ${response.status}`
+    );
   }
-  
+
   const data: GetMeditationSessionResponse = await response.json();
 
   if (!data.session) {
-    throw new Error('Invalid response: session data missing');
+    throw new Error("Invalid response: session data missing");
   }
 
   return data.session;
