@@ -30,6 +30,23 @@ export async function GET(
       stage: string,
       practice: string
     ): Promise<string> => {
+      const pipeline: any[] = [];
+
+      // If fetching from themes collection, filter by category first
+      if (collection === "themes")
+        pipeline.push(
+          { $match: { category } },
+          { $project: { phrases: `$meditations.${stage}.${practice}` } }
+        );
+      else pipeline.push({ $project: { phrases: `$${stage}.${practice}` } });
+
+      // Project the specific field and get random phrase
+      pipeline.push(
+        { $project: { phrases: `$${stage}.${practice}` } },
+        { $unwind: "$phrases" },
+        { $sample: { size: 1 } }
+      );
+
       const result = await db
         .collection(collection)
         .aggregate([
@@ -39,7 +56,9 @@ export async function GET(
         ])
         .toArray();
 
-      return result[0]?.phrases || "";
+      console.log(collection, stage, practice, result);
+
+      return result[0]?.phrases;
     };
 
     // Process stages using map instead of for...of

@@ -330,6 +330,134 @@
           "closing": []
         }
       }
+    },
+    {
+      "_id": "64b8f1a2e4b0c8a1f0d6c9b2",
+      "category": "sleep",
+      "title": "Sono",
+      "description": "Meditações focadas em promover relaxamento profundo e facilitar o sono tranquilo.",
+      "meditations": {
+        "opening": {
+          "psychoeducation": [
+            "O sono é um processo natural que permite que o corpo e a mente se regenerem.",
+            "Muitas vezes, a dificuldade para dormir está ligada a pensamentos acelerados ou preocupações do dia.",
+            "A meditação para o sono ajuda a desacelerar a mente e preparar o corpo para o descanso.",
+            "Relaxar antes de dormir não significa ignorar problemas, mas dar ao corpo a chance de se restaurar.",
+            "Quando nos permitimos desacelerar, o sono surge de forma mais natural.",
+            "A respiração consciente ativa o sistema nervoso parassimpático, que favorece relaxamento e calma.",
+            "O sono é essencial para o equilíbrio emocional, memória e funcionamento do corpo.",
+            "A prática de mindfulness antes de dormir ajuda a reduzir a tensão acumulada durante o dia.",
+            "Ao focar na respiração e nas sensações do corpo, diminuímos a atividade mental excessiva.",
+            "Não precisamos lutar contra pensamentos ou insônia — apenas acolher o momento presente.",
+            "Pequenas pausas conscientes antes de dormir podem melhorar a qualidade do sono.",
+            "A mente e o corpo estão naturalmente programados para descansar; a prática apenas facilita esse processo.",
+            "Cada respiração profunda prepara o corpo para uma transição suave do estado de vigília para o sono.",
+            "O sono de qualidade é um componente essencial para a saúde física e mental.",
+            "A ansiedade sobre não conseguir dormir geralmente é o que mantém a mente desperta.",
+            "Ao observar sem julgamento os pensamentos que surgem à noite, eles tendem a perder intensidade.",
+            "O relaxamento progressivo ajuda a liberar tensões musculares e mentais acumuladas durante o dia.",
+            "Permitir-se descansar é um gesto de cuidado consigo mesmo.",
+            "O ambiente silencioso e confortável favorece naturalmente o início do sono.",
+            "A prática regular de meditação antes de dormir cria associações positivas com o descanso.",
+            "Cada exalação profunda ajuda a liberar tensão e preparar o corpo para o relaxamento.",
+            "Observar o corpo de forma gentil auxilia na percepção do momento de descanso.",
+            "Não há necessidade de controlar o sono — ele vem naturalmente quando a mente e o corpo estão prontos.",
+            "A meditação para o sono é uma oportunidade de cultivar paciência e gentileza consigo mesmo.",
+            "Ao relaxar a mente e o corpo, permitimos que processos restaurativos aconteçam de forma mais eficaz.",
+            "A consciência corporal antes de dormir ajuda a reduzir pensamentos repetitivos ou preocupações.",
+            "Aceitar que a mente continuará a pensar à noite é parte do processo de relaxamento.",
+            "Mesmo breves momentos de atenção plena à noite contribuem para um sono mais profundo.",
+            "A prática de mindfulness ensina que descanso e presença podem coexistir.",
+            "A preparação consciente para o sono cria uma ponte suave entre o dia e a noite."
+          ],
+          "intention": [],
+          "posture_and_environment": [],
+          "initial_breathing": [],
+          "attention_orientation": []
+        },
+        "concentration": {
+          "guided_breathing_rhythm": [],
+          "progressive_body_relaxation": [],
+          "non_judgmental_observation": [],
+          "functional_silence": []
+        },
+        "exploration": {
+          "main_focus": [],
+          "narrative_guidance_or_visualization": [],
+          "subtle_reflection_or_insight": [],
+          "emotional_integration": []
+        },
+        "awakening": {
+          "body_reorientation": [],
+          "final_breathing": [],
+          "intention_for_the_rest_of_the_day": [],
+          "closing": []
+        }
+      }
+    },
+    {
+      "_id": "64b8f2b3e4b0c8a1f0d6c9b3",
+      "category": "let_go_love",
+      "title": "Superar um Amor",
+      "description": "Meditações focadas em ajudar a lidar com a dor de um término, cultivar autocompaixão e seguir em frente.",
+      "meditations": {
+        "opening": {
+          "psychoeducation": [
+            "Terminar um relacionamento é uma experiência natural e desafiadora da vida.",
+            "A dor de um amor perdido é uma reação humana comum e válida.",
+            "É normal sentir tristeza, raiva ou confusão quando um vínculo importante se encerra.",
+            "O processo de desapego exige paciência, gentileza e tempo.",
+            "Mindfulness ajuda a perceber as emoções sem se deixar dominar por elas.",
+            "Aceitar a perda não significa esquecer completamente, mas permitir que a vida continue.",
+            "A autocompaixão é fundamental para não se culpar por sentimentos ou escolhas passadas.",
+            "Lembranças e memórias podem surgir; observá-las sem apego ajuda a reduzir o sofrimento.",
+            "A mente tende a revisitar o passado, mas o presente é o único momento em que podemos agir.",
+            "O coração precisa de espaço para se curar; a prática de atenção plena apoia essa cura.",
+            "Permitir-se sentir a dor é o primeiro passo para liberar emoções e seguir adiante.",
+            "Cada pessoa se recupera no seu próprio ritmo; não há pressa ou prazo para esquecer.",
+            "A prática meditativa fortalece a capacidade de lidar com pensamentos intrusivos.",
+            "Mesmo sentindo falta de alguém, podemos cultivar tranquilidade e equilíbrio interno.",
+            "Desapegar não é deixar de amar, mas aceitar que algo mudou e seguir a vida.",
+            "A respiração consciente ajuda a ancorar a mente quando as emoções se tornam intensas.",
+            "Observar padrões de pensamento repetitivos permite quebrar ciclos de sofrimento.",
+            "O amor que foi vivido ainda deixa aprendizado e crescimento pessoal.",
+            "A prática de mindfulness auxilia a distinguir entre memórias e realidade presente.",
+            "Podemos honrar o passado sem sermos prisioneiros dele.",
+            "A aceitação reduz a resistência interna e permite que a dor se transforme.",
+            "É natural sentir saudade e tristeza, e ainda assim desejar seguir em frente.",
+            "Meditar ajuda a reconhecer emoções difíceis sem se identificar completamente com elas.",
+            "Cada momento de atenção plena é um passo para reconstruir o bem-estar emocional.",
+            "O cuidado consigo mesmo é essencial durante períodos de término.",
+            "Aprender a observar sem reagir diminui o impacto emocional das lembranças dolorosas.",
+            "A paciência consigo mesmo é uma ferramenta poderosa de cura.",
+            "O desapego saudável permite que novas experiências e relações surjam no futuro.",
+            "Superar um amor exige gentileza, presença e reconhecimento do próprio valor.",
+            "Cada respiração consciente é um convite à aceitação e à libertação da dor."
+          ],
+          "intention": [],
+          "posture_and_environment": [],
+          "initial_breathing": [],
+          "attention_orientation": []
+        },
+        "concentration": {
+          "guided_breathing_rhythm": [],
+          "progressive_body_relaxation": [],
+          "non_judgmental_observation": [],
+          "functional_silence": []
+        },
+        "exploration": {
+          "main_focus": [],
+          "narrative_guidance_or_visualization": [],
+          "subtle_reflection_or_insight": [],
+          "emotional_integration": []
+        },
+        "awakening": {
+          "body_reorientation": [],
+          "final_breathing": [],
+          "intention_for_the_rest_of_the_day": [],
+          "closing": []
+        }
+      }
     }
   ],
   "audios": [
