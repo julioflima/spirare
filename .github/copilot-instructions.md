@@ -14,12 +14,12 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 
 ### System Documentation
 
-- **[PROJECT_OVERVIEW.md](../rules/PROJECT_OVERVIEW.md)** - Complete project overview and features
-- **[FILE_STRUCTURE.md](../rules/FILE_STRUCTURE.md)** - File organization and architecture
-- **[DATABASE.md](../rules/DATABASE.md)** - MongoDB system and schemas
+- **[PROJECT_OVERVIEW.md](../rules/PROJECT_OVERVIEW.md)** - Project features & tech stack
+- **[FILE_STRUCTURE.md](../rules/FILE_STRUCTURE.md)** - File organization patterns
+- **[DATABASE.md](../rules/DATABASE.md)** - MongoDB schemas & operations
 - **[GLOBAL_API_TYPES.md](../rules/GLOBAL_API_TYPES.md)** - API type system (40+ types)
-- **[MEDITATION_METHODOLOGY.md](../rules/MEDITATION_METHODOLOGY.md)** - Meditation composition system
-- **[MEDITATION_API_REVIEW.md](../rules/MEDITATION_API_REVIEW.md)** - API implementation best practices
+- **[MEDITATION_METHODOLOGY.md](../rules/MEDITATION_METHODOLOGY.md)** - Content composition system
+- **[MEDITATION_API_REVIEW.md](../rules/MEDITATION_API_REVIEW.md)** - API best practices
 
 ## 🚨 Critical Development Rules
 
@@ -67,6 +67,7 @@ const MyComponent = () => {
 
 ```
 /rules/
+├── INDEX.md                     # This file - Rules directory guide  
 ├── REACT_QUERY_PATTERNS.md      # ⚠️ CRITICAL - Data fetching
 ├── TYPE_SAFETY_RULES.md         # ⚠️ CRITICAL - Type definitions
 ├── COMPONENT_ARCHITECTURE.md    # Component organization
@@ -78,4 +79,4 @@ const MyComponent = () => {
 └── MEDITATION_API_REVIEW.md    # API best practices
 ```
 
-**Note**: All detailed project information, architecture details, and implementation patterns have been moved to `/rules/`. This instruction file now serves as a quick reference and gateway to the comprehensive documentation.
+**Note**: All detailed project information, architecture details, and implementation patterns are in `/rules/`. This instruction file serves as a quick reference and gateway to comprehensive documentation.
