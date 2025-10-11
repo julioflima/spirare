@@ -1,16 +1,49 @@
 # Spirare — Meditação Guiada Interativa
 
-Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScript e TailwindCSS. A experiência apresenta narrativa em áudio, temporizadores inteligentes, visualização rítmica de respiração e um metrônomo líquido que conduz a prática do início ao fim.
+**Spirare** (do latim "respirar") é uma aplicação web de meditação guiada que combina técnicas milenares com tecnologia moderna para criar experiências personalizadas de mindfulness e bem-estar emocional.
 
-## ✨ Experiência
+## 🎯 Propósito
 
-- **Fluxo de 4 etapas × 4 momentos** — jornada fixa para cultivar presença, respiração, imaginação e integração
-- **Narrativa por IA** — cada instrução é narrada via rota `/api/speech` usando o modelo `gpt-4o-mini-tts`
-- **Timer líquido + gráfico de respiração** — progresso circular combinado com visualizador em glassmorphism
-- **Metrônomo com período ajustável** — knob 3D controla o intervalo das batidas (600–1800 ms)
-- **Controles conscientes** — play/pause, pular momento, encerramento e reinício rápido
-- **Sistema de gestão completo** — interface administrativa para editar conteúdos, temas e áudios
-- **Banco de dados MongoDB** — armazenamento estruturado com validação Zod
+A meditação é uma ferramenta poderosa para cultivar presença, reduzir ansiedade e promover equilíbrio emocional. Porém, práticas tradicionais muitas vezes carecem de personalização para diferentes contextos e necessidades individuais.
+
+**Spirare** resolve isso oferecendo:
+
+- **Sessões dinâmicas e personalizadas** — cada meditação é única, composta em tempo real a partir de um banco de conteúdos calibrados para diferentes temas (ansiedade, foco, sono, etc.)
+- **Narrativa inteligente por IA** — instruções são narradas com voz natural usando Text-to-Speech, eliminando a necessidade de gravações pré-produzidas
+- **Ritmo adaptável** — metrônomo visual e sonoro que você controla para sincronizar com sua respiração natural
+- **Sistema de gestão completo** — interface administrativa que permite criar, editar e personalizar conteúdos, temas e estruturas de meditação sem tocar em código
+
+## 💡 Como Funciona
+
+Cada sessão de meditação segue uma jornada de **4 etapas científicas**:
+
+1. **Abertura (Opening)** — contextualização, intenção e preparação do ambiente
+2. **Concentração (Concentration)** — foco na respiração, relaxamento corporal e silêncio funcional
+3. **Exploração (Exploration)** — aprofundamento no tema específico (ex: visualizações para ansiedade)
+4. **Despertar (Awakening)** — reorientação corporal, respiração final e integração
+
+Dentro de cada etapa, há **práticas específicas** que podem ser:
+- **Gerais** — frases compartilhadas por todos os temas
+- **Específicas** — frases personalizadas para o tema escolhido (ex: ansiedade tem suas próprias visualizações)
+
+O sistema seleciona **aleatoriamente** uma frase diferente a cada sessão, garantindo que a experiência nunca seja repetitiva, mesmo para o mesmo tema.
+
+## ✨ Recursos Principais
+
+### Para Praticantes
+- 🎙️ **Narração por IA em tempo real** — Text-to-Speech natural que narra cada instrução
+- ⏱️ **Timer circular líquido** — visualização suave do progresso da sessão
+- 🌬️ **Gráfico de respiração** — barras pulsantes em glassmorphism que guiam a cadência
+- 🎛️ **Metrônomo ajustável** — controle 3D para definir o ritmo (600-1800ms) que melhor se adapta à sua respiração
+- 🎵 **Áudios ambientes** — trilhas de fundo selecionáveis para aprofundar a imersão
+- ⏭️ **Controles intuitivos** — play/pause, pular prática, encerrar ou reiniciar a qualquer momento
+
+### Para Administradores
+- 📝 **Editor de conteúdos** — crie e edite frases para cada prática de meditação
+- 🎨 **Gestor de temas** — defina novos temas (ansiedade, foco, sono) com conteúdos específicos
+- 🔧 **Configurador de estrutura** — determine quais práticas usam conteúdo geral vs específico
+- 🎵 **Biblioteca de áudios** — faça upload e gerencie trilhas sonoras de fundo
+- ✅ **Validação automática** — todos os dados são validados com Zod antes de salvar
 
 ## 🛠️ Tecnologias
 
@@ -87,66 +120,16 @@ npm run build
 npm start
 ```
 
-## 📁 Estrutura do Projeto
+## � Documentação
 
-```
-src/
-├── app/
-│   ├── [category]/[stage]/[practice]/[variant]/  # Páginas dinâmicas
-│   ├── admin/                                     # Interface administrativa
-│   ├── api/                                       # API Routes
-│   │   ├── speech/                               # Text-to-Speech
-│   │   ├── meditation/[category]/                # Composição de sessões
-│   │   └── database/                             # CRUD APIs
-│   └── components/                               # Componentes React
-├── providers/                                     # React Query hooks
-├── types/                                         # TypeScript types globais
-├── lib/                                          # Utilitários (MongoDB)
-└── styles/                                       # Estilos globais
+Para desenvolvedores, consulte:
 
-rules/                                            # Documentação de desenvolvimento
-├── DATABASE.md                                   # Sistema de banco de dados
-├── TYPE_SAFETY_RULES.md                          # Regras de type safety
-├── GLOBAL_API_TYPES.md                           # Tipos de API
-├── MEDITATION_API_REVIEW.md                      # Review do meditation API
-└── README.md                                     # Visão geral das regras
-```
-
-## 🎨 Interface Administrativa
-
-Acesse a interface de gestão em: `http://localhost:3000/admin`
-
-**Credenciais padrão:**
-
-- Username: `admin`
-- Password: `abreuelima`
-
-**Funcionalidades:**
-
-- Gestão de Áudios (upload, edição, controle)
-- Gestão de Temas (criação, personalização)
-- Edição de Conteúdo (textos de cada fase)
-- Estrutura Personalizável (ordem e duração)
-
-## 📚 Documentação para Desenvolvedores
-
-Para contribuir com o projeto, consulte a documentação em `/rules`:
-
-- **[/rules/DATABASE.md](/rules/DATABASE.md)** - Sistema de banco de dados completo
-- **[/rules/TYPE_SAFETY_RULES.md](/rules/TYPE_SAFETY_RULES.md)** - Regras de type safety
-- **[/rules/GLOBAL_API_TYPES.md](/rules/GLOBAL_API_TYPES.md)** - Sistema de tipos de API
-- **[/rules/MEDITATION_API_REVIEW.md](/rules/MEDITATION_API_REVIEW.md)** - Review e melhorias do API
-- **[/rules/README.md](/rules/README.md)** - Visão geral das regras de desenvolvimento
+- **[Copilot Instructions](.github/copilot-instructions.md)** - Padrões de desenvolvimento
+- **[Rules Directory](/rules/)** - Documentação técnica completa
 
 ## 🤝 Contribuindo
 
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-**Importante:** Antes de contribuir, leia a documentação em `/rules` para entender os padrões do projeto.
+Antes de contribuir, leia a documentação em `/rules` para entender os padrões do projeto.
 
 ## 📄 Licença
 

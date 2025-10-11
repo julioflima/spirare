@@ -67,32 +67,31 @@ The database system is built with:
 ```typescript
 {
   _id: ObjectId,
-  general: {             // Base phrases shared across all categories
-    opening: {
-      psychoeducation: string[],     // Array of phrase variations
-      intention: string[],
-      posture_and_environment: string[],
-      initial_breathing: string[],
-      attention_orientation: string[]
-    },
-    concentration: {
-      guided_breathing_rhythm: string[],
-      progressive_body_relaxation: string[],
-      non_judgmental_observation: string[],
-      functional_silence: string[]
-    },
-    exploration: {
-      main_focus: string[],
-      narrative_guidance_or_visualization: string[],
-      subtle_reflection_or_insight: string[],
-      emotional_integration: string[]
-    },
-    awakening: {
-      body_reorientation: string[],
-      final_breathing: string[],
-      intention_for_the_rest_of_the_day: string[],
-      closing: string[]
-    }
+  // Base phrases shared across all categories
+  opening: {
+    psychoeducation: string[],     // Array of phrase variations
+    intention: string[],
+    posture_and_environment: string[],
+    initial_breathing: string[],
+    attention_orientation: string[]
+  },
+  concentration: {
+    guided_breathing_rhythm: string[],
+    progressive_body_relaxation: string[],
+    non_judgmental_observation: string[],
+    functional_silence: string[]
+  },
+  exploration: {
+    main_focus: string[],
+    narrative_guidance_or_visualization: string[],
+    subtle_reflection_or_insight: string[],
+    emotional_integration: string[]
+  },
+  awakening: {
+    body_reorientation: string[],
+    final_breathing: string[],
+    intention_for_the_rest_of_the_day: string[],
+    closing: string[]
   },
   createdAt: Date,
   updatedAt: Date
@@ -107,7 +106,7 @@ The database system is built with:
   category: string,      // Unique identifier (e.g., "anxiety", "focus")
   title: string,         // Display name (e.g., "Anxiety Relief")
   description?: string,  // Theme description
-  meditations: {         // Category-specific phrases (same structure as meditations.general)
+  meditations: {         // Category-specific phrases (same structure as meditations collection)
     opening: {
       psychoeducation: string[],
       intention: string[],
@@ -217,11 +216,11 @@ See [MEDITATION_API_REVIEW.md](./MEDITATION_API_REVIEW.md) for complete document
 1. **Frontend**: Selects category
 2. **Backend**: Fetches `structure.method` to determine order of practices
 3. **Backend**: For each practice, gets **1 random phrase** from:
-   - `meditations.general[stage][practice]` (base phrases)
+   - `meditations[stage][practice]` (base phrases)
    - OR `themes[category].meditations[stage][practice]` (category-specific phrases)
 4. **Application of Specifics**: Checks `structure.specifics[stage][practice]`
    - If `true`: Uses phrase from themes collection (category-specific)
-   - If `false`: Uses phrase from meditations collection (base/general)
+   - If `false`: Uses phrase from meditations collection (base phrases)
 
 ### Example
 
@@ -230,7 +229,7 @@ For category "anxiety":
 - `structure.specifics.opening.psychoeducation = true`
   → Uses phrase from `themes.anxiety.meditations.opening.psychoeducation[]`
 - `structure.specifics.opening.intention = false`
-  → Uses phrase from `meditations.general.opening.intention[]`
+  → Uses phrase from `meditations.opening.intention[]`
 
 ## Validation & Type Safety
 

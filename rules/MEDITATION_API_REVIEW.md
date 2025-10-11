@@ -4,7 +4,22 @@
 
 ### Overview
 
-This API endpoint composes complete meditation sessions by randomly selecting phrases from the database based on the requested category and meditation structure.
+This API endpoint composes complete meditation sessions by randomly selecting phrases from the database baif (collectionName === "themes") {
+  // Filter by category for theme-specific phrases
+  pipeline = [
+    { $match: { category } },                           // ← Category filter
+    { $project: { phrases: `$meditations.${stage}.${practice}` } },
+    { $unwind: "$phrases" },
+    { $sample: { size: 1 } },
+  ];
+} else {
+  // No category filter for base meditations (no "general" wrapper)
+  pipeline = [
+    { $project: { phrases: `$${stage}.${practice}` } },
+    { $unwind: "$phrases" },
+    { $sample: { size: 1 } },
+  ];
+}sted category and meditation structure.
 
 ## Critical Bugs Fixed
 
