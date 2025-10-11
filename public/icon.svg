@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="spirare-bg" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d1fae5" />
+      <stop offset="0.5" stop-color="#fef3c7" />
+      <stop offset="1" stop-color="#fde68a" />
+    </linearGradient>
+    <linearGradient id="spirare-stroke" x1="120" y1="392" x2="392" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#047857" />
+      <stop offset="0.45" stop-color="#10b981" />
+      <stop offset="1" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect x="48" y="48" width="416" height="416" rx="128" fill="url(#spirare-bg)" />
+  <path d="M160 312C160 248 201 208 256 208C305 208 336 238 336 280C336 316 312 344 272 344C240 344 216 320 216 288C216 248 248 224 288 224C328 224 360 256 360 304" stroke="url(#spirare-stroke)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M208 168C224 144 248 128 280 128C338 128 384 176 384 232C384 288 344 336 296 336" stroke="url(#spirare-stroke)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" opacity="0.65" />
+  <circle cx="184" cy="352" r="28" fill="#10b981" opacity="0.85" />
+</svg>
