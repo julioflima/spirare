@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useRef, useState } from "react";
 
 interface QueueSpeechOptions {
@@ -20,10 +19,13 @@ interface SpeechControls {
   error: Error | null;
 }
 
-export function useSpeech(): SpeechControls {
+interface IUseSpeech {
+  audioBuffer: ArrayBuffer;
+}
+
+export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
-  const queryClient = useQueryClient();
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const sequenceRef = useRef<Promise<void>>(Promise.resolve());
@@ -52,39 +54,6 @@ export function useSpeech(): SpeechControls {
     setIsGenerating(false);
   }, [cleanupAudio]);
 
-  const fetchSpeech = useCallback(
-    async (rawText: string) => {
-      const normalizedText = rawText.trim();
-      if (!normalizedText) {
-        throw new Error("Texto vazio para síntese de voz.");
-      }
-
-      return queryClient.ensureQueryData({
-        queryKey: ["speech", normalizedText],
-        queryFn: async () => {
-          const response = await fetch("/api/speech", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ text: normalizedText }),
-          });
-
-          if (!response.ok) {
-            throw new Error("Falha ao gerar áudio da meditação.");
-          }
-
-          return response.arrayBuffer();
-        },
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
-        retry: 2,
-        retryDelay: (attempt) => Math.min(1500 * (attempt + 1), 4000),
-      });
-    },
-    [queryClient]
-  );
-
   const playText = useCallback(
     async (rawText: string, token: number) => {
       const normalized = rawText.trim();
@@ -97,7 +66,6 @@ export function useSpeech(): SpeechControls {
 
       let audio: HTMLAudioElement | null = null;
       try {
-        const audioBuffer = await fetchSpeech(normalized);
         if (cancelTokenRef.current !== token) {
           setIsGenerating(false);
           return;
@@ -171,7 +139,7 @@ export function useSpeech(): SpeechControls {
         throw playError;
       }
     },
-    [cleanupAudio, fetchSpeech]
+    [audioBuffer, cleanupAudio]
   );
 
   const queueSpeechInternal = useCallback(

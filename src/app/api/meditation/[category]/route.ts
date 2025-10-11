@@ -20,10 +20,14 @@ export async function GET(
 
     const db = await getDatabase();
 
-    // Fetch structure and theme metadata in parallel
-    const [structure, theme] = await Promise.all([
+    // Fetch structure, theme, and random audio in parallel
+    const [structure, theme, randomAudioResult] = await Promise.all([
       db.collection("structure").findOne({}) as Promise<Structure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
+      db
+        .collection("audios")
+        .aggregate([{ $sample: { size: 1 } }])
+        .toArray(),
     ]);
 
     // Validate that required data exists
@@ -40,6 +44,9 @@ export async function GET(
         { status: 404 }
       );
     }
+
+    // Extract random audio (optional, meditation works without it)
+    const randomAudio = randomAudioResult[0] || null;
 
     // Validate structure has required fields
     if (!structure.method || !Array.isArray(structure.method)) {
@@ -127,6 +134,7 @@ export async function GET(
         title: theme.title,
         description: theme.description || "",
         stages,
+        audio: randomAudio,
       },
     };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultMeditation, STEP_DURATION_SECONDS, SUBSTEPS_PER_STEP } from '@/constants/meditation';
 import { Controls } from './Controls';
 import { SessionHeader } from './SessionHeader';
@@ -13,7 +13,11 @@ import { useStageMusic } from './hooks/useStageMusic';
 import { ChevronsRight, Music } from 'lucide-react';
 import { Loading } from '../Loading';
 
-export const MeditationGenerator = () => {
+interface IMeditationGenerator {
+    audioBuffer: ArrayBuffer;
+}
+
+export const MeditationGenerator: FC<IMeditationGenerator> = ({ audioBuffer }) => {
     const [hasStarted, setHasStarted] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [currentSubStep, setCurrentSubStep] = useState(0);
@@ -30,7 +34,7 @@ export const MeditationGenerator = () => {
         resume: resumeSpeech,
         stop: stopSpeech,
         isGenerating: isAudioLoading,
-    } = useSpeech();
+    } = useSpeech({ audioBuffer });
     const {
         periodMs: metronomePeriod,
         setPeriodMs: setMetronomePeriod,

@@ -169,7 +169,7 @@ export const structureCollectionSchema = z.array(structureSchema);
 
 // Type exports
 export type ContentItem = z.infer<typeof contentItemSchema>;
-export type Audio = z.infer<typeof audioSchema>;
+export type Song = z.infer<typeof audioSchema>;
 export type Meditations = z.infer<typeof meditationsSchema>;
 export type Structure = z.infer<typeof structureSchema>;
 export type Theme = z.infer<typeof themeSchema>;

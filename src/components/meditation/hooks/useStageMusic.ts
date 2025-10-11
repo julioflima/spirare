@@ -1,7 +1,7 @@
 "use client";
 
+import { Song } from "@/types";
 import { useCallback, useEffect, useRef } from "react";
-import type { MeditationStageTrack } from "@/types/meditation";
 
 const clampVolume = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -90,7 +90,7 @@ export function useStageMusic() {
   );
 
   const transitionToTrack = useCallback(
-    async (track: MeditationStageTrack | null) => {
+    async (track: Song | null) => {
       if (!track) {
         await stopCurrentTrack();
         return;

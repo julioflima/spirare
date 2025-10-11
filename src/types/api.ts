@@ -3,7 +3,7 @@
  * These types are shared between frontend and backend for consistency
  */
 
-import { Audio, Theme, Structure, Meditations } from "./database";
+import { Song, Theme, Structure, Meditations } from "./database";
 
 // ============================================================================
 // API Response Types
@@ -57,7 +57,7 @@ export interface GetThemesResponse {
  * Response from GET /api/database/audios
  */
 export interface GetAudiosResponse {
-  audios: Audio[];
+  audios: Song[];
 }
 
 /**
@@ -67,7 +67,7 @@ export interface AllDatabaseData {
   meditations: Meditations;
   structure: Structure;
   themes: Theme[];
-  audios: Audio[];
+  audios: Song[];
 }
 
 // ============================================================================
@@ -92,6 +92,19 @@ export interface MeditationStage {
 }
 
 /**
+ * Audio track for meditation session
+ */
+export interface MeditationAudio {
+  _id: string;
+  title: string;
+  artist: string;
+  src: string;
+  fadeInMs?: number;
+  fadeOutMs?: number;
+  volume?: number;
+}
+
+/**
  * Complete meditation session
  */
 export interface MeditationSession {
@@ -99,6 +112,7 @@ export interface MeditationSession {
   title: string;
   description: string;
   stages: MeditationStage[];
+  audio?: MeditationAudio; // Optional background audio
 }
 
 /**
@@ -159,7 +173,7 @@ export interface DeleteThemeResponse {
  * Response from POST /api/database/audios
  */
 export interface CreateAudioResponse {
-  audio: Audio;
+  audio: Song;
   message: string;
 }
 
@@ -167,7 +181,7 @@ export interface CreateAudioResponse {
  * Response from PUT /api/database/audios/[id]
  */
 export interface UpdateAudioResponse {
-  audio: Audio;
+  audio: Song;
   message: string;
 }
 
