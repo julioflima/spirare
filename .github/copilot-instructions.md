@@ -111,6 +111,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 ### Estrutura de Arquivos
 
 - **`src/styles/`** - Todos os arquivos de estilo globais
+
   - Use Sass (`.sass` ou `.scss`) para estilos customizados
   - `globals.css` - estilos globais e configuração do Tailwind
   - Evite CSS inline ou CSS modules quando possível
@@ -240,11 +241,13 @@ src/
 ### Regras de Estrutura
 
 - **`src/app/components/`** - Componentes **globais e puros**, sem chamadas a APIs
+
   - Componentes reutilizáveis em todo o app
   - Apenas recebem props e renderizam UI
   - Exemplo: botões, cards, layouts genéricos
 
 - **`src/app/[route]/_components/`** - Componentes **específicos de uma rota**
+
   - Usam o prefixo `_` para indicar que são privados
   - Podem fazer chamadas a APIs e usar hooks de dados
   - Exemplo: `src/app/admin/_components/ThemeEditor.tsx`
@@ -272,7 +275,80 @@ src/app/
     └── page.tsx           # ✅ Página com lógica inline
 ```
 
-## 🧩 Interação em detalhes
+## � Método de Meditação
+
+### Estrutura de Composição
+
+O sistema de meditação compõe sessões dinamicamente a partir de três fontes:
+
+1. **Base Global** (`meditations` collection): Frases padrão para todas as categorias
+2. **Método de Estrutura** (`structure.method`): Define a ordem das práticas
+3. **Especificidades do Tema** (`structure.specifics` + `themes[].meditations`): Sobrescreve práticas específicas
+
+### Fluxo de Composição
+
+1. **Frontend**: Seleciona categoria
+2. **Backend**: Busca `structure.method` para determinar ordem das práticas
+3. **Backend**: Para cada prática, pega **1 frase aleatória** de:
+   - `meditations.opening.psychoeducation`
+   - `meditations.opening.intention`
+   - `meditations.opening.posture_and_environment`
+   - `meditations.opening.initial_breathing`
+   - `meditations.opening.attention_orientation`
+   - `meditations.concentration.guided_breathing_rhythm`
+   - `meditations.concentration.progressive_body_relaxation`
+   - `meditations.concentration.non_judgmental_observation`
+   - `meditations.concentration.functional_silence`
+   - `meditations.exploration.main_focus`
+   - `meditations.exploration.narrative_guidance_or_visualization`
+   - `meditations.exploration.subtle_reflection_or_insight`
+   - `meditations.exploration.emotional_integration`
+   - `meditations.awakening.body_reorientation`
+   - `meditations.awakening.final_breathing`
+   - `meditations.awakening.intention_for_the_rest_of_the_day`
+   - `meditations.awakening.closing`
+
+4. **Aplicação de Especificidades**: Verifica `structure.specifics[stage][practice]`
+   - Se `true`: Substitui a frase base por uma aleatória de `themes[category].meditations[stage][practice]`
+   - Se `false`: Mantém a frase da base global
+
+### Exemplo
+
+Para categoria "anxiety":
+- `structure.specifics.opening.psychoeducation = true` 
+  → Usa frase de `themes.anxiety.meditations.opening.psychoeducation[]`
+- `structure.specifics.opening.intention = false`
+  → Usa frase de `meditations.opening.intention[]`
+
+### Schema de Dados
+
+```typescript
+{
+  meditations: {
+    [stage]: {
+      [practice]: string[]  // Base global
+    }
+  },
+  structure: {
+    method: Array<{ [stage]: string[] }>,  // Ordem das práticas
+    specifics: {
+      [stage]: {
+        [practice]: boolean  // true = usa tema específico
+      }
+    }
+  },
+  themes: [{
+    category: string,
+    meditations: {
+      [stage]: {
+        [practice]: string[]  // Sobrescreve quando specific = true
+      }
+    }
+  }]
+}
+```
+
+## �🧩 Interação em detalhes
 
 - **Overlay inicial**: botão circular sem textos internos, apenas ícones (Play + Wind) com efeito líquido.
 - **Header**: badge de milestone, LED ritmado pelo metrônomo e botão “Avançar Etapa”.

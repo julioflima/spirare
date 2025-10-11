@@ -1,69 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useMeditationSessionQuery } from '@/providers';
 
-interface Theme {
-    category: string;
-    title: string;
-    description: string;
-}
-
-const STAGES = [
-    { key: 'opening', label: 'Abertura', description: 'Preparação inicial para a meditação' },
-    { key: 'concentration', label: 'Concentração', description: 'Foco e estabilização mental' },
-    { key: 'exploration', label: 'Exploração', description: 'Aprofundamento da prática' },
-    { key: 'awakening', label: 'Despertar', description: 'Finalização e integração' },
-];
+const STAGE_LABELS: Record<string, { label: string; description: string }> = {
+    opening: { label: 'Abertura', description: 'Preparação inicial para a meditação' },
+    concentration: { label: 'Concentração', description: 'Foco e estabilização mental' },
+    exploration: { label: 'Exploração', description: 'Aprofundamento da prática' },
+    awakening: { label: 'Despertar', description: 'Finalização e integração' },
+};
 
 export default function CategoryPage() {
     const params = useParams();
     const category = params.category as string;
-    const [theme, setTheme] = useState<Theme | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { data: session, isLoading, error } = useMeditationSessionQuery(category);
 
-    useEffect(() => {
-        async function fetchTheme() {
-            try {
-                const response = await fetch(`/api/categories`);
-                const data = await response.json();
-
-                if (data.success && data.categories) {
-                    const foundTheme = data.categories.find(
-                        (t: Theme) => t.category === category
-                    );
-                    setTheme(foundTheme || null);
-                }
-            } catch (error) {
-                console.error('Error fetching theme:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchTheme();
-    }, [category]);
-
-    if (loading) {
+    if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Carregando...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                    <p className="text-emerald-800/70">Carregando sessão...</p>
                 </div>
             </div>
         );
     }
 
-    if (!theme) {
+    if (error || !session) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4">Categoria não encontrada</h1>
+                    <h1 className="text-2xl font-bold text-emerald-900 mb-4">Categoria não encontrada</h1>
                     <Link
                         href="/"
-                        className="text-indigo-600 hover:text-indigo-700 underline"
+                        className="text-emerald-600 hover:text-emerald-700 underline cursor-pointer"
                     >
                         Voltar para o início
                     </Link>
@@ -73,12 +44,12 @@ export default function CategoryPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] p-8">
             <div className="max-w-4xl mx-auto">
                 {/* Back button */}
                 <Link
                     href="/"
-                    className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+                    className="inline-flex items-center text-emerald-700/80 hover:text-emerald-900 mb-8 transition-colors cursor-pointer"
                 >
                     <svg
                         className="w-5 h-5 mr-2"
@@ -97,57 +68,65 @@ export default function CategoryPage() {
                 </Link>
 
                 {/* Theme header */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">{theme.title}</h1>
-                    {theme.description && (
-                        <p className="text-lg text-gray-700">{theme.description}</p>
+                <div className="bg-white/25 backdrop-blur-2xl rounded-3xl shadow-lg p-8 mb-8 border border-white/35">
+                    <h1 className="text-4xl font-bold text-emerald-900 mb-4">{session.title}</h1>
+                    {session.description && (
+                        <p className="text-lg text-emerald-800/80 leading-relaxed">{session.description}</p>
                     )}
                 </div>
 
                 {/* Stages grid */}
                 <div className="mb-8">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-6">Escolha uma Etapa</h2>
+                    <h2 className="text-2xl font-semibold text-emerald-900 mb-6">Escolha uma Etapa</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {STAGES.map((stage) => (
-                            <Link
-                                key={stage.key}
-                                href={`/${category}/${stage.key}`}
-                                className="group block p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200"
-                            >
-                                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                                    {stage.label}
-                                </h3>
-                                <p className="text-gray-600 text-sm mb-4">{stage.description}</p>
-                                <div className="flex items-center text-indigo-600 font-medium text-sm">
-                                    <span>Continuar</span>
-                                    <svg
-                                        className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                </div>
-                            </Link>
-                        ))}
+                        {session.stages.map((stageData) => {
+                            const stageInfo = STAGE_LABELS[stageData.stage] || { 
+                                label: stageData.stage, 
+                                description: '' 
+                            };
+                            return (
+                                <Link
+                                    key={stageData.stage}
+                                    href={`/${category}/${stageData.stage}`}
+                                    className="group block p-6 bg-white/25 backdrop-blur-2xl rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-white/35 cursor-pointer"
+                                >
+                                    <h3 className="text-xl font-semibold text-emerald-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                                        {stageInfo.label}
+                                    </h3>
+                                    <p className="text-emerald-700/70 text-sm mb-4">{stageInfo.description}</p>
+                                    <div className="flex items-center text-emerald-600 font-medium text-sm">
+                                        <span>Continuar</span>
+                                        <svg
+                                            className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M9 5l7 7-7 7"
+                                            />
+                                        </svg>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Practice link */}
-                <div className="text-center">
-                    <Link
-                        href={`/${category}/practice`}
-                        className="inline-block px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                        Iniciar Prática Completa
-                    </Link>
-                </div>
+                {/* JSON Debug View */}
+                <details className="bg-white/25 backdrop-blur-2xl rounded-2xl shadow-lg border border-white/35 overflow-hidden">
+                    <summary className="p-6 text-emerald-900 font-semibold text-lg cursor-pointer hover:bg-white/10 transition-colors">
+                        Ver Dados da Sessão (Debug)
+                    </summary>
+                    <div className="p-6 pt-0 max-h-96 overflow-auto">
+                        <pre className="text-xs text-emerald-800 font-mono bg-emerald-50/50 p-4 rounded-lg overflow-x-auto">
+                            {JSON.stringify(session, null, 2)}
+                        </pre>
+                    </div>
+                </details>
             </div>
         </div>
     );

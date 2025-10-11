@@ -106,22 +106,20 @@ export default function Home() {
             <button
               key={category.category}
               onClick={() => setSelectedCategory(category.category)}
-              className={`group relative overflow-hidden rounded-2xl border p-8 backdrop-blur-2xl transition-all duration-300 cursor-pointer ${
-                selectedCategory === category.category
+              className={`group relative overflow-hidden rounded-2xl border p-8 backdrop-blur-2xl transition-all duration-300 cursor-pointer ${selectedCategory === category.category
                   ? 'border-emerald-400/50 bg-white/40 shadow-[0_8px_30px_-8px_rgba(34,197,94,0.3)] scale-[1.02]'
                   : 'border-white/30 bg-white/20 shadow-[0_4px_20px_-4px_rgba(132,204,22,0.15)] hover:border-white/40 hover:bg-white/30 hover:shadow-[0_8px_30px_-8px_rgba(132,204,22,0.25)]'
-              }`}
+                }`}
             >
-              <span 
-                className="pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-200/30 via-lime-200/25 to-amber-200/25 blur-2xl" 
-                aria-hidden="true" 
+              <span
+                className="pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-200/30 via-lime-200/25 to-amber-200/25 blur-2xl"
+                aria-hidden="true"
               />
-              
-              <h3 className={`relative text-lg font-medium transition-colors ${
-                selectedCategory === category.category
+
+              <h3 className={`relative text-lg font-medium transition-colors ${selectedCategory === category.category
                   ? 'text-emerald-800'
                   : 'text-emerald-900/80 group-hover:text-emerald-900'
-              }`}>
+                }`}>
                 {category.title}
               </h3>
             </button>

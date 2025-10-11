@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json();
 
     // Get credentials from environment variables, with defaults
-    const validUsername = process.env.ADMIN_USERNAME || 'admin';
-    const validPassword = process.env.ADMIN_PASSWORD || 'abreuelima';
+    const validUsername = process.env.ADMIN_USERNAME || "admin";
+    const validPassword = process.env.ADMIN_PASSWORD || "abreuelima";
 
     if (username === validUsername && password === validPassword) {
       return NextResponse.json({ success: true });
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false }, { status: 401 });
   } catch {
     return NextResponse.json(
-      { success: false, error: 'Invalid request' },
+      { success: false, error: "Invalid request" },
       { status: 400 }
     );
   }
