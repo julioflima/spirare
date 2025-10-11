@@ -2,28 +2,204 @@
   "meditations": {
     "opening": {
       "psychoeducation": [],
-      "intention": [],
-      "posture_and_environment": [],
-      "initial_breathing": [],
-      "attention_orientation": []
+      "intention": [
+        "Reserve este momento para si.",
+        "Nada precisa ser feito agora além de estar presente.",
+        "Permita que o tempo desacelere e que o corpo encontre descanso.",
+        "Deixe o mundo lá fora e volte-se gentilmente para dentro.",
+        "Traga a intenção de cuidar da mente e do coração neste instante.",
+        "Reconheça que você merece essa pausa de autocuidado.",
+        "Receba este momento como um presente de presença.",
+        "Permita-se sentir segurança no simples ato de estar aqui.",
+        "Aceite o convite para uma pausa consciente.",
+        "Este é um espaço para apenas ser, sem expectativas."
+      ],
+      "posture_and_environment": [
+        "Sente-se confortavelmente, com a coluna ereta e os ombros relaxados.",
+        "Deixe as mãos repousarem sobre as pernas ou no colo.",
+        "Permita que o corpo encontre uma posição estável e natural.",
+        "Relaxe o rosto, suavize a mandíbula e o olhar.",
+        "Sinta o contato do corpo com o assento, firme e acolhedor.",
+        "Ajuste-se até perceber equilíbrio entre firmeza e suavidade.",
+        "Se desejar, feche os olhos ou mantenha o olhar suave em um ponto à frente.",
+        "Perceba o espaço ao seu redor, a temperatura, os sons distantes.",
+        "Deixe que o ambiente se torne parte da sua prática, sem tentar controlá-lo.",
+        "Sinta-se seguro para estar presente neste espaço de cuidado."
+      ],
+      "initial_breathing": [
+        "Comece observando a respiração, sem alterá-la.",
+        "Sinta o ar entrando pelas narinas e saindo suavemente.",
+        "Permita que o corpo respire por si só, sem esforço.",
+        "Perceba o movimento do abdômen se expandindo e contraindo.",
+        "Deixe a respiração ser o seu ponto de ancoragem no agora.",
+        "A cada expiração, permita que o corpo relaxe um pouco mais.",
+        "Respire com curiosidade, como se fosse a primeira vez que percebe o ar em você.",
+        "Note o ritmo natural, sem pressa, apenas presença.",
+        "Se a mente se distrair, volte gentilmente à sensação de respirar.",
+        "Permaneça alguns instantes apenas acompanhando a respiração."
+      ],
+      "attention_orientation": [
+        "Agora, direcione a atenção para o corpo como um todo.",
+        "Perceba o contato dos pés com o chão, o peso do corpo apoiado.",
+        "Sinta a textura da roupa tocando a pele.",
+        "Note o som mais próximo e o som mais distante.",
+        "Observe a temperatura do ar e as sensações de calor ou frescor.",
+        "Traga curiosidade para o que o corpo está comunicando agora.",
+        "Permaneça presente às sensações, sem tentar mudá-las.",
+        "Se surgir desconforto, observe-o com gentileza e aceite o que há.",
+        "Permita que a atenção se estabilize em um ponto de foco, como a respiração.",
+        "Este é o momento de ancorar-se no presente, com simplicidade e calma."
+      ]
     },
     "concentration": {
-      "guided_breathing_rhythm": [],
-      "progressive_body_relaxation": [],
-      "non_judgmental_observation": [],
-      "functional_silence": []
+      "guided_breathing_rhythm": [
+        "Inspire contando até quatro, segure por quatro e expire também em quatro tempos.",
+        "Permita que o ritmo da respiração traga estabilidade.",
+        "Perceba o ar frio entrando e o ar mais quente saindo.",
+        "Sinta o abdômen expandindo suavemente a cada inspiração.",
+        "Não force — deixe o corpo encontrar seu próprio compasso.",
+        "Imagine que cada respiração limpa e acalma.",
+        "Inspire serenidade, expire tensão.",
+        "Permaneça por alguns ciclos nessa respiração consciente.",
+        "Observe como o corpo responde a cada respiração profunda.",
+        "Use o ar como instrumento de equilíbrio e presença."
+      ],
+      "progressive_body_relaxation": [
+        "Comece levando a atenção ao topo da cabeça.",
+        "Relaxe a testa, o couro cabeludo, os olhos e a mandíbula.",
+        "Permita que o pescoço e os ombros se suavizem.",
+        "Desça pelos braços, cotovelos, mãos e dedos.",
+        "Sinta o peito e o abdômen se soltando a cada expiração.",
+        "Relaxe a região lombar, quadris e coxas.",
+        "Permita que as pernas, joelhos e tornozelos se tornem leves.",
+        "Sinta os pés repousando firmemente no chão.",
+        "Observe o corpo como um todo, sereno e apoiado.",
+        "Aceite o que o corpo oferece agora, sem resistência."
+      ],
+      "non_judgmental_observation": [
+        "Perceba os pensamentos que passam como nuvens no céu.",
+        "Não tente detê-los, apenas observe sua passagem.",
+        "Se notar julgamentos, reconheça-os e volte à respiração.",
+        "Permita que sensações e emoções venham e vão naturalmente.",
+        "Você não é seus pensamentos — apenas o espaço que os observa.",
+        "Praticar mindfulness é aceitar o que surge sem lutar.",
+        "Observe o corpo, a mente e o coração com curiosidade.",
+        "Cada pensamento é apenas um evento mental passageiro.",
+        "Não há certo nem errado — apenas consciência.",
+        "Sinta a liberdade de apenas observar."
+      ],
+      "functional_silence": [
+        "Agora, permita alguns instantes de silêncio.",
+        "Deixe o corpo descansar na quietude.",
+        "Sinta o ar, o som, o espaço — tudo em harmonia.",
+        "Nada precisa ser dito ou feito neste momento.",
+        "Apenas esteja presente no intervalo entre um pensamento e outro.",
+        "Perceba como o silêncio também tem uma textura.",
+        "Permita que o silêncio sustente a mente como um solo fértil.",
+        "Deixe o corpo respirar dentro desse espaço de tranquilidade.",
+        "Silêncio não é ausência — é presença ampliada.",
+        "Permaneça assim por alguns instantes, apenas sendo."
+      ]
     },
     "exploration": {
-      "main_focus": [],
-      "narrative_guidance_or_visualization": [],
-      "subtle_reflection_or_insight": [],
-      "emotional_integration": []
+      "main_focus": [
+        "O foco de hoje é a autocompaixão.",
+        "Perceba como você fala consigo mesmo quando sofre.",
+        "Observe se há críticas internas e suavize o tom.",
+        "Lembre-se: o sofrimento faz parte da condição humana.",
+        "Todos nós desejamos estar bem e ser felizes.",
+        "Permita-se oferecer a si mesmo palavras gentis.",
+        "Talvez possa dizer: ‘Estou aqui por mim mesmo’.",
+        "Sinta no corpo a qualidade do cuidado e da ternura.",
+        "Deixe a respiração carregar compaixão a cada ciclo.",
+        "Aceite-se exatamente como está neste instante."
+      ],
+      "narrative_guidance_or_visualization": [
+        "Imagine uma luz suave percorrendo o seu corpo.",
+        "Essa luz simboliza a atenção plena — acolhedora e amorosa.",
+        "Ela se expande a cada respiração, envolvendo todo o corpo.",
+        "Visualize essa luz dissolvendo tensões e suavizando o peito.",
+        "Deixe-a tocar as partes que pedem cuidado.",
+        "A luz se torna mais intensa nos lugares de dor, trazendo alívio.",
+        "Imagine-se sendo envolvido por essa energia de aceitação.",
+        "Permita que o corpo inteiro se banhe nessa claridade calma.",
+        "Sinta a leveza se espalhando pelos ombros e pela mente.",
+        "Você está seguro dentro dessa presença luminosa."
+      ],
+      "subtle_reflection_or_insight": [
+        "Observe o que surge quando você simplesmente permite estar aqui.",
+        "Perceba como o corpo responde ao acolhimento.",
+        "Talvez haja alívio, talvez nada mude — ambos são bem-vindos.",
+        "Note que o simples ato de observar já é transformação.",
+        "A consciência ilumina o que antes estava obscurecido.",
+        "Ao não resistir, você encontra paz mesmo nas dores sutis.",
+        "Permita que a sabedoria do corpo te guie para a quietude.",
+        "Observe o instante presente como um campo de aprendizado.",
+        "Não há nada a alcançar, apenas notar.",
+        "O insight nasce do espaço silencioso entre as experiências."
+      ],
+      "emotional_integration": [
+        "Perceba as emoções que estão presentes agora.",
+        "Dê nome ao que sente — tristeza, calma, medo, gratidão.",
+        "Observe onde essas emoções se manifestam no corpo.",
+        "Não lute contra elas; apenas as reconheça.",
+        "Acolher é o primeiro passo para libertar.",
+        "Deixe que todas as emoções coexistam sem conflito.",
+        "Sinta a suavização que vem quando você permite sentir.",
+        "Compreenda que nenhuma emoção é permanente.",
+        "Aceitar é um gesto de coragem e amor.",
+        "Permaneça com o que há, respirando junto a cada emoção."
+      ]
     },
     "awakening": {
-      "body_reorientation": [],
-      "final_breathing": [],
-      "intention_for_the_rest_of_the_day": [],
-      "closing": []
+      "body_reorientation": [
+        "Traga a atenção de volta para o corpo.",
+        "Sinta o peso apoiado, o contato dos pés com o chão.",
+        "Perceba os sons próximos e distantes.",
+        "Note a temperatura do ar tocando a pele.",
+        "Faça pequenos movimentos com os dedos e ombros.",
+        "Sinta o corpo desperto e presente neste espaço.",
+        "Acolha o retorno sem pressa.",
+        "Permita que a mente e o corpo se encontrem novamente.",
+        "Observe a vitalidade que surge ao despertar.",
+        "Você está aqui, inteiro, no presente."
+      ],
+      "final_breathing": [
+        "Respire fundo e solte o ar lentamente.",
+        "Perceba o corpo cheio de vida.",
+        "A cada respiração, renove sua energia.",
+        "Sinta gratidão pelo simples ato de respirar.",
+        "Permita que a respiração estabilize o corpo e a mente.",
+        "Observe a harmonia entre o inspirar e o expirar.",
+        "Traga consciência à calma que permanece.",
+        "Respire presença, respire gratidão.",
+        "Deixe a respiração marcar a transição para o agora.",
+        "Apenas respire e sinta-se inteiro novamente."
+      ],
+      "intention_for_the_rest_of_the_day": [
+        "Leve consigo essa sensação de presença.",
+        "Permita que a calma acompanhe suas próximas ações.",
+        "Lembre-se de que você pode retornar à respiração a qualquer momento.",
+        "Carregue a gentileza deste instante para o seu dia.",
+        "Que cada gesto seja uma oportunidade de consciência.",
+        "Cultive pequenas pausas de presença ao longo do dia.",
+        "Use os momentos de dificuldade como convites à atenção plena.",
+        "Lembre-se: a prática continua mesmo fora da meditação.",
+        "Leve consigo a intenção de viver com mais clareza.",
+        "Siga o dia com leveza e propósito."
+      ],
+      "closing": [
+        "Agradeça a si mesmo por este momento de cuidado.",
+        "Reconheça o valor de ter parado para estar presente.",
+        "Celebre o simples ato de se permitir respirar.",
+        "Honre a coragem de olhar para dentro com compaixão.",
+        "Lembre-se de que cada prática é um passo de autoconhecimento.",
+        "Sinta gratidão por estar vivo e consciente.",
+        "Permaneça com a leveza e serenidade que cultivou.",
+        "Reconheça que este instante foi um gesto de amor por si mesmo.",
+        "Quando estiver pronto, abra os olhos e retorne suavemente.",
+        "Leve essa paz silenciosa com você."
+      ]
     }
   },
   "structure": {
@@ -98,7 +274,38 @@
       "description": "Meditações focadas em aliviar a ansiedade e promover calma.",
       "meditations": {
         "opening": {
-          "psychoeducation": [],
+          "psychoeducation": [
+            "A ansiedade é uma resposta natural do corpo diante do que ele percebe como ameaça ou incerteza.",
+            "Todos os seres humanos experimentam ansiedade — ela faz parte da vida e tem uma função protetora.",
+            "O problema não é sentir ansiedade, mas quando ela se torna intensa e começa a dominar nossas escolhas.",
+            "Mindfulness nos ajuda a reconhecer a ansiedade antes que ela cresça e tome conta do corpo e da mente.",
+            "Em vez de lutar contra a ansiedade, aprendemos a observá-la com curiosidade e aceitação.",
+            "A ansiedade costuma aparecer quando a mente viaja para o futuro, tentando prever ou controlar o que ainda não aconteceu.",
+            "Estar presente é um antídoto natural para a ansiedade, pois traz a mente de volta ao único tempo que existe: o agora.",
+            "A prática de atenção plena nos ensina a perceber os primeiros sinais de tensão e a responder com calma.",
+            "Quando respiramos conscientemente, ativamos o sistema nervoso parassimpático — aquele que traz relaxamento e segurança.",
+            "A ansiedade não é um inimigo; é um sinal do corpo pedindo cuidado e escuta.",
+            "Sentir ansiedade não significa fraqueza, mas sensibilidade — uma resposta humana a situações desafiadoras.",
+            "Ao observar a ansiedade sem julgamento, ela começa a perder força sobre nós.",
+            "O corpo fala através de sensações: coração acelerado, respiração curta, músculos tensos — tudo isso pode ser acolhido.",
+            "A respiração é o nosso ponto de retorno; cada inspiração pode ser um convite à estabilidade.",
+            "A mente ansiosa busca prever o futuro, mas a prática nos lembra que o futuro não está acontecendo agora.",
+            "Podemos aprender a notar pensamentos ansiosos sem acreditar neles completamente.",
+            "Ansiedade é energia — quando reconhecida, pode ser transformada em foco e clareza.",
+            "A presença não elimina a ansiedade, mas muda a maneira como nos relacionamos com ela.",
+            "Quanto mais tentamos evitar sentir ansiedade, mais ela cresce — acolher é o caminho de suavização.",
+            "Mindfulness nos convida a ver a ansiedade como uma onda: ela vem, atinge o pico e depois se desfaz.",
+            "Nenhuma emoção é permanente; toda sensação tem um começo, meio e fim.",
+            "Quando nos ancoramos no corpo, a mente encontra um lugar de descanso.",
+            "A prática da atenção plena fortalece a nossa capacidade de permanecer estáveis mesmo em meio à incerteza.",
+            "Podemos aprender a reconhecer a diferença entre um perigo real e um pensamento sobre o perigo.",
+            "Respirar conscientemente por alguns instantes já é uma forma de interromper o ciclo da ansiedade.",
+            "Ao cultivar a curiosidade sobre a ansiedade, abrimos espaço para compreendê-la — e não apenas suportá-la.",
+            "Não precisamos eliminar a ansiedade para ter paz; precisamos apenas aprender a conviver com ela de forma gentil.",
+            "A aceitação não é desistência — é o primeiro passo para mudar a relação com o que sentimos.",
+            "A calma não é ausência de ansiedade, mas a presença de consciência.",
+            "Cada momento em que escolhemos observar, em vez de reagir, estamos treinando liberdade interior."
+          ],
           "intention": [],
           "posture_and_environment": [],
           "initial_breathing": [],

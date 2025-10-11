@@ -21,17 +21,52 @@ export class DatabaseService {
       await db.collection("structure").deleteMany({});
       await db.collection("meditations").deleteMany({});
 
+      // Helper function to transform string arrays to ContentItem arrays
+      const transformToContentItems = (items: string[]) => {
+        return items.map((text, index) => ({
+          text,
+          order: index,
+        }));
+      };
+
+      // Helper function to transform meditation phase data
+      const transformPhaseData = (phaseData: Record<string, string[]>) => {
+        const transformed: Record<string, Array<{ text: string; order: number }>> = {};
+        for (const [key, value] of Object.entries(phaseData)) {
+          transformed[key] = Array.isArray(value) ? transformToContentItems(value) : [];
+        }
+        return transformed;
+      };
+
       // Seed themes with embedded meditations
       if (data.themes && Array.isArray(data.themes)) {
         for (const theme of data.themes) {
-          await ThemeService.create(theme);
+          // Remove _id field from the theme before creating to let MongoDB generate it
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { _id, createdAt, updatedAt, meditations, ...themeData } = theme;
+          
+          // Transform meditation data from string arrays to ContentItem arrays
+          const transformedMeditations = {
+            opening: transformPhaseData(meditations.opening),
+            concentration: transformPhaseData(meditations.concentration),
+            exploration: transformPhaseData(meditations.exploration),
+            awakening: transformPhaseData(meditations.awakening),
+          };
+
+          await ThemeService.create({
+            ...themeData,
+            meditations: transformedMeditations,
+          });
         }
       }
 
       // Seed audios
       if (data.audios && Array.isArray(data.audios)) {
         for (const audio of data.audios) {
-          await AudioService.create(audio);
+          // Remove _id field from the audio before creating
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { _id, createdAt, updatedAt, ...audioData } = audio;
+          await AudioService.create(audioData);
         }
       }
 
@@ -42,9 +77,21 @@ export class DatabaseService {
         await StructureService.initializeDefault();
       }
 
-      // Seed meditations document
+      // Seed meditations document - transform string arrays to ContentItem arrays
       if (data.meditations) {
-        await MeditationsService.update(data.meditations);
+        const transformedMeditations = {
+          opening: transformPhaseData(data.meditations.opening),
+          concentration: transformPhaseData(data.meditations.concentration),
+          exploration: transformPhaseData(data.meditations.exploration),
+          awakening: transformPhaseData(data.meditations.awakening),
+        };
+
+        // Create new by setting the data directly
+        await db.collection("meditations").insertOne({
+          ...transformedMeditations,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
       } else {
         await MeditationsService.initializeDefault();
       }
