@@ -20,15 +20,15 @@ export async function GET(
 
     const db = await getDatabase();
 
-    // Fetch structure, theme, and random audio in parallel
-    const [structure, theme, randomAudioResult] = await Promise.all([
+    // Fetch structure, theme, and random song in parallel
+    const [structure, theme, randomSongResult] = await Promise.all([
       db.collection("structure").findOne({}) as Promise<Structure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
-      db
-        .collection("audios")
-        .aggregate([{ $sample: { size: 1 } }])
-        .toArray(),
+      db.collection("audios").aggregate([{ $sample: { size: 1 } }]).toArray(),
     ]);
+
+    // Extract random song (optional, meditation works without it)
+    const song = randomSongResult[0] || null;
 
     // Validate that required data exists
     if (!structure) {
@@ -44,9 +44,6 @@ export async function GET(
         { status: 404 }
       );
     }
-
-    // Extract random audio (optional, meditation works without it)
-    const randomAudio = randomAudioResult[0] || null;
 
     // Validate structure has required fields
     if (!structure.method || !Array.isArray(structure.method)) {
@@ -134,7 +131,18 @@ export async function GET(
         title: theme.title,
         description: theme.description || "",
         stages,
-        audio: randomAudio,
+        // Include random song if available
+        song: song
+          ? {
+              _id: song._id.toString(),
+              title: song.title,
+              artist: song.artist,
+              src: song.src,
+              fadeInMs: song.fadeInMs,
+              fadeOutMs: song.fadeOutMs,
+              volume: song.volume,
+            }
+          : undefined,
       },
     };
 

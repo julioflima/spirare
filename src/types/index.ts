@@ -8,6 +8,3 @@ export * from "./database";
 
 // API types (requests and responses)
 export * from "./api";
-
-// Meditation types (if you have separate meditation-specific types)
-// export * from './meditation';

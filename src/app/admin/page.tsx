@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Audio, Theme, Structure, Meditations } from '@/types/database';
+import { Song, Theme, Structure, Meditations } from '@/types/database';
 import {
     useAllDatabaseDataQuery,
     useCreateThemeMutation,
     useDeleteThemeMutation,
     useUpdateThemeMutation,
-    useCreateAudioMutation,
-    useDeleteAudioMutation,
+    useCreateSongMutation,
+    useDeleteSongMutation,
     useUpdateMeditationsMutation,
     useUpdateStructureMutation,
 } from '@/providers';
@@ -18,7 +18,7 @@ interface AdminData {
     meditations: Meditations | null;
     structure: Structure | null;
     themes: Theme[];
-    audios: Audio[];
+    songs: Song[];
 }
 
 const createEmptyMeditations = (): Theme['meditations'] => ({
@@ -65,21 +65,21 @@ export default function AdminPage() {
     const { data: queryData, isLoading } = useAllDatabaseDataQuery();
     const createThemeMutation = useCreateThemeMutation();
     const deleteThemeMutation = useDeleteThemeMutation();
-    const createAudioMutation = useCreateAudioMutation();
-    const deleteAudioMutation = useDeleteAudioMutation();
+    const createSongMutation = useCreateSongMutation();
+    const deleteSongMutation = useDeleteSongMutation();
 
     // Combined loading state from all mutations
     const isSaving = createThemeMutation.isPending ||
         deleteThemeMutation.isPending ||
-        createAudioMutation.isPending ||
-        deleteAudioMutation.isPending;
+        createSongMutation.isPending ||
+        deleteSongMutation.isPending;
 
     // Data from React Query (no local state needed)
     const data: AdminData = {
         meditations: queryData?.meditations || null,
         structure: queryData?.structure || null,
         themes: queryData?.themes || [],
-        audios: queryData?.audios || []
+        songs: queryData?.songs || []
     };
 
     const showMessage = (type: 'success' | 'error', text: string) => {
@@ -107,23 +107,23 @@ export default function AdminPage() {
         }
     };
 
-    const handleCreateAudio = async (audio: Omit<Audio, '_id' | 'createdAt' | 'updatedAt'>) => {
+    const handleCreateSong = async (song: Omit<Song, '_id' | 'createdAt' | 'updatedAt'>) => {
         try {
-            await createAudioMutation.mutateAsync(audio);
-            showMessage('success', 'Áudio criado com sucesso!');
+            await createSongMutation.mutateAsync(song);
+            showMessage('success', 'Música criada com sucesso!');
         } catch (error) {
-            showMessage('error', error instanceof Error ? error.message : 'Erro ao criar áudio');
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao criar música');
         }
     };
 
-    const handleDeleteAudio = async (id: string) => {
-        if (!confirm('Tem certeza que deseja excluir este áudio?')) return;
+    const handleDeleteSong = async (id: string) => {
+        if (!confirm('Tem certeza que deseja excluir esta música?')) return;
 
         try {
-            await deleteAudioMutation.mutateAsync(id);
-            showMessage('success', 'Áudio excluído com sucesso!');
+            await deleteSongMutation.mutateAsync(id);
+            showMessage('success', 'Música excluída com sucesso!');
         } catch (error) {
-            showMessage('error', error instanceof Error ? error.message : 'Erro ao excluir áudio');
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao excluir música');
         }
     };
 
@@ -212,10 +212,10 @@ export default function AdminPage() {
                         />
                     )}
                     {activeTab === 'audios' && (
-                        <AudiosTab
-                            audios={data.audios}
-                            onCreate={handleCreateAudio}
-                            onDelete={handleDeleteAudio}
+                        <SongsTab
+                            songs={data.songs}
+                            onCreate={handleCreateSong}
+                            onDelete={handleDeleteSong}
                             isSaving={isSaving}
                         />
                     )}
@@ -1200,19 +1200,19 @@ function ThemesTab({
 }
 
 // Audios Tab Component
-function AudiosTab({
-    audios,
+function SongsTab({
+    songs,
     onCreate,
     onDelete,
     isSaving
 }: {
-    audios: Audio[];
-    onCreate: (audio: Omit<Audio, '_id' | 'createdAt' | 'updatedAt'>) => void;
+    songs: Song[];
+    onCreate: (song: Omit<Song, '_id' | 'createdAt' | 'updatedAt'>) => void;
     onDelete: (id: string) => void;
     isSaving: boolean;
 }) {
     const [showForm, setShowForm] = useState(false);
-    const [newAudio, setNewAudio] = useState({
+    const [newSong, setNewSong] = useState({
         title: '',
         artist: '',
         src: '',
@@ -1223,8 +1223,8 @@ function AudiosTab({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onCreate(newAudio);
-        setNewAudio({ title: '', artist: '', src: '', fadeInMs: 3000, fadeOutMs: 3000, volume: 1 });
+        onCreate(newSong);
+        setNewSong({ title: '', artist: '', src: '', fadeInMs: 3000, fadeOutMs: 3000, volume: 1 });
         setShowForm(false);
     };
 
@@ -1236,7 +1236,7 @@ function AudiosTab({
                     onClick={() => setShowForm(!showForm)}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
                 >
-                    {showForm ? 'Cancelar' : 'Adicionar Áudio'}
+                    {showForm ? 'Cancelar' : 'Adicionar Música'}
                 </button>
             </div>
 
@@ -1247,10 +1247,10 @@ function AudiosTab({
                             <label className="block text-sm font-medium text-gray-800 mb-1">Título *</label>
                             <input
                                 type="text"
-                                value={newAudio.title}
-                                onChange={(e) => setNewAudio(prev => ({ ...prev, title: e.target.value }))}
+                                value={newSong.title}
+                                onChange={(e) => setNewSong(prev => ({ ...prev, title: e.target.value }))}
                                 className="w-full p-2 border border-gray-300 rounded-md text-gray-800 placeholder-gray-400"
-                                placeholder="Nome do áudio"
+                                placeholder="Nome da música"
                                 required
                             />
                         </div>
@@ -1258,8 +1258,8 @@ function AudiosTab({
                             <label className="block text-sm font-medium text-gray-800 mb-1">Artista *</label>
                             <input
                                 type="text"
-                                value={newAudio.artist}
-                                onChange={(e) => setNewAudio(prev => ({ ...prev, artist: e.target.value }))}
+                                value={newSong.artist}
+                                onChange={(e) => setNewSong(prev => ({ ...prev, artist: e.target.value }))}
                                 className="w-full p-2 border border-gray-300 rounded-md text-gray-800 placeholder-gray-400"
                                 placeholder="Nome do artista"
                                 required
@@ -1267,13 +1267,13 @@ function AudiosTab({
                         </div>
                     </div>
                     <div className="mt-4">
-                        <label className="block text-sm font-medium text-gray-800 mb-1">URL do Áudio *</label>
+                        <label className="block text-sm font-medium text-gray-800 mb-1">URL da Música *</label>
                         <input
                             type="url"
-                            value={newAudio.src}
-                            onChange={(e) => setNewAudio(prev => ({ ...prev, src: e.target.value }))}
+                            value={newSong.src}
+                            onChange={(e) => setNewSong(prev => ({ ...prev, src: e.target.value }))}
                             className="w-full p-2 border border-gray-300 rounded-md text-gray-800 placeholder-gray-400"
-                            placeholder="https://exemplo.com/audio.mp3"
+                            placeholder="https://exemplo.com/musica.mp3"
                             required
                         />
                     </div>
@@ -1282,8 +1282,8 @@ function AudiosTab({
                             <label className="block text-sm font-medium text-gray-800 mb-1">Fade In (ms)</label>
                             <input
                                 type="number"
-                                value={newAudio.fadeInMs}
-                                onChange={(e) => setNewAudio(prev => ({ ...prev, fadeInMs: Number(e.target.value) }))}
+                                value={newSong.fadeInMs}
+                                onChange={(e) => setNewSong(prev => ({ ...prev, fadeInMs: Number(e.target.value) }))}
                                 className="w-full p-2 border border-gray-300 rounded-md text-gray-800"
                                 min="0"
                             />
@@ -1292,8 +1292,8 @@ function AudiosTab({
                             <label className="block text-sm font-medium text-gray-800 mb-1">Fade Out (ms)</label>
                             <input
                                 type="number"
-                                value={newAudio.fadeOutMs}
-                                onChange={(e) => setNewAudio(prev => ({ ...prev, fadeOutMs: Number(e.target.value) }))}
+                                value={newSong.fadeOutMs}
+                                onChange={(e) => setNewSong(prev => ({ ...prev, fadeOutMs: Number(e.target.value) }))}
                                 className="w-full p-2 border border-gray-300 rounded-md text-gray-800"
                                 min="0"
                             />
@@ -1301,12 +1301,12 @@ function AudiosTab({
                     </div>
                     <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Volume: {newAudio.volume.toFixed(1)}
+                            Volume: {newSong.volume.toFixed(1)}
                         </label>
                         <input
                             type="range"
-                            value={newAudio.volume}
-                            onChange={(e) => setNewAudio(prev => ({ ...prev, volume: Number(e.target.value) }))}
+                            value={newSong.volume}
+                            onChange={(e) => setNewSong(prev => ({ ...prev, volume: Number(e.target.value) }))}
                             className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
                             min="0"
                             max="1"
@@ -1322,28 +1322,28 @@ function AudiosTab({
                         disabled={isSaving}
                         className="mt-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 py-2 rounded-md font-medium transition-colors"
                     >
-                        {isSaving ? 'Criando...' : 'Criar Áudio'}
+                        {isSaving ? 'Criando...' : 'Criar Música'}
                     </button>
                 </form>
             )}
 
             <div className="space-y-4">
-                {audios.map((audio) => (
-                    <div key={audio._id?.toString()} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                {songs.map((song) => (
+                    <div key={song._id?.toString()} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
                         <div className="flex justify-between items-start">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="text-lg font-semibold text-gray-800">{audio.title}</h3>
-                                    <span className="text-sm text-gray-700 bg-gray-200 px-2 py-0.5 rounded">Vol: {audio.volume}</span>
+                                    <h3 className="text-lg font-semibold text-gray-800">{song.title}</h3>
+                                    <span className="text-sm text-gray-700 bg-gray-200 px-2 py-0.5 rounded">Vol: {song.volume}</span>
                                 </div>
-                                <p className="text-sm text-gray-700 mb-1"><strong>Artista:</strong> {audio.artist}</p>
-                                <p className="text-sm text-gray-700 mb-2 break-all"><strong>URL:</strong> {audio.src}</p>
+                                <p className="text-sm text-gray-700 mb-1"><strong>Artista:</strong> {song.artist}</p>
+                                <p className="text-sm text-gray-700 mb-2 break-all"><strong>URL:</strong> {song.src}</p>
                                 <div className="text-xs text-gray-600">
-                                    Fade In: {audio.fadeInMs}ms | Fade Out: {audio.fadeOutMs}ms
+                                    Fade In: {song.fadeInMs}ms | Fade Out: {song.fadeOutMs}ms
                                 </div>
                             </div>
                             <button
-                                onClick={() => audio._id && onDelete(audio._id.toString())}
+                                onClick={() => song._id && onDelete(song._id.toString())}
                                 disabled={isSaving}
                                 className="ml-4 bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white px-3 py-1 rounded text-sm transition-colors"
                             >
@@ -1353,8 +1353,8 @@ function AudiosTab({
                     </div>
                 ))}
             </div>
-            {audios.length === 0 && (
-                <p className="text-gray-600 text-center py-8">Nenhum áudio encontrado</p>
+            {songs.length === 0 && (
+                <p className="text-gray-600 text-center py-8">Nenhuma música encontrada</p>
             )}
         </div>
     );

@@ -1,27 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CreateAudioRequest, CreateAudioResponse } from "@/types/api";
+import type { CreateSongRequest, CreateSongResponse } from "@/types/api";
 
-async function createAudio(
-  audio: CreateAudioRequest
-): Promise<CreateAudioResponse> {
+async function createSong(
+  song: CreateSongRequest
+): Promise<CreateSongResponse> {
   const response = await fetch("/api/database/audios", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(audio),
+    body: JSON.stringify(song),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to create audio");
+    throw new Error("Failed to create song");
   }
 
   return response.json();
 }
 
-export const useCreateAudioMutation = () => {
+export const useCreateSongMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createAudio,
+    mutationFn: createSong,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },

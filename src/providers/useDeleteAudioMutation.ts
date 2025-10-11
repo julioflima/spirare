@@ -1,22 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-async function deleteAudio(id: string) {
+async function deleteSong(id: string) {
   const response = await fetch(`/api/database/audios/${id}`, {
     method: "DELETE",
   });
 
   if (!response.ok) {
-    throw new Error("Failed to delete audio");
+    throw new Error("Failed to delete song");
   }
 
   return response.json();
 }
 
-export const useDeleteAudioMutation = () => {
+export const useDeleteSongMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteAudio,
+    mutationFn: deleteSong,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },

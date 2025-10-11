@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { AllDatabaseData } from "@/types/api";
 
 async function fetchAllDatabaseData(): Promise<AllDatabaseData> {
-  const [meditationsRes, structureRes, themesRes, audiosRes] =
+  const [meditationsRes, structureRes, themesRes, songsRes] =
     await Promise.all([
       fetch("/api/database/meditations").then((r) => r.json()),
       fetch("/api/database/structure").then((r) => r.json()),
@@ -14,7 +14,7 @@ async function fetchAllDatabaseData(): Promise<AllDatabaseData> {
     meditations: meditationsRes.meditations,
     structure: structureRes.structure,
     themes: themesRes.themes,
-    audios: audiosRes.audios,
+    songs: songsRes.audios, // API still returns 'audios' but we map to 'songs'
   };
 }
 
