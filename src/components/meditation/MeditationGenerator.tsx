@@ -44,7 +44,7 @@ export const MeditationGenerator = () => {
     const totalSteps = defaultMeditation.etapas.length;
     const totalMoments = totalSteps * SUBSTEPS_PER_STEP;
     const flatIndex = currentStep * SUBSTEPS_PER_STEP + currentSubStep + 1;
-    const stepNames = useMemo(() => defaultMeditation.etapas.map((etapa) => etapa.nome), []);
+    const stepNames = useMemo(() => defaultMeditation.etapas.map((etapa: any) => etapa.nome), []);
 
     const currentStage = defaultMeditation.etapas[currentStep];
 
