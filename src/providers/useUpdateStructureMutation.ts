@@ -1,7 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { UpdateStructureRequest, UpdateStructureResponse } from "@/types/api";
+import type {
+  UpdateStructureRequest,
+  UpdateStructureResponse,
+} from "@/types/api";
 
-async function updateStructure(data: UpdateStructureRequest): Promise<UpdateStructureResponse> {
+async function updateStructure(
+  data: UpdateStructureRequest
+): Promise<UpdateStructureResponse> {
   const response = await fetch("/api/database/structure", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

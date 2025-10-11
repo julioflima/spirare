@@ -6,7 +6,10 @@ interface UpdateAudioParams {
   data: UpdateAudioRequest;
 }
 
-async function updateAudio({ id, data }: UpdateAudioParams): Promise<UpdateAudioResponse> {
+async function updateAudio({
+  id,
+  data,
+}: UpdateAudioParams): Promise<UpdateAudioResponse> {
   const response = await fetch(`/api/database/audios/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

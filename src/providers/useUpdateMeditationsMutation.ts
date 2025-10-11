@@ -1,7 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { UpdateMeditationsRequest, UpdateMeditationsResponse } from "@/types/api";
+import type {
+  UpdateMeditationsRequest,
+  UpdateMeditationsResponse,
+} from "@/types/api";
 
-async function updateMeditations(data: UpdateMeditationsRequest): Promise<UpdateMeditationsResponse> {
+async function updateMeditations(
+  data: UpdateMeditationsRequest
+): Promise<UpdateMeditationsResponse> {
   const response = await fetch("/api/database/meditations", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

@@ -175,7 +175,8 @@ const { data, isLoading, error } = useCategoriesQuery();
 ```typescript
 // ❌ NÃO FAÇA ISSO - tipo local em API route
 // src/app/api/themes/route.ts
-interface Theme {  // ❌ ERRADO!
+interface Theme {
+  // ❌ ERRADO!
   category: string;
   title: string;
 }
@@ -189,7 +190,8 @@ export async function GET() {
 ```typescript
 // ❌ NÃO FAÇA ISSO - tipo duplicado em provider
 // src/providers/useThemesQuery.ts
-interface Theme {  // ❌ DUPLICADO!
+interface Theme {
+  // ❌ DUPLICADO!
   category: string;
   title: string;
 }
@@ -240,6 +242,7 @@ src/types/
 ```
 
 **Benefícios:**
+
 - ✅ Type safety total entre frontend e backend
 - ✅ Mudanças em contratos de API detectadas em compile-time
 - ✅ IntelliSense completo em toda a aplicação

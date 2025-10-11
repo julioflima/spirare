@@ -6,7 +6,10 @@ interface UpdateThemeParams {
   data: UpdateThemeRequest;
 }
 
-async function updateTheme({ id, data }: UpdateThemeParams): Promise<UpdateThemeResponse> {
+async function updateTheme({
+  id,
+  data,
+}: UpdateThemeParams): Promise<UpdateThemeResponse> {
   const response = await fetch(`/api/database/themes/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

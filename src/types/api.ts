@@ -3,7 +3,7 @@
  * These types are shared between frontend and backend for consistency
  */
 
-import { Audio, Theme, Structure, Meditations } from './database';
+import { Audio, Theme, Structure, Meditations } from "./database";
 
 // ============================================================================
 // API Response Types
@@ -209,7 +209,7 @@ export interface AdminAuthResponse {
 /**
  * Database operation types for super-admin
  */
-export type DatabaseOperation = 'seed' | 'drop' | 'backup' | 'restore';
+export type DatabaseOperation = "seed" | "drop" | "backup" | "restore";
 
 /**
  * Database status information
@@ -244,7 +244,7 @@ export interface CreateThemeRequest {
   category: string;
   title: string;
   description?: string;
-  meditations?: Theme['meditations'];
+  meditations?: Theme["meditations"];
   isActive?: boolean;
 }
 
@@ -255,7 +255,7 @@ export interface UpdateThemeRequest {
   category?: string;
   title?: string;
   description?: string;
-  meditations?: Theme['meditations'];
+  meditations?: Theme["meditations"];
   isActive?: boolean;
 }
 
@@ -287,18 +287,18 @@ export interface UpdateAudioRequest {
  * Update meditations request body
  */
 export interface UpdateMeditationsRequest {
-  opening?: Meditations['opening'];
-  concentration?: Meditations['concentration'];
-  exploration?: Meditations['exploration'];
-  awakening?: Meditations['awakening'];
+  opening?: Meditations["opening"];
+  concentration?: Meditations["concentration"];
+  exploration?: Meditations["exploration"];
+  awakening?: Meditations["awakening"];
 }
 
 /**
  * Update structure request body
  */
 export interface UpdateStructureRequest {
-  method?: Structure['method'];
-  specifics?: Structure['specifics'];
+  method?: Structure["method"];
+  specifics?: Structure["specifics"];
 }
 
 /**

@@ -13,9 +13,7 @@ export async function GET(
 
     // Fetch only structure and theme metadata (not full phrase arrays)
     const [structure, theme] = await Promise.all([
-      db
-        .collection("structure")
-        .findOne({}) as Promise<Structure | null>,
+      db.collection("structure").findOne({}) as Promise<Structure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
     ]);
 
@@ -47,7 +45,7 @@ export async function GET(
     // Process stages using map instead of for...of
     const stages = await Promise.all(
       structure.method.map(async (stageObj) => {
-        const stage = Object.keys(stageObj)[0] as keyof Structure['specifics'];
+        const stage = Object.keys(stageObj)[0] as keyof Structure["specifics"];
         const practices = stageObj[stage] || [];
 
         // Process practices using map
@@ -80,7 +78,7 @@ export async function GET(
       session: {
         category: theme.category,
         title: theme.title,
-        description: theme.description || '',
+        description: theme.description || "",
         stages,
       },
     };

@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import type { MeditationSession, GetMeditationSessionResponse } from "@/types/api";
+import type {
+  MeditationSession,
+  GetMeditationSessionResponse,
+} from "@/types/api";
 
 async function fetchMeditationSession(
   category: string
