@@ -31,9 +31,14 @@ export class DatabaseService {
 
       // Helper function to transform meditation phase data
       const transformPhaseData = (phaseData: Record<string, string[]>) => {
-        const transformed: Record<string, Array<{ text: string; order: number }>> = {};
+        const transformed: Record<
+          string,
+          Array<{ text: string; order: number }>
+        > = {};
         for (const [key, value] of Object.entries(phaseData)) {
-          transformed[key] = Array.isArray(value) ? transformToContentItems(value) : [];
+          transformed[key] = Array.isArray(value)
+            ? transformToContentItems(value)
+            : [];
         }
         return transformed;
       };
@@ -43,8 +48,9 @@ export class DatabaseService {
         for (const theme of data.themes) {
           // Remove _id field from the theme before creating to let MongoDB generate it
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { _id, createdAt, updatedAt, meditations, ...themeData } = theme;
-          
+          const { _id, createdAt, updatedAt, meditations, ...themeData } =
+            theme;
+
           // Transform meditation data from string arrays to ContentItem arrays
           const transformedMeditations = {
             opening: transformPhaseData(meditations.opening),
