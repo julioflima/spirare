@@ -1,15 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { CreateAudioRequest, CreateAudioResponse } from "@/types/api";
 
-interface AudioInput {
-  title: string;
-  artist: string;
-  src: string;
-  fadeInMs?: number;
-  fadeOutMs?: number;
-  volume?: number;
-}
-
-async function createAudio(audio: AudioInput) {
+async function createAudio(audio: CreateAudioRequest): Promise<CreateAudioResponse> {
   const response = await fetch("/api/database/audios", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

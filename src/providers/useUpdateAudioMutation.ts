@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { UpdateAudioRequest, UpdateAudioResponse } from "@/types/api";
 
 interface UpdateAudioParams {
   id: string;
-  data: any;
+  data: UpdateAudioRequest;
 }
 
-async function updateAudio({ id, data }: UpdateAudioParams) {
+async function updateAudio({ id, data }: UpdateAudioParams): Promise<UpdateAudioResponse> {
   const response = await fetch(`/api/database/audios/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

@@ -1,13 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import type { AllDatabaseData } from "@/types/api";
 
-interface DatabaseData {
-  meditations?: any;
-  structure?: any;
-  themes?: any[];
-  audios?: any[];
-}
-
-async function fetchAllDatabaseData(): Promise<DatabaseData> {
+async function fetchAllDatabaseData(): Promise<AllDatabaseData> {
   const [meditationsRes, structureRes, themesRes, audiosRes] =
     await Promise.all([
       fetch("/api/database/meditations").then((r) => r.json()),

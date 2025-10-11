@@ -1,27 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/mongodb";
-
-interface MeditationStructure {
-  method: Array<{ [stage: string]: string[] }>;
-  specifics: {
-    [stage: string]: {
-      [practice: string]: boolean;
-    };
-  };
-}
-
-interface MeditationBase {
-  [stage: string]: {
-    [practice: string]: string[];
-  };
-}
-
-interface Theme {
-  category: string;
-  title: string;
-  description: string;
-  meditations: MeditationBase;
-}
+import { Structure, Theme } from "@/types/database";
+import type { GetMeditationSessionResponse } from "@/types/api";
 
 export async function GET(
   request: NextRequest,
@@ -35,7 +15,7 @@ export async function GET(
     const [structure, theme] = await Promise.all([
       db
         .collection("structure")
-        .findOne({}) as Promise<MeditationStructure | null>,
+        .findOne({}) as Promise<Structure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
     ]);
 
@@ -67,51 +47,45 @@ export async function GET(
     // Process stages using map instead of for...of
     const stages = await Promise.all(
       structure.method.map(async (stageObj) => {
-        const stageName = Object.keys(stageObj)[0];
-        const practices = stageObj[stageName];
+        const stage = Object.keys(stageObj)[0] as keyof Structure['specifics'];
+        const practices = stageObj[stage] || [];
 
         // Process practices using map
         const practicesData = await Promise.all(
-          practices.map(async (practiceName) => {
-            const useSpecific =
-              structure.specifics[stageName]?.[practiceName] === true;
+          practices.map(async (practice: string) => {
+            const isSpecific = structure.specifics[stage]?.[practice];
 
             // Determine collection: theme-specific or base
-            const collection = useSpecific ? "themes" : "meditations";
+            const collection = isSpecific ? "themes" : "meditations";
 
             // Get one random phrase directly from MongoDB
-            const text = await getRandomPhrase(
-              collection,
-              stageName,
-              practiceName
-            );
+            const text = await getRandomPhrase(collection, stage, practice);
 
             return {
-              practice: practiceName,
+              practice,
               text,
-              isSpecific: useSpecific,
+              isSpecific,
             };
           })
         );
 
         return {
-          stage: stageName,
+          stage,
           practices: practicesData,
         };
       })
     );
 
-    const session = {
-      category: theme.category,
-      title: theme.title,
-      description: theme.description,
-      stages,
+    const response: GetMeditationSessionResponse = {
+      session: {
+        category: theme.category,
+        title: theme.title,
+        description: theme.description || '',
+        stages,
+      },
     };
 
-    return NextResponse.json({
-      success: true,
-      session,
-    });
+    return NextResponse.json(response);
   } catch (error) {
     console.error("Error composing meditation:", error);
     return NextResponse.json(

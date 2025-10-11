@@ -1,14 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { CreateThemeRequest, CreateThemeResponse } from "@/types/api";
 
-interface ThemeInput {
-  category: string;
-  title: string;
-  description?: string;
-  meditations?: any;
-  isActive?: boolean;
-}
-
-async function createTheme(theme: ThemeInput) {
+async function createTheme(theme: CreateThemeRequest): Promise<CreateThemeResponse> {
   const response = await fetch("/api/database/themes", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

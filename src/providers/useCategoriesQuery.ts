@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-
-interface Category {
-  category: string;
-  title: string;
-  description: string;
-}
+import type { Category, GetCategoriesResponse } from '@/types/api';
 
 async function fetchCategories(): Promise<Category[]> {
   const response = await fetch('/api/categories');
-  const data = await response.json();
+  const data: GetCategoriesResponse = await response.json();
   return data.categories || [];
 }
 

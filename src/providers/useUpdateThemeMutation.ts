@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { UpdateThemeRequest, UpdateThemeResponse } from "@/types/api";
 
 interface UpdateThemeParams {
   id: string;
-  data: any;
+  data: UpdateThemeRequest;
 }
 
-async function updateTheme({ id, data }: UpdateThemeParams) {
+async function updateTheme({ id, data }: UpdateThemeParams): Promise<UpdateThemeResponse> {
   const response = await fetch(`/api/database/themes/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

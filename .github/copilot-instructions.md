@@ -150,6 +150,102 @@ import { useCategoriesQuery } from "@/providers";
 const { data, isLoading, error } = useCategoriesQuery();
 ```
 
+### 🔷 Type Safety Pattern
+
+**TODOS os tipos devem ser compartilhados entre frontend e backend**
+
+- **`src/types/`** - **OBRIGATÓRIO**: Todos os tipos TypeScript da aplicação
+  - `database.ts` - Schemas Zod e tipos de banco de dados (Theme, Audio, Structure, Meditations)
+  - `api.ts` - Tipos de API (requests, responses, payloads)
+  - `index.ts` - Re-exporta todos os tipos para import centralizado
+
+#### 🚨 Regras Críticas de Tipagem
+
+**NUNCA defina tipos localmente em rotas de API ou providers**
+
+- ❌ **NUNCA** crie `interface` dentro de arquivos de API routes (`/api/**/*.ts`)
+- ❌ **NUNCA** crie `interface` dentro de providers (`/providers/**/*.ts`)
+- ❌ **NUNCA** duplique tipos entre frontend e backend
+- ✅ **SEMPRE** defina tipos em `/src/types/api.ts` ou `/src/types/database.ts`
+- ✅ **SEMPRE** importe tipos de `@/types` ou `@/types/api`
+- ✅ **SEMPRE** use os mesmos tipos em API routes e providers
+
+**Exemplo INCORRETO:**
+
+```typescript
+// ❌ NÃO FAÇA ISSO - tipo local em API route
+// src/app/api/themes/route.ts
+interface Theme {  // ❌ ERRADO!
+  category: string;
+  title: string;
+}
+
+export async function GET() {
+  const themes: Theme[] = await fetchThemes();
+  return NextResponse.json({ themes });
+}
+```
+
+```typescript
+// ❌ NÃO FAÇA ISSO - tipo duplicado em provider
+// src/providers/useThemesQuery.ts
+interface Theme {  // ❌ DUPLICADO!
+  category: string;
+  title: string;
+}
+
+async function fetchThemes(): Promise<Theme[]> {
+  // ...
+}
+```
+
+**Exemplo CORRETO:**
+
+```typescript
+// ✅ FAÇA ISSO
+// 1. Defina tipos em /src/types/api.ts
+export interface GetThemesResponse {
+  themes: Theme[];
+}
+
+// 2. Use no API route
+// src/app/api/themes/route.ts
+import type { GetThemesResponse } from "@/types/api";
+import { Theme } from "@/types/database";
+
+export async function GET() {
+  const themes: Theme[] = await fetchThemes();
+  const response: GetThemesResponse = { themes };
+  return NextResponse.json(response);
+}
+
+// 3. Use no provider
+// src/providers/useThemesQuery.ts
+import type { GetThemesResponse } from "@/types/api";
+
+async function fetchThemes() {
+  const response = await fetch("/api/themes");
+  const data: GetThemesResponse = await response.json();
+  return data.themes;
+}
+```
+
+**Estrutura de Tipos:**
+
+```
+src/types/
+├── database.ts      # Schemas Zod + tipos de modelos (Theme, Audio, etc.)
+├── api.ts          # Request/Response types para todas as APIs
+└── index.ts        # Re-exporta tudo
+```
+
+**Benefícios:**
+- ✅ Type safety total entre frontend e backend
+- ✅ Mudanças em contratos de API detectadas em compile-time
+- ✅ IntelliSense completo em toda a aplicação
+- ✅ Single source of truth para estruturas de dados
+- ✅ Refactoring seguro e automatizado
+
 ### Estrutura de Arquivos
 
 - **`src/styles/`** - Todos os arquivos de estilo globais
