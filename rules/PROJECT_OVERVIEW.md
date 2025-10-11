@@ -110,7 +110,7 @@ A interface administrativa é protegida por autenticação. As credenciais podem
 
 ```bash
 ADMIN_USERNAME=admin        # Padrão: admin
-ADMIN_PASSWORD=abreuelima   # Padrão: abreuelima
+ADMIN_PASSWORD=your_password
 ```
 
 Acesse a interface de gestão em:

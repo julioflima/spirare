@@ -95,7 +95,7 @@ MONGODB_DB=spirare
 
 # Admin (opcional - padrões abaixo)
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=abreuelima
+ADMIN_PASSWORD=your_password
 ```
 
 ### Inicialização do Banco de Dados

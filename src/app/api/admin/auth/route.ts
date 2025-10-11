@@ -5,8 +5,8 @@ export async function POST(request: NextRequest) {
     const { username, password } = await request.json();
 
     // Get credentials from environment variables, with defaults
-    const validUsername = process.env.ADMIN_USERNAME || "admin";
-    const validPassword = process.env.ADMIN_PASSWORD || "abreuelima";
+    const validUsername = process.env.ADMIN_USERNAME;
+    const validPassword = process.env.ADMIN_PASSWORD;
 
     if (username === validUsername && password === validPassword) {
       return NextResponse.json({ success: true });
