@@ -18,7 +18,7 @@ The database system is built with:
 1. **structure** - Single document with meditation method and specifics (which practices use theme-specific content)
 2. **meditations** - Single document with base/general meditation phrases for all categories
 3. **themes** - Multiple documents, one per category (anxiety, focus, etc.) with category-specific phrases
-4. **audios** - Multiple documents for background audio tracks
+4. **songs** - Multiple documents for background song tracks
 
 ### Data Models
 
@@ -139,14 +139,14 @@ The database system is built with:
 }
 ```
 
-#### Audios Collection (Multiple Documents)
+#### Songs Collection (Multiple Documents)
 
 ```typescript
 {
   _id: ObjectId,
   title: string,         // Display name
   artist: string,        // Artist/Creator
-  src: string,          // Audio file URL
+  src: string,          // Song file URL
   fadeInMs?: number,    // Fade in duration
   fadeOutMs?: number,   // Fade out duration
   volume?: number,      // Default volume (0-1)
@@ -165,7 +165,7 @@ The database system is built with:
 
 ### Database Management
 
-- `GET /api/database` - Get all collections data (structure, meditations, themes, audios)
+- `GET /api/database` - Get all collections data (structure, meditations, themes, songs)
 - `POST /api/database/seed` - Seed database with initial data
 
 ### Meditations API
@@ -186,13 +186,13 @@ The database system is built with:
 - `PUT /api/database/themes/[id]` - Update theme
 - `DELETE /api/database/themes/[id]` - Delete theme
 
-### Audios API
+### Songs API
 
-- `GET /api/database/audios` - Get all audios
-- `POST /api/database/audios` - Create new audio
-- `GET /api/database/audios/[id]` - Get audio by ID
-- `PUT /api/database/audios/[id]` - Update audio
-- `DELETE /api/database/audios/[id]` - Delete audio
+- `GET /api/database/songs` - Get all songs
+- `POST /api/database/songs` - Create new song
+- `GET /api/database/songs/[id]` - Get song by ID
+- `PUT /api/database/songs/[id]` - Update song
+- `DELETE /api/database/songs/[id]` - Delete song
 
 ## Setup
 

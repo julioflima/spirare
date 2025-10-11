@@ -1,6 +1,6 @@
 import { getDatabase } from "@/lib/mongodb";
 import { ThemeService } from "./themesService";
-import { AudioService } from "./audiosService";
+import { SongService } from "./songsService";
 import { StructureService } from "./structureService";
 import { MeditationsService } from "./meditationsService";
 import fs from "fs/promises";
@@ -17,7 +17,7 @@ export class DatabaseService {
       // Clear existing collections
       const db = await getDatabase();
       await db.collection("themes").deleteMany({});
-      await db.collection("audios").deleteMany({});
+      await db.collection("songs").deleteMany({});
       await db.collection("structure").deleteMany({});
       await db.collection("meditations").deleteMany({});
 
@@ -66,13 +66,13 @@ export class DatabaseService {
         }
       }
 
-      // Seed audios
-      if (data.audios && Array.isArray(data.audios)) {
-        for (const audio of data.audios) {
-          // Remove _id field from the audio before creating
+      // Seed songs
+      if (data.songs && Array.isArray(data.songs)) {
+        for (const song of data.songs) {
+          // Remove _id field from the song before creating
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { _id, createdAt, updatedAt, ...audioData } = audio;
-          await AudioService.create(audioData);
+          const { _id, createdAt, updatedAt, ...songData } = song;
+          await SongService.create(songData);
         }
       }
 
@@ -104,7 +104,7 @@ export class DatabaseService {
 
       return {
         themes: data.themes?.length || 0,
-        audios: data.audios?.length || 0,
+        songs: data.songs?.length || 0,
         structure: data.structure ? 1 : 0,
         meditations: data.meditations ? 1 : 0,
       };
@@ -117,13 +117,13 @@ export class DatabaseService {
   static async backupDatabase() {
     try {
       const themes = await ThemeService.getAll();
-      const audios = await AudioService.getAll();
+      const songs = await SongService.getAll();
       const structure = await StructureService.get();
       const meditations = await MeditationsService.get();
 
       return {
         themes,
-        audios,
+        songs,
         structure,
         meditations,
         timestamp: new Date().toISOString(),
@@ -144,7 +144,7 @@ export class DatabaseService {
         .drop()
         .catch(() => {});
       await db
-        .collection("audios")
+        .collection("songs")
         .drop()
         .catch(() => {});
       await db
@@ -168,7 +168,7 @@ export class DatabaseService {
       const db = await getDatabase();
 
       const themesCount = await db.collection("themes").countDocuments();
-      const audiosCount = await db.collection("audios").countDocuments();
+      const songsCount = await db.collection("songs").countDocuments();
       const structureCount = await db.collection("structure").countDocuments();
       const meditationsCount = await db
         .collection("meditations")
@@ -177,11 +177,11 @@ export class DatabaseService {
       return {
         collections: {
           themes: themesCount,
-          audios: audiosCount,
+          songs: songsCount,
           structure: structureCount,
           meditations: meditationsCount,
         },
-        total: themesCount + audiosCount + structureCount + meditationsCount,
+        total: themesCount + songsCount + structureCount + meditationsCount,
         timestamp: new Date().toISOString(),
       };
     } catch (error) {

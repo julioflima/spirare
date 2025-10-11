@@ -20,27 +20,27 @@ interface SpeechControls {
 }
 
 interface IUseSpeech {
-  audioBuffer: ArrayBuffer;
+  songBuffer: ArrayBuffer;
 }
 
-export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
-  const audioElementRef = useRef<HTMLAudioElement | null>(null);
-  const audioUrlRef = useRef<string | null>(null);
+export function useSpeech({ songBuffer }: IUseSpeech): SpeechControls {
+  const songElementRef = useRef<HTMLSongElement | null>(null);
+  const songUrlRef = useRef<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const sequenceRef = useRef<Promise<void>>(Promise.resolve());
   const cancelTokenRef = useRef(0);
   const rejectPlaybackRef = useRef<((reason: Error) => void) | null>(null);
 
-  const cleanupAudio = useCallback(() => {
-    if (audioElementRef.current) {
-      audioElementRef.current.pause();
-      audioElementRef.current.src = "";
-      audioElementRef.current = null;
+  const cleanupSong = useCallback(() => {
+    if (songElementRef.current) {
+      songElementRef.current.pause();
+      songElementRef.current.src = "";
+      songElementRef.current = null;
     }
-    if (audioUrlRef.current) {
-      URL.revokeObjectURL(audioUrlRef.current);
-      audioUrlRef.current = null;
+    if (songUrlRef.current) {
+      URL.revokeObjectURL(songUrlRef.current);
+      songUrlRef.current = null;
     }
   }, []);
 
@@ -50,9 +50,9 @@ export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
       rejectPlaybackRef.current(new Error("Playback interrompido."));
       rejectPlaybackRef.current = null;
     }
-    cleanupAudio();
+    cleanupSong();
     setIsGenerating(false);
-  }, [cleanupAudio]);
+  }, [cleanupSong]);
 
   const playText = useCallback(
     async (rawText: string, token: number) => {
@@ -64,61 +64,61 @@ export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
       setIsGenerating(true);
       setError(null);
 
-      let audio: HTMLAudioElement | null = null;
+      let song: HTMLSongElement | null = null;
       try {
         if (cancelTokenRef.current !== token) {
           setIsGenerating(false);
           return;
         }
 
-        const blob = new Blob([audioBuffer], { type: "audio/mpeg" });
+        const blob = new Blob([songBuffer], { type: "song/mpeg" });
         const url = URL.createObjectURL(blob);
-        audioUrlRef.current = url;
+        songUrlRef.current = url;
 
-        audio = new Audio(url);
-        audioElementRef.current = audio;
-        audio.volume = 1;
+        song = new Song(url);
+        songElementRef.current = song;
+        song.volume = 1;
 
         await new Promise<void>((resolve, reject) => {
           const handleEnded = () => {
-            audio?.removeEventListener("ended", handleEnded);
-            audio?.removeEventListener("error", handleError);
+            song?.removeEventListener("ended", handleEnded);
+            song?.removeEventListener("error", handleError);
             rejectPlaybackRef.current = null;
-            cleanupAudio();
+            cleanupSong();
             resolve();
           };
 
           const handleError = () => {
-            audio?.removeEventListener("ended", handleEnded);
-            audio?.removeEventListener("error", handleError);
+            song?.removeEventListener("ended", handleEnded);
+            song?.removeEventListener("error", handleError);
             rejectPlaybackRef.current = null;
             const playbackError = new Error(
               "Erro ao reproduzir áudio da meditação."
             );
-            cleanupAudio();
+            cleanupSong();
             reject(playbackError);
           };
 
           rejectPlaybackRef.current = (reason) => {
-            audio?.removeEventListener("ended", handleEnded);
-            audio?.removeEventListener("error", handleError);
-            cleanupAudio();
+            song?.removeEventListener("ended", handleEnded);
+            song?.removeEventListener("error", handleError);
+            cleanupSong();
             reject(reason);
           };
 
-          audio?.addEventListener("ended", handleEnded);
-          audio?.addEventListener("error", handleError);
+          song?.addEventListener("ended", handleEnded);
+          song?.addEventListener("error", handleError);
 
-          audio
+          song
             ?.play()
             .then(() => {
               setIsGenerating(false);
             })
             .catch((playbackStartError) => {
-              audio?.removeEventListener("ended", handleEnded);
-              audio?.removeEventListener("error", handleError);
+              song?.removeEventListener("ended", handleEnded);
+              song?.removeEventListener("error", handleError);
               rejectPlaybackRef.current = null;
-              cleanupAudio();
+              cleanupSong();
               const normalizedError =
                 playbackStartError instanceof Error
                   ? playbackStartError
@@ -139,7 +139,7 @@ export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
         throw playError;
       }
     },
-    [audioBuffer, cleanupAudio]
+    [songBuffer, cleanupSong]
   );
 
   const queueSpeechInternal = useCallback(
@@ -194,11 +194,11 @@ export function useSpeech({ audioBuffer }: IUseSpeech): SpeechControls {
   );
 
   const pause = useCallback(() => {
-    audioElementRef.current?.pause();
+    songElementRef.current?.pause();
   }, []);
 
   const resume = useCallback(() => {
-    audioElementRef.current?.play().catch(() => undefined);
+    songElementRef.current?.play().catch(() => undefined);
   }, []);
 
   return {

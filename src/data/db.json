@@ -460,12 +460,12 @@
       }
     }
   ],
-  "audios": [
+  "songs": [
     {
       "_id": "64b8f1a2e4b0c8a1f0d6c9b2",
       "title": "Weightless Atmosphere",
       "artist": "AmbiNet (Pixabay)",
-      "src": "https://cdn.pixabay.com/download/audio/2025/03/18/audio_edb18178a5.mp3?filename=weightless-atmosphere-315424.mp3",
+      "src": "https://cdn.pixabay.com/download/song/2025/03/18/song_edb18178a5.mp3?filename=weightless-atmosphere-315424.mp3",
       "fadeInMs": 3000,
       "fadeOutMs": 2000,
       "volume": 0.3

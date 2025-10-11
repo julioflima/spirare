@@ -26,7 +26,7 @@ src/
 │   │   └── database/            # APIs CRUD para dados
 │   │       ├── route.ts         # Database principal
 │   │       ├── seed/route.ts    # Seeding do banco
-│   │       ├── audios/          # CRUD de áudios
+│   │       ├── songs/          # CRUD de áudios
 │   │       └── themes/          # CRUD de temas
 │   ├── components/              # Componentes globais puros (sem API calls)
 │   │   └── meditation/          # Componentes da experiência
@@ -41,7 +41,7 @@ src/
 ├── styles/                      # Estilos globais
 │   └── globals.css              # Configuração Tailwind e estilos base
 ├── services/                    # Camada de serviços MongoDB
-│   ├── audiosService.ts
+│   ├── songsService.ts
 │   ├── themesService.ts
 │   ├── meditationsService.ts
 │   ├── structureService.ts
@@ -61,6 +61,7 @@ src/
 **Purpose**: Componentes **globais e puros**, sem chamadas a APIs
 
 **Rules**:
+
 - Componentes reutilizáveis em todo o app
 - Apenas recebem props e renderizam UI
 - Exemplo: botões, cards, layouts genéricos
@@ -73,6 +74,7 @@ src/
 **Purpose**: Componentes **específicos de uma rota**
 
 **Rules**:
+
 - Usam o prefixo `_` para indicar que são privados
 - Podem fazer chamadas a APIs e usar hooks de dados
 - Exemplo: `src/app/admin/_components/ThemeEditor.tsx`
@@ -85,6 +87,7 @@ src/
 **Purpose**: Páginas podem conter lógica
 
 **Rules**:
+
 - Lógica de fetching com React Query
 - useState, useEffect e outros hooks
 - Não extrair em componentes separados a menos que necessário para reuso
@@ -102,7 +105,7 @@ src/app/
 ├── admin/
 │   ├── _components/        # ✅ Componentes do admin
 │   │   ├── ThemeForm.tsx  # Formulário de tema (usa API)
-│   │   └── AudioList.tsx  # Lista de áudios (usa API)
+│   │   └── SongList.tsx  # Lista de áudios (usa API)
 │   └── page.tsx           # ✅ Página com lógica inline
 └── [category]/
     ├── _components/        # ✅ Componentes da categoria
@@ -122,12 +125,12 @@ src/app/
 
 ### Backend (API e Banco de Dados)
 
-| Área                          | Descrição                                                                                              |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `src/app/api/speech/route.ts` | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real.                     |
-| `src/app/api/database/`       | CRUD APIs para áudios, temas e conteúdos de meditação.                                                 |
-| `src/services/`               | Camada de serviços para interação com MongoDB (AudioService, ThemeService, MeditationDatabaseService). |
-| `src/types/database.ts`       | Schemas Zod para validação de dados e tipos TypeScript.                                                |
+| Área                          | Descrição                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/app/api/speech/route.ts` | Rota Next.js que consome o SDK oficial da OpenAI para gerar o áudio em tempo real.                    |
+| `src/app/api/database/`       | CRUD APIs para áudios, temas e conteúdos de meditação.                                                |
+| `src/services/`               | Camada de serviços para interação com MongoDB (SongService, ThemeService, MeditationDatabaseService). |
+| `src/types/database.ts`       | Schemas Zod para validação de dados e tipos TypeScript.                                               |
 
 ### Sistema de Gestão
 
@@ -142,6 +145,7 @@ src/app/
 ### **`src/styles/`** - Global Styles
 
 **Rules**:
+
 - Use Sass (`.sass` ou `.scss`) para estilos customizados
 - `globals.css` - estilos globais e configuração do Tailwind
 - Evite CSS inline ou CSS modules quando possível
@@ -149,6 +153,7 @@ src/app/
 ### **`public/`** - Static Assets
 
 **Rules**:
+
 - Todos os ícones e favicons devem estar aqui
 - Imagens, fontes, e outros assets públicos
 - Acessível via `/` (ex: `/icon.svg`)
@@ -156,6 +161,7 @@ src/app/
 ### **`src/providers/`** - React Query Hooks
 
 **Rules**:
+
 - **Um provider por arquivo**: cada hook em seu próprio arquivo
 - Se precisar de escopo, crie um diretório (ex: `CategoryProviders/`)
 - **Queries**: Fetching de dados com cache automático (GET requests)
@@ -166,7 +172,8 @@ src/app/
 ### **`src/types/`** - Type Definitions
 
 **Rules**:
-- `database.ts` - Schemas Zod e tipos de banco de dados (Theme, Audio, Structure, Meditations)
+
+- `database.ts` - Schemas Zod e tipos de banco de dados (Theme, Song, Structure, Meditations)
 - `api.ts` - Tipos de API (requests, responses, payloads)
 - `index.ts` - Re-exporta todos os tipos para import centralizado
 

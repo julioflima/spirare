@@ -10,7 +10,7 @@ const DEFAULT_FADE_OUT = 1500;
 const DEFAULT_VOLUME = 0.5;
 
 export function useStageMusic() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const songRef = useRef<HTMLSongElement | null>(null);
   const fadeFrameRef = useRef<number | null>(null);
 
   const cancelFade = useCallback(() => {
@@ -22,22 +22,22 @@ export function useStageMusic() {
 
   const fadeTo = useCallback(
     (targetVolume: number, duration: number) => {
-      const audio = audioRef.current;
-      if (!audio) {
+      const song = songRef.current;
+      if (!song) {
         return Promise.resolve();
       }
 
       cancelFade();
 
       if (duration <= 0) {
-        audio.volume = clampVolume(targetVolume);
+        song.volume = clampVolume(targetVolume);
         return Promise.resolve();
       }
 
-      const startVolume = audio.volume;
+      const startVolume = song.volume;
       const volumeDelta = clampVolume(targetVolume) - startVolume;
       if (Math.abs(volumeDelta) < 0.001) {
-        audio.volume = clampVolume(targetVolume);
+        song.volume = clampVolume(targetVolume);
         return Promise.resolve();
       }
 
@@ -45,14 +45,14 @@ export function useStageMusic() {
         const startTime = performance.now();
 
         const step = (now: number) => {
-          if (!audioRef.current) {
+          if (!songRef.current) {
             resolve();
             return;
           }
 
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / duration, 1);
-          audioRef.current.volume = clampVolume(
+          songRef.current.volume = clampVolume(
             startVolume + volumeDelta * progress
           );
 
@@ -74,16 +74,16 @@ export function useStageMusic() {
     async (fadeOutMs?: number) => {
       cancelFade();
 
-      if (!audioRef.current) {
+      if (!songRef.current) {
         return;
       }
 
       try {
         await fadeTo(0, fadeOutMs ?? DEFAULT_FADE_OUT);
       } finally {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-        audioRef.current = null;
+        songRef.current.pause();
+        songRef.current.src = "";
+        songRef.current = null;
       }
     },
     [cancelFade, fadeTo]
@@ -98,24 +98,24 @@ export function useStageMusic() {
 
       const { src, fadeInMs, fadeOutMs, volume } = track;
 
-      if (audioRef.current && audioRef.current.src === src) {
+      if (songRef.current && songRef.current.src === src) {
         return;
       }
 
       await stopCurrentTrack(fadeOutMs);
 
-      const audio = new Audio(src);
-      audio.crossOrigin = "anonymous";
-      audio.loop = true;
-      audio.volume = 0;
+      const song = new Song(src);
+      song.crossOrigin = "anonymous";
+      song.loop = true;
+      song.volume = 0;
 
-      audioRef.current = audio;
+      songRef.current = song;
 
       try {
-        await audio.play();
+        await song.play();
       } catch (error) {
         console.error("Não foi possível reproduzir a trilha da etapa.", error);
-        audioRef.current = null;
+        songRef.current = null;
         return;
       }
 
@@ -134,10 +134,10 @@ export function useStageMusic() {
     playTrack: transitionToTrack,
     stopTrack: stopCurrentTrack,
     pauseTrack: () => {
-      audioRef.current?.pause();
+      songRef.current?.pause();
     },
     resumeTrack: () => {
-      audioRef.current?.play().catch(() => undefined);
+      songRef.current?.play().catch(() => undefined);
     },
   };
 }

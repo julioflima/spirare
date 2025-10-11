@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 async function deleteSong(id: string) {
-  const response = await fetch(`/api/database/audios/${id}`, {
+  const response = await fetch(`/api/database/songs/${id}`, {
     method: "DELETE",
   });
 

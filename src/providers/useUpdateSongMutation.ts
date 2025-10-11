@@ -10,7 +10,7 @@ async function updateSong({
   id,
   data,
 }: UpdateSongParams): Promise<UpdateSongResponse> {
-  const response = await fetch(`/api/database/audios/${id}`, {
+  const response = await fetch(`/api/database/songs/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

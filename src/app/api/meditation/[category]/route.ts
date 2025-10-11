@@ -24,7 +24,10 @@ export async function GET(
     const [structure, theme, randomSongResult] = await Promise.all([
       db.collection("structure").findOne({}) as Promise<Structure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
-      db.collection("audios").aggregate([{ $sample: { size: 1 } }]).toArray(),
+      db
+        .collection("songs")
+        .aggregate([{ $sample: { size: 1 } }])
+        .toArray(),
     ]);
 
     // Extract random song (optional, meditation works without it)

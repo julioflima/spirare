@@ -7,13 +7,13 @@ export const contentItemSchema = z.object({
   text: z.string().min(1, "Texto é obrigatório"),
   order: z.number().min(0, "Ordem deve ser positiva"),
   duration: z.number().min(1, "Duração deve ser positiva").optional(),
-  audioId: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
+  songId: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
 
-// Audio Schema for the audios collection
-export const audioSchema = z.object({
+// Song Schema for the songs collection
+export const songSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
   title: z.string().min(1, "Título é obrigatório"),
   artist: z.string().min(1, "Artista é obrigatório"),
@@ -131,12 +131,12 @@ export const themeSchema = z.object({
 });
 
 // Create schemas for API operations
-export const createAudioSchema = audioSchema.omit({
+export const createSongSchema = songSchema.omit({
   _id: true,
   createdAt: true,
   updatedAt: true,
 });
-export const updateAudioSchema = audioSchema
+export const updateSongSchema = songSchema
   .omit({ _id: true, createdAt: true })
   .partial();
 
@@ -163,19 +163,19 @@ export const updateMeditationsSchema = meditationsSchema
   .partial();
 
 // Collection schemas for validation
-export const audioCollectionSchema = z.array(audioSchema);
+export const songCollectionSchema = z.array(songSchema);
 export const themeCollectionSchema = z.array(themeSchema);
 export const structureCollectionSchema = z.array(structureSchema);
 
 // Type exports
 export type ContentItem = z.infer<typeof contentItemSchema>;
-export type Song = z.infer<typeof audioSchema>;
+export type Song = z.infer<typeof songSchema>;
 export type Meditations = z.infer<typeof meditationsSchema>;
 export type Structure = z.infer<typeof structureSchema>;
 export type Theme = z.infer<typeof themeSchema>;
 
-export type CreateAudio = z.infer<typeof createAudioSchema>;
-export type UpdateAudio = z.infer<typeof updateAudioSchema>;
+export type CreateSong = z.infer<typeof createSongSchema>;
+export type UpdateSong = z.infer<typeof updateSongSchema>;
 export type CreateTheme = z.infer<typeof createThemeSchema>;
 export type UpdateTheme = z.infer<typeof updateThemeSchema>;
 export type CreateStructure = z.infer<typeof createStructureSchema>;

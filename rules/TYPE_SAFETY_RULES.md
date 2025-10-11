@@ -29,7 +29,7 @@ Inserted after the "Data Fetching Pattern" section, before "Estrutura de Arquivo
 
 ```
 src/types/
-├── database.ts      # Zod schemas + model types (Theme, Audio, etc.)
+├── database.ts      # Zod schemas + model types (Theme, Song, etc.)
 ├── api.ts          # Request/Response types for all APIs
 └── index.ts        # Re-exports everything
 ```

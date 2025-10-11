@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { MeditationsService } from "@/services/meditationsService";
 import { StructureService } from "@/services/structureService";
-import { AudioService } from "@/services/audiosService";
+import { SongService } from "@/services/songsService";
 import { ThemeService } from "@/services/themesService";
 
 async function seedDatabase() {
@@ -14,23 +14,23 @@ async function seedDatabase() {
     const dbJsonContent = await fs.readFile(dbJsonPath, "utf-8");
     const dbData = JSON.parse(dbJsonContent);
 
-    // Seed audios collection
-    console.log("🎵 Seeding audios collection...");
-    if (dbData.audios && Array.isArray(dbData.audios)) {
-      for (const audioData of dbData.audios) {
+    // Seed songs collection
+    console.log("🎵 Seeding songs collection...");
+    if (dbData.songs && Array.isArray(dbData.songs)) {
+      for (const songData of dbData.songs) {
         try {
-          await AudioService.create({
-            title: audioData.title,
-            artist: audioData.artist,
-            src: audioData.src,
-            fadeInMs: audioData.fadeInMs,
-            fadeOutMs: audioData.fadeOutMs,
-            volume: audioData.volume,
+          await SongService.create({
+            title: songData.title,
+            artist: songData.artist,
+            src: songData.src,
+            fadeInMs: songData.fadeInMs,
+            fadeOutMs: songData.fadeOutMs,
+            volume: songData.volume,
           });
-          console.log(`✅ Audio "${audioData.title}" created`);
+          console.log(`✅ Song "${songData.title}" created`);
         } catch (error) {
           console.log(
-            `⚠️  Audio "${audioData.title}" already exists or failed to create:`,
+            `⚠️  Song "${songData.title}" already exists or failed to create:`,
             error
           );
         }
@@ -91,7 +91,7 @@ async function seedDatabase() {
 
     console.log("🎉 Database seeding completed successfully!");
 
-    const audiosCount = dbData.audios?.length || 0;
+    const songsCount = dbData.songs?.length || 0;
     const themesCount = dbData.themes?.length || 0;
     const structureCount = dbData.structure ? 1 : 0;
 
@@ -99,7 +99,7 @@ async function seedDatabase() {
       success: true,
       message: "Database seeded successfully",
       data: {
-        audios: audiosCount,
+        songs: songsCount,
         themes: themesCount,
         structure: structureCount,
         meditations: "initialized",

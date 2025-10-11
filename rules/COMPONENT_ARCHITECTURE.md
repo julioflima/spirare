@@ -20,7 +20,7 @@ src/app/
 ├── admin/
 │   ├── _components/        # ✅ Admin-specific (CAN use APIs)
 │   │   ├── ThemeForm.tsx
-│   │   └── AudioList.tsx
+│   │   └── SongList.tsx
 │   └── page.tsx           # ✅ Page with inline logic
 └── [category]/
     ├── _components/        # ✅ Category-specific
@@ -135,7 +135,7 @@ export default function AdminPage() {
 **Examples:**
 
 - `src/app/admin/_components/ThemeForm.tsx` - Theme editing form
-- `src/app/admin/_components/AudioUploader.tsx` - Audio upload widget
+- `src/app/admin/_components/SongUploader.tsx` - Song upload widget
 - `src/app/[category]/_components/StageSelector.tsx` - Stage navigation
 
 ### 3. Pages (`src/app/[route]/page.tsx`)
@@ -167,7 +167,7 @@ export default function AdminPage() {
 ### Component Names
 
 - Match file name: `ThemeCard.tsx` exports `ThemeCard`
-- Descriptive and specific: `AudioUploadButton` not `Button2`
+- Descriptive and specific: `SongUploadButton` not `Button2`
 
 ### Folder Names
 

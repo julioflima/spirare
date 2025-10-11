@@ -1,14 +1,14 @@
 'use client';
 
 import { FC, useMemo } from 'react';
-import { useAudioWaveform } from './hooks/useAudioWaveform';
+import { useSongWaveform } from './hooks/useSongWaveform';
 
 interface BreathVisualizerProps {
     isActive: boolean;
 }
 
 export const BreathVisualizer: FC<BreathVisualizerProps> = ({ isActive }) => {
-    const samples = useAudioWaveform({ isActive, bars: 24 });
+    const samples = useSongWaveform({ isActive, bars: 24 });
 
     const bars = useMemo(() => {
         return samples.map((sample) => {

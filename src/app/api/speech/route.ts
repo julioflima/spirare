@@ -30,7 +30,7 @@ Pause:
 Pausas estratégicas continuam, mas agora transmitem aconchego. 
 `;
 
-    const response = await openai.audio.speech.create({
+    const response = await openai.song.speech.create({
       model: "gpt-4o-mini-tts",
       voice: "coral",
       input: text,
@@ -40,7 +40,7 @@ Pausas estratégicas continuam, mas agora transmitem aconchego.
     const buffer = Buffer.from(await response.arrayBuffer());
     return new NextResponse(buffer, {
       headers: {
-        "Content-Type": "audio/mpeg",
+        "Content-Type": "song/mpeg",
       },
     });
   } catch (error) {

@@ -14,10 +14,10 @@ import { ChevronsRight, Music } from 'lucide-react';
 import { Loading } from '../Loading';
 
 interface IMeditationGenerator {
-    audioBuffer: ArrayBuffer;
+    songBuffer: ArrayBuffer;
 }
 
-export const MeditationGenerator: FC<IMeditationGenerator> = ({ audioBuffer }) => {
+export const MeditationGenerator: FC<IMeditationGenerator> = ({ songBuffer }) => {
     const [hasStarted, setHasStarted] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [currentSubStep, setCurrentSubStep] = useState(0);
@@ -33,8 +33,8 @@ export const MeditationGenerator: FC<IMeditationGenerator> = ({ audioBuffer }) =
         pause: pauseSpeech,
         resume: resumeSpeech,
         stop: stopSpeech,
-        isGenerating: isAudioLoading,
-    } = useSpeech({ audioBuffer });
+        isGenerating: isSongLoading,
+    } = useSpeech({ songBuffer });
     const {
         periodMs: metronomePeriod,
         setPeriodMs: setMetronomePeriod,
@@ -244,7 +244,7 @@ export const MeditationGenerator: FC<IMeditationGenerator> = ({ audioBuffer }) =
                     <span className="pointer-events-none absolute -top-24 -left-16 h-44 w-44 rounded-full bg-gradient-to-br from-emerald-200/38 via-lime-200/36 to-amber-200/32 blur-3xl" aria-hidden="true" />
                     <span className="pointer-events-none absolute -bottom-28 -right-12 h-56 w-56 rounded-full bg-gradient-to-br from-white/40 via-emerald-100/35 to-amber-100/30 blur-3xl" aria-hidden="true" />
 
-                    {isAudioLoading && (
+                    {isSongLoading && (
                         <Loading>Preparando instruções de aúdio</Loading>
                     )}
 

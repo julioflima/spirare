@@ -59,7 +59,7 @@ const createInitialTheme = (): Omit<Theme, '_id' | 'createdAt' | 'updatedAt'> =>
 
 export default function AdminPage() {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'audios'>('meditations');
+    const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'songs'>('meditations');
 
     // React Query hooks
     const { data: queryData, isLoading } = useAllDatabaseDataQuery();
@@ -178,7 +178,7 @@ export default function AdminPage() {
                                 { key: 'meditations', label: 'Meditações' },
                                 { key: 'structure', label: 'Estrutura' },
                                 { key: 'themes', label: 'Temas' },
-                                { key: 'audios', label: 'Áudios' },
+                                { key: 'songs', label: 'Áudios' },
                             ].map((tab) => (
                                 <button
                                     key={tab.key}
@@ -211,7 +211,7 @@ export default function AdminPage() {
                             isSaving={isSaving}
                         />
                     )}
-                    {activeTab === 'audios' && (
+                    {activeTab === 'songs' && (
                         <SongsTab
                             songs={data.songs}
                             onCreate={handleCreateSong}
@@ -1199,7 +1199,7 @@ function ThemesTab({
     );
 }
 
-// Audios Tab Component
+// Songs Tab Component
 function SongsTab({
     songs,
     onCreate,

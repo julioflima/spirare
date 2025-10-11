@@ -46,7 +46,7 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 - `@tanstack/react-query` para data fetching e caching
 - `react-circular-progressbar` para o halo de progresso
 - `lucide-react` para iconografia
-- Web Audio API para o metrônomo granuloso
+- Web Song API para o metrônomo granuloso
 - OpenAI SDK (`gpt-4o-mini-tts`) para Text-to-Speech
 
 ### Backend & Database

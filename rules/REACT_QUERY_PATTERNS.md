@@ -22,8 +22,8 @@ src/providers/
 ├── useUpdateThemeMutation.ts      # Mutation
 ├── useDeleteThemeMutation.ts      # Mutation
 └── [scope]/                       # Optional scoping
-    ├── useAudiosQuery.ts
-    └── useCreateAudioMutation.ts
+    ├── useSongsQuery.ts
+    └── useCreateSongMutation.ts
 ```
 
 ### Rules

@@ -21,9 +21,9 @@ Created a centralized type system in `/src/types/api.ts` that is shared between 
 - ✅ `/src/providers/useCategoriesQuery.ts` - Uses `Category`, `GetCategoriesResponse`
 - ✅ `/src/providers/useMeditationSessionQuery.ts` - Uses `MeditationSession`, `GetMeditationSessionResponse`
 - ✅ `/src/providers/useCreateThemeMutation.ts` - Uses `CreateThemeRequest`, `CreateThemeResponse`
-- ✅ `/src/providers/useCreateAudioMutation.ts` - Uses `CreateAudioRequest`, `CreateAudioResponse`
+- ✅ `/src/providers/useCreateSongMutation.ts` - Uses `CreateSongRequest`, `CreateSongResponse`
 - ✅ `/src/providers/useUpdateThemeMutation.ts` - Uses `UpdateThemeRequest`, `UpdateThemeResponse`
-- ✅ `/src/providers/useUpdateAudioMutation.ts` - Uses `UpdateAudioRequest`, `UpdateAudioResponse`
+- ✅ `/src/providers/useUpdateSongMutation.ts` - Uses `UpdateSongRequest`, `UpdateSongResponse`
 - ✅ `/src/providers/useUpdateMeditationsMutation.ts` - Uses `UpdateMeditationsRequest`, `UpdateMeditationsResponse`
 - ✅ `/src/providers/useUpdateStructureMutation.ts` - Uses `UpdateStructureRequest`, `UpdateStructureResponse`
 
@@ -43,7 +43,7 @@ Created a centralized type system in `/src/types/api.ts` that is shared between 
 -GetMeditationsResponse -
   GetStructureResponse -
   GetThemesResponse -
-  GetAudiosResponse -
+  GetSongsResponse -
   AllDatabaseData; // Combined data
 ```
 
@@ -68,9 +68,9 @@ Created a centralized type system in `/src/types/api.ts` that is shared between 
 -CreateThemeResponse -
   UpdateThemeResponse -
   DeleteThemeResponse -
-  CreateAudioResponse -
-  UpdateAudioResponse -
-  DeleteAudioResponse -
+  CreateSongResponse -
+  UpdateSongResponse -
+  DeleteSongResponse -
   UpdateMeditationsResponse -
   UpdateStructureResponse;
 ```
@@ -89,8 +89,8 @@ Created a centralized type system in `/src/types/api.ts` that is shared between 
 ```typescript
 -CreateThemeRequest -
   UpdateThemeRequest -
-  CreateAudioRequest -
-  UpdateAudioRequest -
+  CreateSongRequest -
+  UpdateSongRequest -
   UpdateMeditationsRequest -
   UpdateStructureRequest -
   AdminAuthRequest;

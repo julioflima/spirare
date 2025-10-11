@@ -2,24 +2,24 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-interface UseAudioWaveformOptions {
+interface UseSongWaveformOptions {
   isActive: boolean;
   bars?: number;
   smoothing?: number;
 }
 
-export function useAudioWaveform({
+export function useSongWaveform({
   isActive,
   bars = 24,
   smoothing = 0.6,
-}: UseAudioWaveformOptions) {
+}: UseSongWaveformOptions) {
   const [levels, setLevels] = useState<number[]>(() => new Array(bars).fill(0));
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const songContextRef = useRef<SongContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const rafRef = useRef<number | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const sourceRef = useRef<MediaStreamSongSourceNode | null>(null);
 
   useEffect(() => {
     if (
@@ -36,7 +36,7 @@ export function useAudioWaveform({
     const setup = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
+          song: true,
           video: false,
         });
         if (cancelled) {
@@ -44,7 +44,7 @@ export function useAudioWaveform({
           return;
         }
 
-        const context = new AudioContext();
+        const context = new SongContext();
         const analyser = context.createAnalyser();
         analyser.fftSize = 512;
         analyser.smoothingTimeConstant = smoothing;
@@ -57,7 +57,7 @@ export function useAudioWaveform({
           bufferLength
         ) as Uint8Array<ArrayBuffer>;
 
-        audioContextRef.current = context;
+        songContextRef.current = context;
         analyserRef.current = analyser;
         mediaStreamRef.current = stream;
         sourceRef.current = source;
@@ -126,9 +126,9 @@ export function useAudioWaveform({
         analyserRef.current.disconnect();
         analyserRef.current = null;
       }
-      if (audioContextRef.current) {
-        audioContextRef.current.close().catch(() => undefined);
-        audioContextRef.current = null;
+      if (songContextRef.current) {
+        songContextRef.current.close().catch(() => undefined);
+        songContextRef.current = null;
       }
       if (mediaStreamRef.current) {
         mediaStreamRef.current.getTracks().forEach((track) => track.stop());

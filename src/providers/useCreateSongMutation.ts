@@ -4,7 +4,7 @@ import type { CreateSongRequest, CreateSongResponse } from "@/types/api";
 async function createSong(
   song: CreateSongRequest
 ): Promise<CreateSongResponse> {
-  const response = await fetch("/api/database/audios", {
+  const response = await fetch("/api/database/songs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(song),

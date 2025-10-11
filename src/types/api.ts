@@ -6,12 +6,12 @@
 
 import { z } from "zod";
 import {
-  audioSchema,
+  songSchema,
   themeSchema,
   structureSchema,
   meditationsSchema,
-  createAudioSchema,
-  updateAudioSchema,
+  createSongSchema,
+  updateSongSchema,
   createThemeSchema,
   updateThemeSchema,
   updateStructureSchema,
@@ -60,7 +60,9 @@ export type ApiError = z.infer<typeof apiErrorSchema>;
 export const getMeditationsResponseSchema = z.object({
   meditations: meditationsSchema,
 });
-export type GetMeditationsResponse = z.infer<typeof getMeditationsResponseSchema>;
+export type GetMeditationsResponse = z.infer<
+  typeof getMeditationsResponseSchema
+>;
 
 /**
  * Response from GET /api/database/structure
@@ -79,10 +81,10 @@ export const getThemesResponseSchema = z.object({
 export type GetThemesResponse = z.infer<typeof getThemesResponseSchema>;
 
 /**
- * Response from GET /api/database/songs (formerly audios)
+ * Response from GET /api/database/songs (formerly songs)
  */
 export const getSongsResponseSchema = z.object({
-  songs: z.array(audioSchema),
+  songs: z.array(songSchema),
 });
 export type GetSongsResponse = z.infer<typeof getSongsResponseSchema>;
 
@@ -93,7 +95,7 @@ export const allDatabaseDataSchema = z.object({
   meditations: meditationsSchema,
   structure: structureSchema,
   themes: z.array(themeSchema),
-  songs: z.array(audioSchema),
+  songs: z.array(songSchema),
 });
 export type AllDatabaseData = z.infer<typeof allDatabaseDataSchema>;
 
@@ -121,7 +123,7 @@ export const meditationStageSchema = z.object({
 export type MeditationStage = z.infer<typeof meditationStageSchema>;
 
 /**
- * Song for meditation session (renamed from Audio to avoid browser Audio API conflict)
+ * Song for meditation session (renamed from Song to avoid browser Song API conflict)
  */
 export const meditationSongSchema = z.object({
   _id: z.string(),
@@ -152,7 +154,9 @@ export type MeditationSession = z.infer<typeof meditationSessionSchema>;
 export const getMeditationSessionResponseSchema = z.object({
   session: meditationSessionSchema,
 });
-export type GetMeditationSessionResponse = z.infer<typeof getMeditationSessionResponseSchema>;
+export type GetMeditationSessionResponse = z.infer<
+  typeof getMeditationSessionResponseSchema
+>;
 
 // ============================================================================
 // Categories API Types
@@ -207,10 +211,10 @@ export const deleteThemeResponseSchema = z.object({
 export type DeleteThemeResponse = z.infer<typeof deleteThemeResponseSchema>;
 
 /**
- * Response from POST /api/database/songs (formerly audios)
+ * Response from POST /api/database/songs (formerly songs)
  */
 export const createSongResponseSchema = z.object({
-  song: audioSchema,
+  song: songSchema,
   message: z.string(),
 });
 export type CreateSongResponse = z.infer<typeof createSongResponseSchema>;
@@ -219,7 +223,7 @@ export type CreateSongResponse = z.infer<typeof createSongResponseSchema>;
  * Response from PUT /api/database/songs/[id]
  */
 export const updateSongResponseSchema = z.object({
-  song: audioSchema,
+  song: songSchema,
   message: z.string(),
 });
 export type UpdateSongResponse = z.infer<typeof updateSongResponseSchema>;
@@ -239,7 +243,9 @@ export const updateMeditationsResponseSchema = z.object({
   meditations: meditationsSchema,
   message: z.string(),
 });
-export type UpdateMeditationsResponse = z.infer<typeof updateMeditationsResponseSchema>;
+export type UpdateMeditationsResponse = z.infer<
+  typeof updateMeditationsResponseSchema
+>;
 
 /**
  * Response from PUT /api/database/structure
@@ -248,7 +254,9 @@ export const updateStructureResponseSchema = z.object({
   structure: structureSchema,
   message: z.string(),
 });
-export type UpdateStructureResponse = z.infer<typeof updateStructureResponseSchema>;
+export type UpdateStructureResponse = z.infer<
+  typeof updateStructureResponseSchema
+>;
 
 // ============================================================================
 // Admin API Types
@@ -266,7 +274,12 @@ export type AdminAuthResponse = z.infer<typeof adminAuthResponseSchema>;
 /**
  * Database operation types for super-admin
  */
-export const databaseOperationSchema = z.enum(["seed", "drop", "backup", "restore"]);
+export const databaseOperationSchema = z.enum([
+  "seed",
+  "drop",
+  "backup",
+  "restore",
+]);
 export type DatabaseOperation = z.infer<typeof databaseOperationSchema>;
 
 /**
@@ -278,7 +291,7 @@ export const databaseStatusSchema = z.object({
     meditations: z.number(),
     structure: z.number(),
     themes: z.number(),
-    songs: z.number(), // renamed from audios
+    songs: z.number(), // renamed from songs
   }),
 });
 export type DatabaseStatus = z.infer<typeof databaseStatusSchema>;
@@ -291,7 +304,9 @@ export const databaseOperationResponseSchema = z.object({
   message: z.string(),
   details: z.any().optional(),
 });
-export type DatabaseOperationResponse = z.infer<typeof databaseOperationResponseSchema>;
+export type DatabaseOperationResponse = z.infer<
+  typeof databaseOperationResponseSchema
+>;
 
 // ============================================================================
 // Request Body Types (reuse database schemas)
@@ -310,28 +325,32 @@ export const updateThemeRequestSchema = updateThemeSchema;
 export type UpdateThemeRequest = z.infer<typeof updateThemeRequestSchema>;
 
 /**
- * Create song request body (formerly audio)
+ * Create song request body (formerly song)
  */
-export const createSongRequestSchema = createAudioSchema;
+export const createSongRequestSchema = createSongSchema;
 export type CreateSongRequest = z.infer<typeof createSongRequestSchema>;
 
 /**
- * Update song request body (formerly audio)
+ * Update song request body (formerly song)
  */
-export const updateSongRequestSchema = updateAudioSchema;
+export const updateSongRequestSchema = updateSongSchema;
 export type UpdateSongRequest = z.infer<typeof updateSongRequestSchema>;
 
 /**
  * Update meditations request body
  */
 export const updateMeditationsRequestSchema = updateMeditationsSchema;
-export type UpdateMeditationsRequest = z.infer<typeof updateMeditationsRequestSchema>;
+export type UpdateMeditationsRequest = z.infer<
+  typeof updateMeditationsRequestSchema
+>;
 
 /**
  * Update structure request body
  */
 export const updateStructureRequestSchema = updateStructureSchema;
-export type UpdateStructureRequest = z.infer<typeof updateStructureRequestSchema>;
+export type UpdateStructureRequest = z.infer<
+  typeof updateStructureRequestSchema
+>;
 
 /**
  * Admin authentication request body
