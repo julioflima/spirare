@@ -97,16 +97,54 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 
 ### Data Fetching Pattern
 
-- **`src/providers/`** - Todos os hooks de React Query (queries e mutations)
+- **`src/providers/`** - **OBRIGATÓRIO**: Todos os hooks de React Query (queries e mutations)
   - **Um provider por arquivo**: cada hook em seu próprio arquivo
   - Se precisar de escopo, crie um diretório (ex: `CategoryProviders/`)
-  - Queries: Fetching de dados com cache automático
-  - Mutations: Operações de escrita (POST, PUT, DELETE)
+  - **Queries**: Fetching de dados com cache automático (GET requests)
+  - **Mutations**: Operações de escrita (POST, PUT, DELETE)
   - Exemplo de query: `useCategoriesQuery.ts`
   - Exemplo de mutation: `useCreateOrUpdateMutation.ts`
   - Cada provider exporta um único hook específico
   - Centraliza toda lógica de chamadas a APIs
   - `index.ts` re-exporta todos os providers
+
+#### 🚨 Regra Crítica de Data Fetching
+
+**TODAS as chamadas REST API devem ser feitas através de React Query providers**
+
+- ❌ **NUNCA** use `fetch()` diretamente em componentes ou páginas
+- ❌ **NUNCA** use `useEffect` + `fetch` para buscar dados
+- ✅ **SEMPRE** crie um provider em `src/providers/` usando `useQuery` ou `useMutation`
+- ✅ **SEMPRE** importe e use o hook do provider no componente
+- ✅ React Query gerencia cache, refetch, loading states automaticamente
+
+**Exemplo INCORRETO:**
+```typescript
+// ❌ NÃO FAÇA ISSO
+const [data, setData] = useState(null);
+useEffect(() => {
+  fetch('/api/categories').then(r => r.json()).then(setData);
+}, []);
+```
+
+**Exemplo CORRETO:**
+```typescript
+// ✅ FAÇA ISSO
+// 1. Crie src/providers/useCategoriesQuery.ts
+export const useCategoriesQuery = () => {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const response = await fetch('/api/categories');
+      return response.json();
+    }
+  });
+};
+
+// 2. Use no componente
+import { useCategoriesQuery } from '@/providers';
+const { data, isLoading, error } = useCategoriesQuery();
+```
 
 ### Estrutura de Arquivos
 

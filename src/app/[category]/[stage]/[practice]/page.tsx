@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useThemesQuery } from '@/providers';
 
 interface Variant {
     text: string;
@@ -50,48 +51,37 @@ export default function PracticePage() {
     const category = params.category as string;
     const stage = params.stage as string;
     const practice = params.practice as string;
-    const [variants, setVariants] = useState<Variant[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [themeTitle, setThemeTitle] = useState('');
 
-    useEffect(() => {
-        async function fetchVariants() {
-            try {
-                const response = await fetch(`/api/database/themes`);
-                const data = await response.json();
+    // Use React Query provider
+    const { data: themes, isLoading: loading } = useThemesQuery();
 
-                if (data.success && data.themes) {
-                    const theme = data.themes.find((t: any) => t.category === category);
-                    if (theme) {
-                        setThemeTitle(theme.title);
-                        const practiceData = theme.meditations[stage]?.[practice];
+    // Compute variants from themes
+    const { variants, themeTitle } = useMemo(() => {
+        if (!themes) return { variants: [], themeTitle: '' };
 
-                        if (practiceData && Array.isArray(practiceData)) {
-                            const variantsList = practiceData.map((item: any, index: number) => ({
-                                text: item.text,
-                                order: item.order,
-                                index,
-                            }));
-                            setVariants(variantsList);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching variants:', error);
-            } finally {
-                setLoading(false);
-            }
+        const theme = themes.find((t: any) => t.category === category);
+        if (!theme) return { variants: [], themeTitle: '' };
+
+        const practiceData = theme.meditations?.[stage]?.[practice];
+        if (!practiceData || !Array.isArray(practiceData)) {
+            return { variants: [], themeTitle: theme.title };
         }
 
-        fetchVariants();
-    }, [category, stage, practice]);
+        const variantsList = practiceData.map((item: any, index: number) => ({
+            text: item.text,
+            order: item.order,
+            index,
+        }));
+
+        return { variants: variantsList, themeTitle: theme.title };
+    }, [themes, category, stage, practice]);
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Carregando...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                    <p className="text-emerald-800/70">Carregando...</p>
                 </div>
             </div>
         );

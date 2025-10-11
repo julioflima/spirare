@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useDatabaseActionMutation, useDatabaseStatusQuery } from '@/providers';
 
 export default function SuperAdminPage() {
-  const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'warning'; text: string } | null>(null);
+  
+  const databaseActionMutation = useDatabaseActionMutation();
+  const { refetch: fetchStatus } = useDatabaseStatusQuery();
+
+  const isProcessing = databaseActionMutation.isPending;
 
   const showMessage = (type: 'success' | 'error' | 'warning', text: string) => {
     setMessage({ type, text });
@@ -15,27 +20,11 @@ export default function SuperAdminPage() {
   const handleSeedDatabase = async () => {
     if (!confirm('⚠️ Tem certeza que deseja popular a base de dados? Isso irá adicionar dados padrão.')) return;
 
-    setIsProcessing(true);
     try {
-      const response = await fetch('/api/database', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'seed' })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        showMessage('success', `Base de dados populada com sucesso! ${JSON.stringify(data.data, null, 2)}`);
-      } else {
-        showMessage('error', data.message || 'Erro ao popular base de dados');
-      }
-    } catch {
-      showMessage('error', 'Erro ao conectar com o servidor');
-    } finally {
-      setIsProcessing(false);
+      const data = await databaseActionMutation.mutateAsync({ action: 'seed' });
+      showMessage('success', `Base de dados populada com sucesso! ${JSON.stringify(data.data, null, 2)}`);
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Erro ao popular base de dados');
     }
   };
 
@@ -44,61 +33,28 @@ export default function SuperAdminPage() {
 
     if (!confirm('🚨 ÚLTIMA CONFIRMAÇÃO: Todos os dados serão perdidos permanentemente. Continuar?')) return;
 
-    setIsProcessing(true);
     try {
-      const response = await fetch('/api/database', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'drop' })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        showMessage('warning', 'Base de dados excluída com sucesso! Todos os dados foram removidos.');
-      } else {
-        showMessage('error', data.message || 'Erro ao excluir base de dados');
-      }
-    } catch {
-      showMessage('error', 'Erro ao conectar com o servidor');
-    } finally {
-      setIsProcessing(false);
+      await databaseActionMutation.mutateAsync({ action: 'drop' });
+      showMessage('warning', 'Base de dados excluída com sucesso! Todos os dados foram removidos.');
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Erro ao excluir base de dados');
     }
   };
 
   const handleGetDatabaseStatus = async () => {
-    setIsProcessing(true);
     try {
-      const response = await fetch('/api/database');
-      const data = await response.json();
-
-      if (response.ok) {
-        showMessage('success', `Status da base de dados: ${JSON.stringify(data, null, 2)}`);
-      } else {
-        showMessage('error', data.message || 'Erro ao obter status da base de dados');
-      }
-    } catch {
-      showMessage('error', 'Erro ao conectar com o servidor');
-    } finally {
-      setIsProcessing(false);
+      const { data } = await fetchStatus();
+      showMessage('success', `Status da base de dados: ${JSON.stringify(data, null, 2)}`);
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Erro ao obter status da base de dados');
     }
   };
 
   const handleBackupDatabase = async () => {
-    setIsProcessing(true);
     try {
-      const response = await fetch('/api/database', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'backup' })
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
+      const blob = await databaseActionMutation.mutateAsync({ action: 'backup' });
+      
+      if (blob instanceof Blob) {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
@@ -108,14 +64,9 @@ export default function SuperAdminPage() {
         a.click();
         window.URL.revokeObjectURL(url);
         showMessage('success', 'Backup da base de dados criado e baixado com sucesso!');
-      } else {
-        const data = await response.json();
-        showMessage('error', data.message || 'Erro ao criar backup da base de dados');
       }
-    } catch {
-      showMessage('error', 'Erro ao conectar com o servidor');
-    } finally {
-      setIsProcessing(false);
+    } catch (error) {
+      showMessage('error', error instanceof Error ? error.message : 'Erro ao criar backup da base de dados');
     }
   };
 

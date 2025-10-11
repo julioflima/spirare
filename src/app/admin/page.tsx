@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Audio, Theme, Structure, Meditations } from '@/types/database';
+import { useAllDatabaseDataQuery } from '@/providers';
 
 interface AdminData {
     meditations: Meditations | null;
@@ -48,53 +49,33 @@ const createInitialTheme = (): Omit<Theme, '_id' | 'createdAt' | 'updatedAt'> =>
 });
 
 export default function AdminPage() {
-    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'audios'>('meditations');
     const [data, setData] = useState<AdminData>({
         meditations: null,
         structure: null,
         themes: [],
         audios: []
     });
-    const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'audios'>('meditations');
-
-    // Load all collections
+    
+    // Use React Query provider for initial data fetch
+    const { data: queryData, isLoading, refetch } = useAllDatabaseDataQuery();
+    
+    // Sync query data to local state
     useEffect(() => {
-        loadData();
-    }, []);
-
-    const loadData = async () => {
-        try {
-            const [meditationsRes, structureRes, themesRes, audiosRes] = await Promise.all([
-                fetch('/api/database/meditations'),
-                fetch('/api/database/structure'),
-                fetch('/api/database/themes'),
-                fetch('/api/database/audios')
-            ]);
-
-            if (meditationsRes.ok && structureRes.ok && themesRes.ok && audiosRes.ok) {
-                const [meditationsData, structureData, themesData, audiosData] = await Promise.all([
-                    meditationsRes.json(),
-                    structureRes.json(),
-                    themesRes.json(),
-                    audiosRes.json()
-                ]);
-
-                setData({
-                    meditations: meditationsData.meditations,
-                    structure: structureData.structure,
-                    themes: themesData.themes,
-                    audios: audiosData.audios
-                });
-            } else {
-                setMessage({ type: 'error', text: 'Erro ao carregar dados' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setIsLoading(false);
+        if (queryData) {
+            setData({
+                meditations: queryData.meditations || null,
+                structure: queryData.structure || null,
+                themes: queryData.themes || [],
+                audios: queryData.audios || []
+            });
         }
+    }, [queryData]);
+
+    const loadData = () => {
+        refetch();
     };
 
     const showMessage = (type: 'success' | 'error', text: string) => {

@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useThemesQuery } from '@/providers';
 
 interface VariantData {
     text: string;
@@ -50,48 +51,35 @@ export default function VariantPage() {
     const stage = params.stage as string;
     const practice = params.practice as string;
     const variantIndex = parseInt(params.variant as string);
-    const [variant, setVariant] = useState<VariantData | null>(null);
-    const [totalVariants, setTotalVariants] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [themeTitle, setThemeTitle] = useState('');
 
-    useEffect(() => {
-        async function fetchVariant() {
-            try {
-                const response = await fetch(`/api/database/themes`);
-                const data = await response.json();
+    // Use React Query provider
+    const { data: themes, isLoading: loading } = useThemesQuery();
 
-                if (data.success && data.themes) {
-                    const theme = data.themes.find((t: any) => t.category === category);
-                    if (theme) {
-                        setThemeTitle(theme.title);
-                        const practiceData = theme.meditations[stage]?.[practice];
+    // Compute variant data from themes
+    const { variant, totalVariants, themeTitle } = useMemo(() => {
+        if (!themes) return { variant: null, totalVariants: 0, themeTitle: '' };
 
-                        if (practiceData && Array.isArray(practiceData)) {
-                            setTotalVariants(practiceData.length);
-                            const selectedVariant = practiceData[variantIndex];
-                            if (selectedVariant) {
-                                setVariant(selectedVariant);
-                            }
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching variant:', error);
-            } finally {
-                setLoading(false);
-            }
+        const theme = themes.find((t: any) => t.category === category);
+        if (!theme) return { variant: null, totalVariants: 0, themeTitle: '' };
+
+        const practiceData = theme.meditations?.[stage]?.[practice];
+        if (!practiceData || !Array.isArray(practiceData)) {
+            return { variant: null, totalVariants: 0, themeTitle: theme.title };
         }
 
-        fetchVariant();
-    }, [category, stage, practice, variantIndex]);
+        return {
+            variant: practiceData[variantIndex] || null,
+            totalVariants: practiceData.length,
+            themeTitle: theme.title,
+        };
+    }, [themes, category, stage, practice, variantIndex]);
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Carregando...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                    <p className="text-emerald-800/70">Carregando...</p>
                 </div>
             </div>
         );
@@ -99,12 +87,12 @@ export default function VariantPage() {
 
     if (!variant) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4">Variante não encontrada</h1>
+                    <h1 className="text-2xl font-bold text-emerald-900 mb-4">Variante não encontrada</h1>
                     <Link
                         href={`/${category}/${stage}/${practice}`}
-                        className="text-indigo-600 hover:text-indigo-700 underline"
+                        className="text-emerald-600 hover:text-emerald-700 underline cursor-pointer"
                     >
                         Voltar para a lista de variantes
                     </Link>
@@ -118,12 +106,12 @@ export default function VariantPage() {
     const hasNext = variantIndex < totalVariants - 1;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] p-8">
             <div className="max-w-3xl mx-auto">
                 {/* Back button */}
                 <Link
                     href={`/${category}/${stage}/${practice}`}
-                    className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+                    className="inline-flex items-center text-emerald-700/80 hover:text-emerald-900 mb-8 transition-colors cursor-pointer"
                 >
                     <svg
                         className="w-5 h-5 mr-2"
@@ -142,20 +130,20 @@ export default function VariantPage() {
                 </Link>
 
                 {/* Breadcrumb */}
-                <div className="mb-6 text-sm text-gray-600">
+                <div className="mb-6 text-sm text-emerald-700/70">
                     <span>{themeTitle}</span>
                     <span className="mx-2">›</span>
                     <span>{STAGE_LABELS[stage]}</span>
                     <span className="mx-2">›</span>
                     <span>{practiceLabel}</span>
                     <span className="mx-2">›</span>
-                    <span className="text-gray-900 font-medium">Variante {variantIndex + 1}</span>
+                    <span className="text-emerald-900 font-medium">Variante {variantIndex + 1}</span>
                 </div>
 
                 {/* Variant content */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-12 mb-8 border border-gray-200">
+                <div className="bg-white/25 backdrop-blur-2xl rounded-3xl shadow-lg p-12 mb-8 border border-white/35">
                     <div className="flex items-center justify-center mb-8">
-                        <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-2xl">
+                        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-2xl">
                             {variantIndex + 1}
                         </div>
                     </div>

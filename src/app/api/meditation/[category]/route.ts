@@ -31,75 +31,76 @@ export async function GET(
     const { category } = await params;
     const db = await getDatabase();
 
-    // Fetch structure, base meditations, and theme
-    const [structure, baseMeditations, theme] = await Promise.all([
-      db
-        .collection("structure")
-        .findOne({}) as Promise<MeditationStructure | null>,
-      db
-        .collection("meditations")
-        .findOne({}) as Promise<MeditationBase | null>,
+    // Fetch only structure and theme metadata (not full phrase arrays)
+    const [structure, theme] = await Promise.all([
+      db.collection("structure").findOne({}) as Promise<MeditationStructure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
     ]);
 
-    if (!structure || !baseMeditations || !theme) {
+    if (!structure || !theme) {
       return NextResponse.json(
         { success: false, error: "Data not found" },
         { status: 404 }
       );
     }
 
-    // Compose the meditation session
-    const session: any = {
+    // Helper function to get one random phrase using MongoDB aggregation
+    const getRandomPhrase = async (
+      collection: string,
+      stage: string,
+      practice: string
+    ): Promise<string> => {
+      const result = await db
+        .collection(collection)
+        .aggregate([
+          { $project: { phrases: `$${stage}.${practice}` } },
+          { $unwind: "$phrases" },
+          { $sample: { size: 1 } },
+        ])
+        .toArray();
+
+      return result[0]?.phrases || "";
+    };
+
+    // Process stages using map instead of for...of
+    const stages = await Promise.all(
+      structure.method.map(async (stageObj) => {
+        const stageName = Object.keys(stageObj)[0];
+        const practices = stageObj[stageName];
+
+        // Process practices using map
+        const practicesData = await Promise.all(
+          practices.map(async (practiceName) => {
+            const useSpecific =
+              structure.specifics[stageName]?.[practiceName] === true;
+
+            // Determine collection: theme-specific or base
+            const collection = useSpecific ? "themes" : "meditations";
+            
+            // Get one random phrase directly from MongoDB
+            const text = await getRandomPhrase(collection, stageName, practiceName);
+
+            return {
+              practice: practiceName,
+              text,
+              isSpecific: useSpecific,
+            };
+          })
+        );
+
+        return {
+          stage: stageName,
+          practices: practicesData,
+        };
+      })
+    );
+
+    const session = {
       category: theme.category,
       title: theme.title,
       description: theme.description,
-      stages: [],
+      stages,
     };
-
-    // Process each stage in the method order
-    for (const stageObj of structure.method) {
-      const stageName = Object.keys(stageObj)[0];
-      const practices = stageObj[stageName];
-
-      const stageData: any = {
-        stage: stageName,
-        practices: [],
-      };
-
-      // Process each practice
-      for (const practiceName of practices) {
-        const useSpecific =
-          structure.specifics[stageName]?.[practiceName] === true;
-
-        let phrases: string[] = [];
-
-        if (
-          useSpecific &&
-          theme.meditations[stageName]?.[practiceName]?.length > 0
-        ) {
-          // Use theme-specific phrases
-          phrases = theme.meditations[stageName][practiceName];
-        } else {
-          // Use base global phrases
-          phrases = baseMeditations[stageName]?.[practiceName] || [];
-        }
-
-        // Select one random phrase
-        const randomPhrase =
-          phrases.length > 0
-            ? phrases[Math.floor(Math.random() * phrases.length)]
-            : "";
-
-        stageData.practices.push({
-          practice: practiceName,
-          text: randomPhrase,
-          isSpecific: useSpecific,
-        });
-      }
-
-      session.stages.push(stageData);
-    }
 
     return NextResponse.json({
       success: true,

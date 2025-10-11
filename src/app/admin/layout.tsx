@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAdminAuthMutation } from '@/providers';
 
 export default function AdminLayout({
     children,
@@ -14,6 +15,7 @@ export default function AdminLayout({
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const loginMutation = useAdminAuthMutation();
 
     useEffect(() => {
         // Check if already authenticated
@@ -29,13 +31,7 @@ export default function AdminLayout({
         setError('');
 
         try {
-            const response = await fetch('/api/admin/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await response.json();
+            const data = await loginMutation.mutateAsync({ username, password });
 
             if (data.success) {
                 sessionStorage.setItem('spirare-admin-auth', 'authenticated');
