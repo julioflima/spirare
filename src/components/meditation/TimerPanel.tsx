@@ -35,7 +35,6 @@ export const TimerPanel: FC<TimerPanelProps> = ({
     metronomeMin,
     metronomeMax,
     isSessionActive,
-    ledActive,
 }) => {
     return (
         <section className="relative mb-8 grid gap-8 rounded-[32px] border border-white/30 bg-white/25 p-8 shadow-[0_30px_70px_-45px_rgba(132,204,22,0.45)] backdrop-blur-2xl lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">

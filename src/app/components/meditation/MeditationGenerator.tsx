@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultMeditation, STEP_DURATION_SECONDS, SUBSTEPS_PER_STEP } from '@/constants/meditation';
-import { Controls } from './Controls';
-import { SessionHeader } from './SessionHeader';
-import { StartOverlay } from './StartOverlay';
-import { StepContent } from './StepContent';
-import { TimerPanel } from './TimerPanel';
-import { useMetronome, MAX_METRONOME_PERIOD_MS, MIN_METRONOME_PERIOD_MS } from './hooks/useMetronome';
-import { useSpeech } from './hooks/useSpeech';
-import { useStageMusic } from './hooks/useStageMusic';
+import { Controls } from '@/components/meditation/Controls';
+import { SessionHeader } from '@/components/meditation/SessionHeader';
+import { StartOverlay } from '@/components/meditation/StartOverlay';
+import { StepContent } from '@/components/meditation/StepContent';
+import { TimerPanel } from '@/components/meditation/TimerPanel';
+import { useMetronome, MAX_METRONOME_PERIOD_MS, MIN_METRONOME_PERIOD_MS } from '@/components/meditation/hooks/useMetronome';
+import { useSpeech } from '@/components/meditation/hooks/useSpeech';
+import { useStageMusic } from '@/components/meditation/hooks/useStageMusic';
 import { ChevronsRight, Music } from 'lucide-react';
 
 export const MeditationGenerator = () => {

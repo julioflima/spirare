@@ -85,3 +85,56 @@ export default function StagePage() {
             </div>
         );
     }
+
+    if (practices.length === 0) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-emerald-800/70">Nenhuma prática encontrada para esta etapa</p>
+                </div>
+            </div>
+        );
+    }
+
+    const stageLabel = STAGE_LABELS[stage] || stage;
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] p-8">
+            <div className="max-w-4xl mx-auto">
+                {/* Breadcrumb */}
+                <div className="mb-8">
+                    <Link
+                        href={`/${category}`}
+                        className="text-emerald-700 hover:text-emerald-900 transition-colors"
+                    >
+                        ← Voltar para {themeTitle}
+                    </Link>
+                </div>
+
+                {/* Header */}
+                <div className="mb-12 text-center">
+                    <h1 className="text-4xl font-bold text-emerald-900 mb-2">{stageLabel}</h1>
+                    <p className="text-emerald-700/70">Selecione uma prática para continuar</p>
+                </div>
+
+                {/* Practices Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {practices.map((practice) => (
+                        <Link
+                            key={practice.key}
+                            href={`/${category}/${stage}/${practice.key}`}
+                            className="group block p-6 bg-white/40 backdrop-blur-sm rounded-2xl border border-emerald-200/50 hover:bg-white/60 hover:border-emerald-300 transition-all duration-300 hover:shadow-lg"
+                        >
+                            <h3 className="text-xl font-semibold text-emerald-900 mb-2 group-hover:text-emerald-700 transition-colors">
+                                {practice.label}
+                            </h3>
+                            <p className="text-sm text-emerald-700/60">
+                                {practice.itemsCount} {practice.itemsCount === 1 ? 'variação' : 'variações'}
+                            </p>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -1,9 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface AudioInput {
-  name: string;
-  url: string;
-  duration?: number;
+  title: string;
+  artist: string;
+  src: string;
+  fadeInMs?: number;
+  fadeOutMs?: number;
+  volume?: number;
 }
 
 async function createAudio(audio: AudioInput) {

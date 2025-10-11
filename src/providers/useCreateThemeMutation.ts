@@ -3,8 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 interface ThemeInput {
   category: string;
   title: string;
-  description: string;
+  description?: string;
   meditations?: any;
+  isActive?: boolean;
 }
 
 async function createTheme(theme: ThemeInput) {
