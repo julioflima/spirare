@@ -5,14 +5,14 @@ import type { GetMeditationSessionResponse } from "@/types/api";
 
 /**
  * GET /api/meditation/[category]
- * 
+ *
  * Composes a meditation session by:
  * 1. Fetching the meditation structure and theme for the category
  * 2. For each practice, randomly selecting one phrase from either:
  *    - Theme-specific collection (themes) if practice is marked as specific
  *    - Base meditation collection (meditations) for shared practices
  * 3. Building the complete session with all stages and practices
- * 
+ *
  * @param category - The meditation theme category (e.g., "anxiety", "focus")
  * @returns A complete meditation session with random phrases
  */
@@ -63,53 +63,53 @@ export async function GET(
     }
 
     /**
- * Retrieves a random phrase from the database using MongoDB aggregation.
- * 
- * Performance: O(1) memory usage, scales to billions of phrases.
- * 
- * @param db - MongoDB database instance
- * @param collectionName - Collection to query ("themes" for category-specific, "meditations" for base)
- * @param stage - Meditation stage (e.g., "opening", "concentration")
- * @param practice - Practice within the stage (e.g., "psychoeducation", "intention")
- * @param category - Theme category (required for "themes" collection, ignored for "meditations")
- * @returns A randomly selected phrase, or empty string if none found
- * @throws Error if category is missing when collectionName is "themes"
- */
-async function getRandomPhrase(
-  db: any,
-  collectionName: "themes" | "meditations",
-  stage: string,
-  practice: string,
-  category?: string
-): Promise<string> {
-  const collection = db.collection(collectionName);
+     * Retrieves a random phrase from the database using MongoDB aggregation.
+     *
+     * Performance: O(1) memory usage, scales to billions of phrases.
+     *
+     * @param db - MongoDB database instance
+     * @param collectionName - Collection to query ("themes" for category-specific, "meditations" for base)
+     * @param stage - Meditation stage (e.g., "opening", "concentration")
+     * @param practice - Practice within the stage (e.g., "psychoeducation", "intention")
+     * @param category - Theme category (required for "themes" collection, ignored for "meditations")
+     * @returns A randomly selected phrase, or empty string if none found
+     * @throws Error if category is missing when collectionName is "themes"
+     */
+    async function getRandomPhrase(
+      db: any,
+      collectionName: "themes" | "meditations",
+      stage: string,
+      practice: string,
+      category?: string
+    ): Promise<string> {
+      const collection = db.collection(collectionName);
 
-  // Build aggregation pipeline based on collection type
-  let pipeline: any[];
+      // Build aggregation pipeline based on collection type
+      let pipeline: any[];
 
-  if (collectionName === "themes") {
-    // For themes, filter by category and navigate to nested meditations
-    if (!category) {
-      throw new Error("Category required for themes collection");
+      if (collectionName === "themes") {
+        // For themes, filter by category and navigate to nested meditations
+        if (!category) {
+          throw new Error("Category required for themes collection");
+        }
+        pipeline = [
+          { $match: { category } },
+          { $project: { phrases: `$meditations.${stage}.${practice}` } },
+          { $unwind: "$phrases" },
+          { $sample: { size: 1 } },
+        ];
+      } else {
+        // For meditations, use base collection without category filter
+        pipeline = [
+          { $project: { phrases: `$general.${stage}.${practice}` } },
+          { $unwind: "$phrases" },
+          { $sample: { size: 1 } },
+        ];
+      }
+
+      const result = await collection.aggregate(pipeline).toArray();
+      return result[0]?.phrases || "";
     }
-    pipeline = [
-      { $match: { category } },
-      { $project: { phrases: `$meditations.${stage}.${practice}` } },
-      { $unwind: "$phrases" },
-      { $sample: { size: 1 } },
-    ];
-  } else {
-    // For meditations, use base collection without category filter
-    pipeline = [
-      { $project: { phrases: `$general.${stage}.${practice}` } },
-      { $unwind: "$phrases" },
-      { $sample: { size: 1 } },
-    ];
-  }
-
-  const result = await collection.aggregate(pipeline).toArray();
-  return result[0]?.phrases || "";
-}
 
     // Process stages using map instead of for...of
     const stages = await Promise.all(

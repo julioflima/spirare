@@ -117,10 +117,12 @@ rules/                                            # Documentação de desenvolvi
 Acesse a interface de gestão em: `http://localhost:3000/admin`
 
 **Credenciais padrão:**
+
 - Username: `admin`
 - Password: `abreuelima`
 
 **Funcionalidades:**
+
 - Gestão de Áudios (upload, edição, controle)
 - Gestão de Temas (criação, personalização)
 - Edição de Conteúdo (textos de cada fase)

@@ -11,6 +11,7 @@ This API endpoint composes complete meditation sessions by randomly selecting ph
 ### 1. **Duplicate Pipeline Construction (Most Critical)**
 
 **Problem:**
+
 ```typescript
 // ❌ Built pipeline but never used it
 let pipeline: any[];
@@ -30,6 +31,7 @@ const result = await collection.aggregate([
 **Impact:** Category filtering would never work. The function would always use the hardcoded pipeline regardless of collection type.
 
 **Fix:**
+
 ```typescript
 // ✅ Build pipeline conditionally, then USE it
 let pipeline: any[];
@@ -45,6 +47,7 @@ const result = await collection.aggregate(pipeline).toArray();
 ### 2. **Debug Console Logs in Production**
 
 **Problem:**
+
 ```typescript
 console.log(collection, stage, practice, result); // ❌ Debug code
 ```
@@ -60,6 +63,7 @@ console.log(collection, stage, practice, result); // ❌ Debug code
 **Impact:** Invalid input could cause crashes or database errors.
 
 **Fix:**
+
 ```typescript
 if (!category || typeof category !== "string") {
   return NextResponse.json(
@@ -72,6 +76,7 @@ if (!category || typeof category !== "string") {
 ### 4. **Poor Error Handling**
 
 **Problem:**
+
 - Generic error messages
 - No distinction between different failure types
 - Stack traces exposed in production
@@ -79,6 +84,7 @@ if (!category || typeof category !== "string") {
 **Impact:** Hard to debug, security risk, poor user experience.
 
 **Fix:**
+
 ```typescript
 // Specific error for missing structure
 if (!structure) {
@@ -131,9 +137,9 @@ Added comprehensive documentation:
 ```typescript
 /**
  * Retrieves a random phrase from the database using MongoDB aggregation.
- * 
+ *
  * Performance: O(1) memory usage, scales to billions of phrases.
- * 
+ *
  * @param db - MongoDB database instance
  * @param collectionName - Collection to query ("themes" for category-specific, "meditations" for base)
  * @param stage - Meditation stage (e.g., "opening", "concentration")
@@ -179,16 +185,19 @@ const text = await getRandomPhrase(
 ### Flow
 
 1. **Validate Input**
+
    - Check category parameter exists and is a string
    - Return 400 if invalid
 
 2. **Fetch Structure & Theme**
+
    - Get meditation structure (defines practice order)
    - Get theme data for the category
    - Return 404 if theme not found
    - Return 500 if structure missing
 
 3. **Compose Session**
+
    - For each stage (opening, concentration, exploration, awakening):
      - For each practice in that stage:
        - Check if practice is "specific" (uses theme phrases)
@@ -208,7 +217,7 @@ const text = await getRandomPhrase(
 if (collectionName === "themes") {
   // Filter by category for theme-specific phrases
   pipeline = [
-    { $match: { category } },                           // ← Category filter
+    { $match: { category } }, // ← Category filter
     { $project: { phrases: `$meditations.${stage}.${practice}` } },
     { $unwind: "$phrases" },
     { $sample: { size: 1 } },
@@ -226,17 +235,20 @@ if (collectionName === "themes") {
 ## Testing Recommendations
 
 1. **Category Filtering**
+
    - Test with valid category → should return category-specific phrases
    - Test with invalid category → should return 404
    - Verify `themes` collection queries filter by category
    - Verify `meditations` collection queries ignore category
 
 2. **Random Selection**
+
    - Call endpoint multiple times with same category
    - Verify different phrases returned each time
    - Confirm phrases match the category theme
 
 3. **Error Cases**
+
    - Missing category parameter → 400
    - Invalid category type → 400
    - Non-existent category → 404
