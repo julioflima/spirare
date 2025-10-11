@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Audio, Theme, Structure, Meditations } from '@/types/database';
-import { 
+import {
     useAllDatabaseDataQuery,
     useCreateThemeMutation,
     useDeleteThemeMutation,
@@ -61,20 +61,20 @@ const createInitialTheme = (): Omit<Theme, '_id' | 'createdAt' | 'updatedAt'> =>
 export default function AdminPage() {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'audios'>('meditations');
-    
+
     // React Query hooks
     const { data: queryData, isLoading } = useAllDatabaseDataQuery();
     const createThemeMutation = useCreateThemeMutation();
     const deleteThemeMutation = useDeleteThemeMutation();
     const createAudioMutation = useCreateAudioMutation();
     const deleteAudioMutation = useDeleteAudioMutation();
-    
+
     // Combined loading state from all mutations
-    const isSaving = createThemeMutation.isPending || 
-                     deleteThemeMutation.isPending || 
-                     createAudioMutation.isPending ||
-                     deleteAudioMutation.isPending;
-    
+    const isSaving = createThemeMutation.isPending ||
+        deleteThemeMutation.isPending ||
+        createAudioMutation.isPending ||
+        deleteAudioMutation.isPending;
+
     // Data from React Query (no local state needed)
     const data: AdminData = {
         meditations: queryData?.meditations || null,
@@ -149,7 +149,7 @@ export default function AdminPage() {
                     <p className="text-gray-600">Gerencie o conteúdo da aplicação de meditação</p>
                     <div className="mt-4 space-x-4">
                         <Link
-                            href="/super-admin"
+                            href="/admin/super"
                             className="inline-block bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                         >
                             🚨 Super Admin
@@ -268,11 +268,11 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
     const [showAddModal, setShowAddModal] = useState<{ phase: string; section: string } | null>(null);
     const [newMeditationText, setNewMeditationText] = useState('');
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    
+
     // React Query mutation
     const updateMeditationsMutation = useUpdateMeditationsMutation();
     const isSaving = updateMeditationsMutation.isPending;
-    
+
     // Use query data if available, otherwise use initial
     const { data: queryData } = useAllDatabaseDataQuery();
     const meditations = queryData?.meditations || initialMeditations;
@@ -524,7 +524,7 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
 function StructureTab({ structure }: { structure: Structure | null }) {
     const [editedSpecifics, setEditedSpecifics] = useState<Structure['specifics'] | null>(null);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    
+
     // React Query mutation
     const updateStructureMutation = useUpdateStructureMutation();
     const isSaving = updateStructureMutation.isPending;
@@ -730,11 +730,11 @@ function ThemesList({
     const [phraseText, setPhraseText] = useState('');
     const [themeData, setThemeData] = useState<{ category: string; title: string; description: string; isActive: boolean } | null>(null);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    
+
     // React Query mutation
     const updateThemeMutation = useUpdateThemeMutation();
     const saving = updateThemeMutation.isPending;
-    
+
     // Use query data if available, otherwise use initial
     const { data: queryData } = useAllDatabaseDataQuery();
     const themes = queryData?.themes || initialThemes;
@@ -756,7 +756,7 @@ function ThemesList({
                 id: themeId,
                 data: { meditations: updatedMeditations }
             });
-            
+
             setMessage({ type: 'success', text: 'Frase adicionada com sucesso!' });
             setShowAddPhraseModal(null);
             setNewPhraseText('');
@@ -786,7 +786,7 @@ function ThemesList({
                 id: editingPhrase.themeId,
                 data: { meditations: updatedMeditations }
             });
-            
+
             setMessage({ type: 'success', text: 'Frase atualizada com sucesso!' });
             setEditingPhrase(null);
             setTimeout(() => setMessage(null), 3000);
@@ -810,7 +810,7 @@ function ThemesList({
                 id: themeId,
                 data: { meditations: updatedMeditations }
             });
-            
+
             setMessage({ type: 'success', text: 'Frase excluída com sucesso!' });
             setTimeout(() => setMessage(null), 3000);
         } catch (error) {
@@ -839,7 +839,7 @@ function ThemesList({
                 id: editingTheme,
                 data: themeData
             });
-            
+
             setMessage({ type: 'success', text: 'Tema atualizado com sucesso!' });
             setEditingTheme(null);
             setTimeout(() => setMessage(null), 3000);
