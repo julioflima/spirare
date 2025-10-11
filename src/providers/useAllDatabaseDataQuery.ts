@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 interface DatabaseData {
   meditations?: any;
@@ -9,10 +9,10 @@ interface DatabaseData {
 
 async function fetchAllDatabaseData(): Promise<DatabaseData> {
   const [meditations, structure, themes, audios] = await Promise.all([
-    fetch('/api/database/meditations').then((r) => r.json()),
-    fetch('/api/database/structure').then((r) => r.json()),
-    fetch('/api/database/themes').then((r) => r.json()),
-    fetch('/api/database/audios').then((r) => r.json()),
+    fetch("/api/database/meditations").then((r) => r.json()),
+    fetch("/api/database/structure").then((r) => r.json()),
+    fetch("/api/database/themes").then((r) => r.json()),
+    fetch("/api/database/audios").then((r) => r.json()),
   ]);
 
   return {
@@ -25,7 +25,7 @@ async function fetchAllDatabaseData(): Promise<DatabaseData> {
 
 export const useAllDatabaseDataQuery = () => {
   return useQuery({
-    queryKey: ['database', 'all'],
+    queryKey: ["database", "all"],
     queryFn: fetchAllDatabaseData,
   });
 };

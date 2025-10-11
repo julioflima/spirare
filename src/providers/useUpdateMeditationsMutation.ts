@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UpdateMeditationsParams {
   stage: string;
@@ -7,14 +7,14 @@ interface UpdateMeditationsParams {
 }
 
 async function updateMeditations(data: UpdateMeditationsParams) {
-  const response = await fetch('/api/database/meditations', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/database/meditations", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update meditations');
+    throw new Error("Failed to update meditations");
   }
 
   return response.json();
@@ -26,7 +26,7 @@ export const useUpdateMeditationsMutation = () => {
   return useMutation({
     mutationFn: updateMeditations,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['database', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },
   });
 };

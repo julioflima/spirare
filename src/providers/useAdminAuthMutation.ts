@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
 interface LoginCredentials {
   username: string;
@@ -10,15 +10,17 @@ interface AuthResponse {
   message?: string;
 }
 
-async function loginAdmin(credentials: LoginCredentials): Promise<AuthResponse> {
-  const response = await fetch('/api/admin/auth', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+async function loginAdmin(
+  credentials: LoginCredentials
+): Promise<AuthResponse> {
+  const response = await fetch("/api/admin/auth", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
 
   if (!response.ok) {
-    throw new Error('Authentication failed');
+    throw new Error("Authentication failed");
   }
 
   return response.json();

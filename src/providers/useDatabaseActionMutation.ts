@@ -1,16 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-type DatabaseAction = 'seed' | 'drop' | 'backup';
+type DatabaseAction = "seed" | "drop" | "backup";
 
 interface DatabaseActionParams {
   action: DatabaseAction;
 }
 
 async function executeDatabaseAction({ action }: DatabaseActionParams) {
-  const response = await fetch('/api/database', {
-    method: 'POST',
+  const response = await fetch("/api/database", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ action }),
   });
@@ -21,7 +21,7 @@ async function executeDatabaseAction({ action }: DatabaseActionParams) {
   }
 
   // For backup action, return the blob
-  if (action === 'backup') {
+  if (action === "backup") {
     return response.blob();
   }
 

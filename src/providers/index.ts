@@ -12,6 +12,7 @@ export * from "./useUpdateThemeMutation";
 export * from "./useDeleteThemeMutation";
 export * from "./useCreateAudioMutation";
 export * from "./useUpdateAudioMutation";
+export * from "./useDeleteAudioMutation";
 export * from "./useUpdateMeditationsMutation";
 export * from "./useUpdateStructureMutation";
 export * from "./useDatabaseOperationMutation";

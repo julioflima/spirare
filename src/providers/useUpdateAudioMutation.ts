@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UpdateAudioParams {
   id: string;
@@ -7,13 +7,13 @@ interface UpdateAudioParams {
 
 async function updateAudio({ id, data }: UpdateAudioParams) {
   const response = await fetch(`/api/database/audios/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update audio');
+    throw new Error("Failed to update audio");
   }
 
   return response.json();
@@ -25,7 +25,7 @@ export const useUpdateAudioMutation = () => {
   return useMutation({
     mutationFn: updateAudio,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['database', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },
   });
 };

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 interface Theme {
   _id?: string;
@@ -9,14 +9,14 @@ interface Theme {
 }
 
 async function fetchThemes(): Promise<Theme[]> {
-  const response = await fetch('/api/database/themes');
+  const response = await fetch("/api/database/themes");
   const data = await response.json();
   return data.data || [];
 }
 
 export const useThemesQuery = () => {
   return useQuery({
-    queryKey: ['themes'],
+    queryKey: ["themes"],
     queryFn: fetchThemes,
   });
 };

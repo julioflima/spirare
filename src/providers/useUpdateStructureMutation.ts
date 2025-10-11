@@ -1,14 +1,14 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 async function updateStructure(data: any) {
-  const response = await fetch('/api/database/structure', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/database/structure", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update structure');
+    throw new Error("Failed to update structure");
   }
 
   return response.json();
@@ -20,7 +20,7 @@ export const useUpdateStructureMutation = () => {
   return useMutation({
     mutationFn: updateStructure,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['database', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },
   });
 };

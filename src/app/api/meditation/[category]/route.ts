@@ -33,7 +33,9 @@ export async function GET(
 
     // Fetch only structure and theme metadata (not full phrase arrays)
     const [structure, theme] = await Promise.all([
-      db.collection("structure").findOne({}) as Promise<MeditationStructure | null>,
+      db
+        .collection("structure")
+        .findOne({}) as Promise<MeditationStructure | null>,
       db.collection("themes").findOne({ category }) as Promise<Theme | null>,
     ]);
 
@@ -76,9 +78,13 @@ export async function GET(
 
             // Determine collection: theme-specific or base
             const collection = useSpecific ? "themes" : "meditations";
-            
+
             // Get one random phrase directly from MongoDB
-            const text = await getRandomPhrase(collection, stageName, practiceName);
+            const text = await getRandomPhrase(
+              collection,
+              stageName,
+              practiceName
+            );
 
             return {
               practice: practiceName,

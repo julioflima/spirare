@@ -3,7 +3,17 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Audio, Theme, Structure, Meditations } from '@/types/database';
-import { useAllDatabaseDataQuery } from '@/providers';
+import { 
+    useAllDatabaseDataQuery,
+    useCreateThemeMutation,
+    useDeleteThemeMutation,
+    useUpdateThemeMutation,
+    useCreateAudioMutation,
+    useUpdateAudioMutation,
+    useDeleteAudioMutation,
+    useUpdateMeditationsMutation,
+    useUpdateStructureMutation,
+} from '@/providers';
 
 interface AdminData {
     meditations: Meditations | null;
@@ -49,33 +59,28 @@ const createInitialTheme = (): Omit<Theme, '_id' | 'createdAt' | 'updatedAt'> =>
 });
 
 export default function AdminPage() {
-    const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [activeTab, setActiveTab] = useState<'meditations' | 'structure' | 'themes' | 'audios'>('meditations');
-    const [data, setData] = useState<AdminData>({
-        meditations: null,
-        structure: null,
-        themes: [],
-        audios: []
-    });
     
-    // Use React Query provider for initial data fetch
-    const { data: queryData, isLoading, refetch } = useAllDatabaseDataQuery();
+    // React Query hooks
+    const { data: queryData, isLoading } = useAllDatabaseDataQuery();
+    const createThemeMutation = useCreateThemeMutation();
+    const deleteThemeMutation = useDeleteThemeMutation();
+    const createAudioMutation = useCreateAudioMutation();
+    const deleteAudioMutation = useDeleteAudioMutation();
     
-    // Sync query data to local state
-    useEffect(() => {
-        if (queryData) {
-            setData({
-                meditations: queryData.meditations || null,
-                structure: queryData.structure || null,
-                themes: queryData.themes || [],
-                audios: queryData.audios || []
-            });
-        }
-    }, [queryData]);
-
-    const loadData = () => {
-        refetch();
+    // Combined loading state from all mutations
+    const isSaving = createThemeMutation.isPending || 
+                     deleteThemeMutation.isPending || 
+                     createAudioMutation.isPending ||
+                     deleteAudioMutation.isPending;
+    
+    // Data from React Query (no local state needed)
+    const data: AdminData = {
+        meditations: queryData?.meditations || null,
+        structure: queryData?.structure || null,
+        themes: queryData?.themes || [],
+        audios: queryData?.audios || []
     };
 
     const showMessage = (type: 'success' | 'error', text: string) => {
@@ -84,102 +89,42 @@ export default function AdminPage() {
     };
 
     const handleCreateTheme = async (theme: Omit<Theme, '_id' | 'createdAt' | 'updatedAt'>) => {
-        setIsSaving(true);
         try {
-            const response = await fetch('/api/database/themes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(theme),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setData(prev => ({ ...prev, themes: [...prev.themes, result.theme] }));
-                showMessage('success', 'Tema criado com sucesso!');
-            } else {
-                const error = await response.json();
-                showMessage('error', error.message || 'Erro ao criar tema');
-            }
-        } catch {
-            showMessage('error', 'Erro ao conectar com o servidor');
-        } finally {
-            setIsSaving(false);
+            await createThemeMutation.mutateAsync(theme);
+            showMessage('success', 'Tema criado com sucesso!');
+        } catch (error) {
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao criar tema');
         }
     };
 
     const handleDeleteTheme = async (id: string) => {
         if (!confirm('Tem certeza que deseja excluir este tema?')) return;
 
-        setIsSaving(true);
         try {
-            const response = await fetch(`/api/database/themes/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                setData(prev => ({
-                    ...prev,
-                    themes: prev.themes.filter(theme => theme._id !== id)
-                }));
-                showMessage('success', 'Tema excluído com sucesso!');
-            } else {
-                const error = await response.json();
-                showMessage('error', error.message || 'Erro ao excluir tema');
-            }
-        } catch {
-            showMessage('error', 'Erro ao conectar com o servidor');
-        } finally {
-            setIsSaving(false);
+            await deleteThemeMutation.mutateAsync(id);
+            showMessage('success', 'Tema excluído com sucesso!');
+        } catch (error) {
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao excluir tema');
         }
     };
 
     const handleCreateAudio = async (audio: Omit<Audio, '_id' | 'createdAt' | 'updatedAt'>) => {
-        setIsSaving(true);
         try {
-            const response = await fetch('/api/database/audios', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(audio),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setData(prev => ({ ...prev, audios: [...prev.audios, result.audio] }));
-                showMessage('success', 'Áudio criado com sucesso!');
-            } else {
-                const error = await response.json();
-                showMessage('error', error.message || 'Erro ao criar áudio');
-            }
-        } catch {
-            showMessage('error', 'Erro ao conectar com o servidor');
-        } finally {
-            setIsSaving(false);
+            await createAudioMutation.mutateAsync(audio);
+            showMessage('success', 'Áudio criado com sucesso!');
+        } catch (error) {
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao criar áudio');
         }
     };
 
     const handleDeleteAudio = async (id: string) => {
         if (!confirm('Tem certeza que deseja excluir este áudio?')) return;
 
-        setIsSaving(true);
         try {
-            const response = await fetch(`/api/database/audios/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                setData(prev => ({
-                    ...prev,
-                    audios: prev.audios.filter(audio => audio._id !== id)
-                }));
-                showMessage('success', 'Áudio excluído com sucesso!');
-            } else {
-                const error = await response.json();
-                showMessage('error', error.message || 'Erro ao excluir áudio');
-            }
-        } catch {
-            showMessage('error', 'Erro ao conectar com o servidor');
-        } finally {
-            setIsSaving(false);
+            await deleteAudioMutation.mutateAsync(id);
+            showMessage('success', 'Áudio excluído com sucesso!');
+        } catch (error) {
+            showMessage('error', error instanceof Error ? error.message : 'Erro ao excluir áudio');
         }
     };
 
@@ -317,19 +262,20 @@ function Modal({
 
 // Meditations Tab Component
 function MeditationsTab({ meditations: initialMeditations }: { meditations: Meditations | null }) {
-    const [meditations, setMeditations] = useState<Meditations | null>(initialMeditations);
     const [expandedPhase, setExpandedPhase] = useState<string | null>(null);
     const [editingItem, setEditingItem] = useState<{ phase: string; section: string; index: number } | null>(null);
     const [editText, setEditText] = useState('');
     const [showAddModal, setShowAddModal] = useState<{ phase: string; section: string } | null>(null);
     const [newMeditationText, setNewMeditationText] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
-    // Update local state when prop changes
-    useEffect(() => {
-        setMeditations(initialMeditations);
-    }, [initialMeditations]);
+    
+    // React Query mutation
+    const updateMeditationsMutation = useUpdateMeditationsMutation();
+    const isSaving = updateMeditationsMutation.isPending;
+    
+    // Use query data if available, otherwise use initial
+    const { data: queryData } = useAllDatabaseDataQuery();
+    const meditations = queryData?.meditations || initialMeditations;
 
     if (!meditations) {
         return (
@@ -348,7 +294,6 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
     const handleSave = async () => {
         if (!editingItem || !meditations) return;
 
-        setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
 
@@ -360,34 +305,19 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
             const phaseData = updatedMeditations[editingItem.phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[editingItem.section][editingItem.index].text = editText;
 
-            const response = await fetch('/api/database/meditations', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedMeditations),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setMeditations(result.meditations);
-                setMessage({ type: 'success', text: 'Meditação atualizada com sucesso!' });
-                setEditingItem(null);
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao atualizar' });
-            }
+            await updateMeditationsMutation.mutateAsync(updatedMeditations);
+            setMessage({ type: 'success', text: 'Meditação atualizada com sucesso!' });
+            setEditingItem(null);
+            setTimeout(() => setMessage(null), 3000);
         } catch (err) {
             console.error('Error saving meditation:', err);
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setIsSaving(false);
+            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Erro ao conectar com o servidor' });
         }
     };
 
     const handleDelete = async (phase: string, section: string, index: number) => {
         if (!confirm('Tem certeza que deseja excluir este item?')) return;
 
-        setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
 
@@ -399,26 +329,12 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
             const phaseData = updatedMeditations[phase as keyof Meditations] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[section].splice(index, 1);
 
-            const response = await fetch('/api/database/meditations', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedMeditations),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setMeditations(result.meditations);
-                setMessage({ type: 'success', text: 'Item excluído com sucesso!' });
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao excluir' });
-            }
+            await updateMeditationsMutation.mutateAsync(updatedMeditations);
+            setMessage({ type: 'success', text: 'Item excluído com sucesso!' });
+            setTimeout(() => setMessage(null), 3000);
         } catch (err) {
             console.error('Error deleting meditation:', err);
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setIsSaving(false);
+            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Erro ao conectar com o servidor' });
         }
     };
 
@@ -426,7 +342,6 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
         if (!showAddModal || !newMeditationText.trim()) return;
 
         const { phase, section } = showAddModal;
-        setIsSaving(true);
         try {
             const updatedMeditations = JSON.parse(JSON.stringify(meditations));
 
@@ -439,28 +354,14 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
             const newOrder = phaseData[section].length;
             phaseData[section].push({ text: newMeditationText, order: newOrder });
 
-            const response = await fetch('/api/database/meditations', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedMeditations),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setMeditations(result.meditations);
-                setMessage({ type: 'success', text: 'Meditação adicionada com sucesso!' });
-                setShowAddModal(null);
-                setNewMeditationText('');
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao adicionar' });
-            }
+            await updateMeditationsMutation.mutateAsync(updatedMeditations);
+            setMessage({ type: 'success', text: 'Meditação adicionada com sucesso!' });
+            setShowAddModal(null);
+            setNewMeditationText('');
+            setTimeout(() => setMessage(null), 3000);
         } catch (err) {
             console.error('Error adding meditation:', err);
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setIsSaving(false);
+            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Erro ao conectar com o servidor' });
         }
     };
 
@@ -622,8 +523,11 @@ function MeditationsTab({ meditations: initialMeditations }: { meditations: Medi
 // Structure Tab Component
 function StructureTab({ structure }: { structure: Structure | null }) {
     const [editedSpecifics, setEditedSpecifics] = useState<Structure['specifics'] | null>(null);
-    const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    
+    // React Query mutation
+    const updateStructureMutation = useUpdateStructureMutation();
+    const isSaving = updateStructureMutation.isPending;
 
     // Initialize edited specifics when structure changes
     useEffect(() => {
@@ -660,25 +564,12 @@ function StructureTab({ structure }: { structure: Structure | null }) {
     const handleSave = async () => {
         if (!editedSpecifics) return;
 
-        setIsSaving(true);
         try {
-            const response = await fetch('/api/database/structure', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ specifics: editedSpecifics }),
-            });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Especificidades salvas com sucesso!' });
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao salvar especificidades' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setIsSaving(false);
+            await updateStructureMutation.mutateAsync({ specifics: editedSpecifics });
+            setMessage({ type: 'success', text: 'Especificidades salvas com sucesso!' });
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Erro ao conectar com o servidor' });
         }
     };
 
@@ -831,7 +722,6 @@ function ThemesList({
     onDelete: (id: string) => void;
     isSaving: boolean;
 }) {
-    const [themes, setThemes] = useState<Theme[]>(initialThemes);
     const [expandedTheme, setExpandedTheme] = useState<string | null>(null);
     const [editingTheme, setEditingTheme] = useState<string | null>(null);
     const [editingPhrase, setEditingPhrase] = useState<{ themeId: string; phase: string; section: string; index: number } | null>(null);
@@ -840,30 +730,19 @@ function ThemesList({
     const [phraseText, setPhraseText] = useState('');
     const [themeData, setThemeData] = useState<{ category: string; title: string; description: string; isActive: boolean } | null>(null);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    const [saving, setSaving] = useState(false);
-
-    // Sync local state with prop changes
-    useEffect(() => {
-        setThemes(initialThemes);
-    }, [initialThemes]);
-
-    const refreshThemes = async () => {
-        try {
-            const response = await fetch('/api/database/themes');
-            if (response.ok) {
-                const data = await response.json();
-                setThemes(data.themes || []);
-            }
-        } catch (error) {
-            console.error('Error refreshing themes:', error);
-        }
-    };
+    
+    // React Query mutation
+    const updateThemeMutation = useUpdateThemeMutation();
+    const saving = updateThemeMutation.isPending;
+    
+    // Use query data if available, otherwise use initial
+    const { data: queryData } = useAllDatabaseDataQuery();
+    const themes = queryData?.themes || initialThemes;
 
     const handleAddPhrase = async () => {
         if (!showAddPhraseModal || !newPhraseText.trim()) return;
 
         const { themeId, phase, section } = showAddPhraseModal;
-        setSaving(true);
         try {
             const theme = themes.find(t => t._id?.toString() === themeId);
             if (!theme) return;
@@ -873,26 +752,17 @@ function ThemesList({
             const newOrder = phaseData[section].length;
             phaseData[section].push({ text: newPhraseText, order: newOrder });
 
-            const response = await fetch(`/api/database/themes/${themeId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ meditations: updatedMeditations }),
+            await updateThemeMutation.mutateAsync({
+                id: themeId,
+                data: { meditations: updatedMeditations }
             });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Frase adicionada com sucesso!' });
-                setShowAddPhraseModal(null);
-                setNewPhraseText('');
-                await refreshThemes();
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao adicionar frase' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setSaving(false);
+            
+            setMessage({ type: 'success', text: 'Frase adicionada com sucesso!' });
+            setShowAddPhraseModal(null);
+            setNewPhraseText('');
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Erro ao conectar com o servidor' });
         }
     };
 
@@ -904,7 +774,6 @@ function ThemesList({
     const handleSavePhrase = async () => {
         if (!editingPhrase) return;
 
-        setSaving(true);
         try {
             const theme = themes.find(t => t._id?.toString() === editingPhrase.themeId);
             if (!theme) return;
@@ -913,32 +782,22 @@ function ThemesList({
             const phaseData = updatedMeditations[editingPhrase.phase as keyof Theme['meditations']] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[editingPhrase.section][editingPhrase.index].text = phraseText;
 
-            const response = await fetch(`/api/database/themes/${editingPhrase.themeId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ meditations: updatedMeditations }),
+            await updateThemeMutation.mutateAsync({
+                id: editingPhrase.themeId,
+                data: { meditations: updatedMeditations }
             });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Frase atualizada com sucesso!' });
-                setEditingPhrase(null);
-                await refreshThemes();
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao atualizar frase' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setSaving(false);
+            
+            setMessage({ type: 'success', text: 'Frase atualizada com sucesso!' });
+            setEditingPhrase(null);
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Erro ao conectar com o servidor' });
         }
     };
 
     const handleDeletePhrase = async (themeId: string, phase: string, section: string, index: number) => {
         if (!confirm('Tem certeza que deseja excluir esta frase?')) return;
 
-        setSaving(true);
         try {
             const theme = themes.find(t => t._id?.toString() === themeId);
             if (!theme) return;
@@ -947,24 +806,15 @@ function ThemesList({
             const phaseData = updatedMeditations[phase as keyof Theme['meditations']] as Record<string, Array<{ text: string; order: number }>>;
             phaseData[section].splice(index, 1);
 
-            const response = await fetch(`/api/database/themes/${themeId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ meditations: updatedMeditations }),
+            await updateThemeMutation.mutateAsync({
+                id: themeId,
+                data: { meditations: updatedMeditations }
             });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Frase excluída com sucesso!' });
-                await refreshThemes();
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao excluir frase' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setSaving(false);
+            
+            setMessage({ type: 'success', text: 'Frase excluída com sucesso!' });
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Erro ao conectar com o servidor' });
         }
     };
 
@@ -984,27 +834,17 @@ function ThemesList({
     const handleSaveTheme = async () => {
         if (!editingTheme || !themeData) return;
 
-        setSaving(true);
         try {
-            const response = await fetch(`/api/database/themes/${editingTheme}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(themeData),
+            await updateThemeMutation.mutateAsync({
+                id: editingTheme,
+                data: themeData
             });
-
-            if (response.ok) {
-                setMessage({ type: 'success', text: 'Tema atualizado com sucesso!' });
-                setEditingTheme(null);
-                await refreshThemes();
-                setTimeout(() => setMessage(null), 3000);
-            } else {
-                const error = await response.json();
-                setMessage({ type: 'error', text: error.message || 'Erro ao atualizar tema' });
-            }
-        } catch {
-            setMessage({ type: 'error', text: 'Erro ao conectar com o servidor' });
-        } finally {
-            setSaving(false);
+            
+            setMessage({ type: 'success', text: 'Tema atualizado com sucesso!' });
+            setEditingTheme(null);
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error) {
+            setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Erro ao conectar com o servidor' });
         }
     };
 

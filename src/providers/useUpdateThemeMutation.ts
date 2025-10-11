@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UpdateThemeParams {
   id: string;
@@ -7,13 +7,13 @@ interface UpdateThemeParams {
 
 async function updateTheme({ id, data }: UpdateThemeParams) {
   const response = await fetch(`/api/database/themes/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update theme');
+    throw new Error("Failed to update theme");
   }
 
   return response.json();
@@ -25,8 +25,8 @@ export const useUpdateThemeMutation = () => {
   return useMutation({
     mutationFn: updateTheme,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['themes'] });
-      queryClient.invalidateQueries({ queryKey: ['database', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ["themes"] });
+      queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },
   });
 };

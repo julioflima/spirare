@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface AudioInput {
   name: string;
@@ -7,14 +7,14 @@ interface AudioInput {
 }
 
 async function createAudio(audio: AudioInput) {
-  const response = await fetch('/api/database/audios', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/database/audios", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(audio),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create audio');
+    throw new Error("Failed to create audio");
   }
 
   return response.json();
@@ -26,7 +26,7 @@ export const useCreateAudioMutation = () => {
   return useMutation({
     mutationFn: createAudio,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['database', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ["database", "all"] });
     },
   });
 };

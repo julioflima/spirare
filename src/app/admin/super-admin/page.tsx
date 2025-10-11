@@ -6,7 +6,7 @@ import { useDatabaseActionMutation, useDatabaseStatusQuery } from '@/providers';
 
 export default function SuperAdminPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'warning'; text: string } | null>(null);
-  
+
   const databaseActionMutation = useDatabaseActionMutation();
   const { refetch: fetchStatus } = useDatabaseStatusQuery();
 
@@ -53,7 +53,7 @@ export default function SuperAdminPage() {
   const handleBackupDatabase = async () => {
     try {
       const blob = await databaseActionMutation.mutateAsync({ action: 'backup' });
-      
+
       if (blob instanceof Blob) {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -92,10 +92,10 @@ export default function SuperAdminPage() {
         {/* Message Display */}
         {message && (
           <div className={`mb-6 p-4 rounded-lg border ${message.type === 'success'
-              ? 'bg-green-100 text-green-700 border-green-300'
-              : message.type === 'warning'
-                ? 'bg-yellow-100 text-yellow-700 border-yellow-300'
-                : 'bg-red-100 text-red-700 border-red-300'
+            ? 'bg-green-100 text-green-700 border-green-300'
+            : message.type === 'warning'
+              ? 'bg-yellow-100 text-yellow-700 border-yellow-300'
+              : 'bg-red-100 text-red-700 border-red-300'
             }`}>
             <pre className="whitespace-pre-wrap font-mono text-xs">{message.text}</pre>
           </div>

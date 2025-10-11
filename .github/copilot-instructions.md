@@ -119,30 +119,34 @@ Spirare é um ritual de meditação guiada construído com Next.js 15, TypeScrip
 - ✅ React Query gerencia cache, refetch, loading states automaticamente
 
 **Exemplo INCORRETO:**
+
 ```typescript
 // ❌ NÃO FAÇA ISSO
 const [data, setData] = useState(null);
 useEffect(() => {
-  fetch('/api/categories').then(r => r.json()).then(setData);
+  fetch("/api/categories")
+    .then((r) => r.json())
+    .then(setData);
 }, []);
 ```
 
 **Exemplo CORRETO:**
+
 ```typescript
 // ✅ FAÇA ISSO
 // 1. Crie src/providers/useCategoriesQuery.ts
 export const useCategoriesQuery = () => {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: ["categories"],
     queryFn: async () => {
-      const response = await fetch('/api/categories');
+      const response = await fetch("/api/categories");
       return response.json();
-    }
+    },
   });
 };
 
 // 2. Use no componente
-import { useCategoriesQuery } from '@/providers';
+import { useCategoriesQuery } from "@/providers";
 const { data, isLoading, error } = useCategoriesQuery();
 ```
 
