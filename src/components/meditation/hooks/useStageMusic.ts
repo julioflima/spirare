@@ -1,6 +1,6 @@
 "use client";
 
-import { Song } from "@/types";
+import type { Song } from "@/types";
 import { useCallback, useEffect, useRef } from "react";
 
 const clampVolume = (value: number) => Math.min(1, Math.max(0, value));
@@ -10,7 +10,7 @@ const DEFAULT_FADE_OUT = 1500;
 const DEFAULT_VOLUME = 0.5;
 
 export function useStageMusic() {
-  const songRef = useRef<HTMLSongElement | null>(null);
+  const songRef = useRef<HTMLAudioElement | null>(null);
   const fadeFrameRef = useRef<number | null>(null);
 
   const cancelFade = useCallback(() => {
@@ -104,7 +104,7 @@ export function useStageMusic() {
 
       await stopCurrentTrack(fadeOutMs);
 
-      const song = new Song(src);
+      const song = new Audio(src);
       song.crossOrigin = "anonymous";
       song.loop = true;
       song.volume = 0;

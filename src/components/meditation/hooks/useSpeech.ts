@@ -24,7 +24,7 @@ interface IUseSpeech {
 }
 
 export function useSpeech({ songBuffer }: IUseSpeech): SpeechControls {
-  const songElementRef = useRef<HTMLSongElement | null>(null);
+  const songElementRef = useRef<HTMLAudioElement | null>(null);
   const songUrlRef = useRef<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -64,7 +64,7 @@ export function useSpeech({ songBuffer }: IUseSpeech): SpeechControls {
       setIsGenerating(true);
       setError(null);
 
-      let song: HTMLSongElement | null = null;
+      let song: HTMLAudioElement | null = null;
       try {
         if (cancelTokenRef.current !== token) {
           setIsGenerating(false);
@@ -75,7 +75,7 @@ export function useSpeech({ songBuffer }: IUseSpeech): SpeechControls {
         const url = URL.createObjectURL(blob);
         songUrlRef.current = url;
 
-        song = new Song(url);
+        song = new Audio(url);
         songElementRef.current = song;
         song.volume = 1;
 

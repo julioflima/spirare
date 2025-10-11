@@ -23,19 +23,19 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   const [isPlaying, setIsPlaying] = useState(false);
   const [beatActive, setBeatActive] = useState(false);
 
-  const contextRef = useRef<SongContext | null>(null);
+  const contextRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const periodRef = useRef(initialPeriod);
 
-  const ensureSongContext = useCallback(() => {
+  const ensureAudioContext = useCallback(() => {
     if (typeof window === "undefined") return;
 
     if (!contextRef.current) {
-      const SongContextClass =
-        window.SongContext ||
-        (window as unknown as { webkitSongContext: typeof SongContext })
-          .webkitSongContext;
-      contextRef.current = new SongContextClass();
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
+      contextRef.current = new AudioContextClass();
     }
 
     if (contextRef.current.state === "suspended") {
@@ -87,13 +87,13 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   }, []);
 
   const start = useCallback(() => {
-    ensureSongContext();
+    ensureAudioContext();
     clearCurrentInterval();
     setIsPlaying(true);
     periodRef.current = periodMs;
     tick();
     intervalRef.current = setInterval(tick, periodRef.current);
-  }, [clearCurrentInterval, ensureSongContext, periodMs, tick]);
+  }, [clearCurrentInterval, ensureAudioContext, periodMs, tick]);
 
   const stop = useCallback(() => {
     clearCurrentInterval();
@@ -111,14 +111,14 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   useEffect(() => {
     periodRef.current = periodMs;
     if (isPlaying) {
-      ensureSongContext();
+      ensureAudioContext();
       clearCurrentInterval();
       intervalRef.current = setInterval(tick, periodMs);
     }
     return stop;
   }, [
     clearCurrentInterval,
-    ensureSongContext,
+    ensureAudioContext,
     isPlaying,
     periodMs,
     stop,

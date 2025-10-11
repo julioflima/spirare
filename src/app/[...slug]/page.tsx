@@ -43,7 +43,7 @@ export default function CategoryPage() {
 
     return (
         <>
-            {category && stage && practice && order && <MeditationGenerator />}
+            {/* {category && stage && practice && order && <MeditationGenerator />} */}
 
             <div className="min-h-screen bg-gradient-to-br from-[#f8fff8] via-[#fdf8ec] to-[#fff4d6] px-6 py-10">
                 <div className="max-w-4xl mx-auto">

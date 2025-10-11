@@ -30,7 +30,7 @@ Pause:
 Pausas estratégicas continuam, mas agora transmitem aconchego. 
 `;
 
-    const response = await openai.song.speech.create({
+    const response = await openai.audio.speech.create({
       model: "gpt-4o-mini-tts",
       voice: "coral",
       input: text,
