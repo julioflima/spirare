@@ -4,6 +4,7 @@ import { useCategoriesQuery } from '@/providers';
 import { Lock, Play, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -79,33 +80,41 @@ export default function Home() {
 
         {/* Category cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...categories, ...categories, ...categories, ...categories].map(((category, index) => ({ ...category, category: category.category + index }))).map((category) => (
+          {categories.map((category) => (
             <button
               key={category.category}
               onClick={() => setSelectedCategory(category.category)}
+              onMouseEnter={(e) => {
+                if (selectedCategory !== category.category) {
+                  e.currentTarget.style.filter = 'drop-shadow(0 6px 12px rgba(251,191,36,0.5))';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedCategory !== category.category) {
+                  e.currentTarget.style.filter = '';
+                }
+              }}
               className={`group relative overflow-hidden rounded-2xl p-8 backdrop-blur-3xl backdrop-saturate-150 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer ${selectedCategory === category.category
                 ? 'scale-[1.02]'
                 : 'hover:backdrop-saturate-[180%] hover:scale-[1.01]'
                 }`}
               style={{
-                border: '2px solid transparent',
-                background: selectedCategory === category.category
-                  ? 'linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45)), linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(52,211,153,0.4) 25%, rgba(16,185,129,0.35) 50%, rgba(251,191,36,0.4) 75%, rgba(255,255,255,0.85) 100%)'
-                  : 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.15)), linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 20%, transparent 80%, rgba(255,255,255,0.4) 100%)',
-                backgroundOrigin: 'border-box',
-                backgroundClip: 'padding-box, border-box',
+                border: '3px solid transparent',
+                backgroundImage: selectedCategory === category.category
+                  ? 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, transparent 100%)'
+                  : undefined,
+                backgroundOrigin: selectedCategory === category.category ? 'border-box' : undefined,
+                backgroundClip: selectedCategory === category.category ? 'border-box' : undefined,
+                filter: selectedCategory === category.category ? 'drop-shadow(0 6px 12px rgba(251,191,36,0.2))' : undefined,
                 boxShadow: selectedCategory === category.category
-                  ? '0 35px 80px -40px rgba(34,197,94,0.5), inset 0 1px 0 0 rgba(255,255,255,0.8), inset 0 -1px 0 0 rgba(255,255,255,0.3)'
+                  ? 'inset 0 1px 0 0 rgba(255,255,255,0.9), inset 0 -1px 0 0 rgba(255,255,255,0.4)'
                   : '0 4px 20px -4px rgba(132,204,22,0.15), inset 0 1px 0 0 rgba(255,255,255,0.4)'
               }}
             >
-              {/* Multi-layer liquid glow for selected state */}
+              {/* Remove all background glow layers for selected state */}
               {selectedCategory === category.category && (
                 <>
-                  <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-200/40 via-cyan-200/30 to-blue-200/40 blur-3xl animate-pulse" aria-hidden="true" />
-                  <span className="pointer-events-none absolute inset-0 rounded-2xl bg-white/40 blur-2xl opacity-60" aria-hidden="true" />
-                  {/* Inner highlight */}
-                  <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-2xl bg-gradient-to-b from-white/60 to-transparent" aria-hidden="true" />
+                  {/* Only keep the white gradient border, no background layers */}
                 </>
               )}
 
@@ -132,11 +141,17 @@ export default function Home() {
 
       {/* Play button - fixed at bottom, only show when category is selected */}
       {selectedCategory && selectedCategoryData && (
-        <div className="fixed bottom-8 left-0 right-0 flex justify-center z-40 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <motion.div
+          className="fixed bottom-8 left-0 right-0 flex justify-center z-40"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+        >
           <Link
             href={`/${selectedCategory}`}
             aria-label={`Começar meditação: ${selectedCategoryData.title}`}
-            className="group relative flex h-48 w-48 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-white/40 bg-gradient-to-br from-white/20 via-cyan-100/15 to-blue-100/15 shadow-[0_30px_70px_-35px_rgba(6,182,212,0.35)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.08] hover:shadow-[0_42px_100px_-48px_rgba(6,182,212,0.45)] active:scale-[0.98] animate-[bounce_2s_ease-in-out_3]"
+            className="group relative flex h-48 w-48 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-white/40 bg-gradient-to-br from-white/20 via-cyan-100/15 to-blue-100/15 shadow-[0_30px_70px_-35px_rgba(6,182,212,0.35)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.08] hover:shadow-[0_42px_100px_-48px_rgba(6,182,212,0.45)] active:scale-[0.98]"
           >
             {/* Multi-layer animated liquid glow */}
             <span className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-200/15 via-blue-200/10 to-teal-200/15 blur-3xl animate-pulse" aria-hidden="true" />
@@ -152,7 +167,7 @@ export default function Home() {
               </span>
             </span>
           </Link>
-        </div>
+        </motion.div>
       )}
     </div>
   );
