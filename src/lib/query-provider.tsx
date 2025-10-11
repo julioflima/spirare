@@ -1,6 +1,8 @@
 'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { ReactNode, useState } from 'react';
 
 const DEFAULT_RETRY_DELAY = (attempt: number) => Math.min(1500 * (attempt + 1), 4000);
@@ -14,8 +16,6 @@ export const QueryProvider = ({ children }: { children: ReactNode }) => {
                         retry: 2,
                         retryDelay: DEFAULT_RETRY_DELAY,
                         refetchOnWindowFocus: false,
-                        staleTime: 24 * 60 * 60 * 1000, // 1 day
-                        gcTime: 24 * 60 * 60 * 1000, // 1 day
                     },
                     mutations: {
                         retry: 2,
@@ -25,5 +25,15 @@ export const QueryProvider = ({ children }: { children: ReactNode }) => {
             }),
     );
 
-    return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+    const [persister] = useState(() =>
+        createAsyncStoragePersister({
+            storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        })
+    );
+
+    return (
+        <PersistQueryClientProvider client={client} persistOptions={{ persister }}>
+            {children}
+        </PersistQueryClientProvider>
+    );
 };

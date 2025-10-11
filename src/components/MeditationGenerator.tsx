@@ -1,1 +1,0 @@
-export { MeditationGenerator as default } from './meditation';

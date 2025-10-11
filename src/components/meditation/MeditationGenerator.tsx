@@ -11,6 +11,7 @@ import { useMetronome, MAX_METRONOME_PERIOD_MS, MIN_METRONOME_PERIOD_MS } from '
 import { useSpeech } from './hooks/useSpeech';
 import { useStageMusic } from './hooks/useStageMusic';
 import { ChevronsRight, Music } from 'lucide-react';
+import { Loading } from '../Loading';
 
 export const MeditationGenerator = () => {
     const [hasStarted, setHasStarted] = useState(false);
@@ -240,12 +241,7 @@ export const MeditationGenerator = () => {
                     <span className="pointer-events-none absolute -bottom-28 -right-12 h-56 w-56 rounded-full bg-gradient-to-br from-white/40 via-emerald-100/35 to-amber-100/30 blur-3xl" aria-hidden="true" />
 
                     {isAudioLoading && (
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-white/70 backdrop-blur-xl">
-                            <div className="h-14 w-14 animate-spin rounded-full border-4 border-emerald-300/80 border-t-transparent" aria-hidden="true" />
-                            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-emerald-800/80">
-                                Preparando instruções de áudio
-                            </p>
-                        </div>
+                        <Loading>Preparando instruções de aúdio</Loading>
                     )}
 
                     <SessionHeader

@@ -151,14 +151,14 @@ export default function Home() {
           <Link
             href={`/${selectedCategory}`}
             aria-label={`Começar meditação: ${selectedCategoryData.title}`}
-            className="group relative flex h-48 w-48 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-white/40 bg-gradient-to-br from-white/20 via-cyan-100/15 to-blue-100/15 shadow-[0_30px_70px_-35px_rgba(6,182,212,0.35)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.08] hover:shadow-[0_42px_100px_-48px_rgba(6,182,212,0.45)] active:scale-[0.98]"
+            className="group relative flex h-48 w-48 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-white/60 bg-gradient-to-br from-white/50 via-cyan-100/40 to-blue-100/35 shadow-[0_30px_70px_-35px_rgba(6,182,212,0.35)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.08] hover:shadow-[0_42px_100px_-48px_rgba(6,182,212,0.45)] active:scale-[0.98]"
           >
             {/* Multi-layer animated liquid glow */}
-            <span className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-200/15 via-blue-200/10 to-teal-200/15 blur-3xl animate-pulse" aria-hidden="true" />
-            <span className="absolute inset-0 rounded-full bg-white/20 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} aria-hidden="true" />
+            <span className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-200/30 via-blue-200/25 to-teal-200/30 blur-3xl animate-pulse" aria-hidden="true" />
+            <span className="absolute inset-0 rounded-full bg-white/35 blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }} aria-hidden="true" />
 
             {/* Inner liquid glass ring */}
-            <span className="absolute inset-6 rounded-full border border-white/40 bg-gradient-to-br from-white/30 via-cyan-50/15 to-transparent transition-all duration-500 group-hover:shadow-[inset_8px_8px_20px_rgba(78,205,196,0.15),inset_-10px_-10px_18px_rgba(255,255,255,0.5)]" />
+            <span className="absolute inset-6 rounded-full border border-white/60 bg-gradient-to-br from-white/50 via-cyan-50/30 to-white/20 transition-all duration-500 group-hover:shadow-[inset_8px_8px_20px_rgba(78,205,196,0.15),inset_-10px_-10px_18px_rgba(255,255,255,0.5)]" />
 
             {/* Icon */}
             <span className="relative flex items-center justify-center text-cyan-800 transition-transform duration-500 group-hover:scale-110">

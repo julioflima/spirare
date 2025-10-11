@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import type {
   MeditationSession,
   GetMeditationSessionResponse,
+  ApiError,
 } from "@/types/api";
 
 async function fetchMeditationSession(
@@ -28,10 +29,17 @@ async function fetchMeditationSession(
   return data.session;
 }
 
-export function useMeditationSessionQuery(category: string) {
+export function useMeditationSessionQuery(
+  category: string,
+  options: Omit<
+    UseQueryOptions<unknown, ApiError, MeditationSession>,
+    "queryKey"
+  > = {}
+) {
   return useQuery({
     queryKey: ["meditation-session", category],
     queryFn: () => fetchMeditationSession(category),
     enabled: !!category,
+    ...options,
   });
 }
