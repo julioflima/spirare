@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/mongodb';
+import { NextRequest, NextResponse } from "next/server";
+import { getDatabase } from "@/lib/mongodb";
 
 interface MeditationStructure {
   method: Array<{ [stage: string]: string[] }>;
@@ -33,14 +33,18 @@ export async function GET(
 
     // Fetch structure, base meditations, and theme
     const [structure, baseMeditations, theme] = await Promise.all([
-      db.collection('structure').findOne({}) as Promise<MeditationStructure | null>,
-      db.collection('meditations').findOne({}) as Promise<MeditationBase | null>,
-      db.collection('themes').findOne({ category }) as Promise<Theme | null>,
+      db
+        .collection("structure")
+        .findOne({}) as Promise<MeditationStructure | null>,
+      db
+        .collection("meditations")
+        .findOne({}) as Promise<MeditationBase | null>,
+      db.collection("themes").findOne({ category }) as Promise<Theme | null>,
     ]);
 
     if (!structure || !baseMeditations || !theme) {
       return NextResponse.json(
-        { success: false, error: 'Data not found' },
+        { success: false, error: "Data not found" },
         { status: 404 }
       );
     }
@@ -65,11 +69,15 @@ export async function GET(
 
       // Process each practice
       for (const practiceName of practices) {
-        const useSpecific = structure.specifics[stageName]?.[practiceName] === true;
-        
+        const useSpecific =
+          structure.specifics[stageName]?.[practiceName] === true;
+
         let phrases: string[] = [];
-        
-        if (useSpecific && theme.meditations[stageName]?.[practiceName]?.length > 0) {
+
+        if (
+          useSpecific &&
+          theme.meditations[stageName]?.[practiceName]?.length > 0
+        ) {
           // Use theme-specific phrases
           phrases = theme.meditations[stageName][practiceName];
         } else {
@@ -78,9 +86,10 @@ export async function GET(
         }
 
         // Select one random phrase
-        const randomPhrase = phrases.length > 0 
-          ? phrases[Math.floor(Math.random() * phrases.length)]
-          : '';
+        const randomPhrase =
+          phrases.length > 0
+            ? phrases[Math.floor(Math.random() * phrases.length)]
+            : "";
 
         stageData.practices.push({
           practice: practiceName,
@@ -96,11 +105,10 @@ export async function GET(
       success: true,
       session,
     });
-
   } catch (error) {
-    console.error('Error composing meditation:', error);
+    console.error("Error composing meditation:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to compose meditation' },
+      { success: false, error: "Failed to compose meditation" },
       { status: 500 }
     );
   }

@@ -80,9 +80,9 @@ export default function CategoryPage() {
                     <h2 className="text-2xl font-semibold text-emerald-900 mb-6">Escolha uma Etapa</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {session.stages.map((stageData) => {
-                            const stageInfo = STAGE_LABELS[stageData.stage] || { 
-                                label: stageData.stage, 
-                                description: '' 
+                            const stageInfo = STAGE_LABELS[stageData.stage] || {
+                                label: stageData.stage,
+                                description: ''
                             };
                             return (
                                 <Link

@@ -290,6 +290,7 @@ O sistema de meditação compõe sessões dinamicamente a partir de três fontes
 1. **Frontend**: Seleciona categoria
 2. **Backend**: Busca `structure.method` para determinar ordem das práticas
 3. **Backend**: Para cada prática, pega **1 frase aleatória** de:
+
    - `meditations.opening.psychoeducation`
    - `meditations.opening.intention`
    - `meditations.opening.posture_and_environment`
@@ -315,7 +316,8 @@ O sistema de meditação compõe sessões dinamicamente a partir de três fontes
 ### Exemplo
 
 Para categoria "anxiety":
-- `structure.specifics.opening.psychoeducation = true` 
+
+- `structure.specifics.opening.psychoeducation = true`
   → Usa frase de `themes.anxiety.meditations.opening.psychoeducation[]`
 - `structure.specifics.opening.intention = false`
   → Usa frase de `meditations.opening.intention[]`
