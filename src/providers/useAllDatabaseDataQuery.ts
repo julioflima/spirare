@@ -8,7 +8,7 @@ interface DatabaseData {
 }
 
 async function fetchAllDatabaseData(): Promise<DatabaseData> {
-  const [meditations, structure, themes, audios] = await Promise.all([
+  const [meditationsRes, structureRes, themesRes, audiosRes] = await Promise.all([
     fetch("/api/database/meditations").then((r) => r.json()),
     fetch("/api/database/structure").then((r) => r.json()),
     fetch("/api/database/themes").then((r) => r.json()),
@@ -16,10 +16,10 @@ async function fetchAllDatabaseData(): Promise<DatabaseData> {
   ]);
 
   return {
-    meditations: meditations.data,
-    structure: structure.data,
-    themes: themes.data,
-    audios: audios.data,
+    meditations: meditationsRes.meditations,
+    structure: structureRes.structure,
+    themes: themesRes.themes,
+    audios: audiosRes.audios,
   };
 }
 
