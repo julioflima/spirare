@@ -1,9 +1,6 @@
 import { Document } from "mongodb";
 import { getDatabase } from "@/lib/mongodb";
-import {
-  MetronomeSettings,
-  metronomeSettingsSchema,
-} from "@/types/database";
+import { MetronomeSettings, metronomeSettingsSchema } from "@/types/database";
 import { updateMetronomeSettingsRequestSchema } from "@/types/api";
 
 const COLLECTION_NAME = "metronome_settings";
@@ -24,9 +21,8 @@ const DEFAULT_METRONOME_SETTINGS: Omit<MetronomeSettings, "_id"> = {
 export class SettingsService {
   static async getMetronomeSettings(): Promise<MetronomeSettings> {
     const db = await getDatabase();
-    const collection = db.collection<MetronomeSettingsDocument>(
-      COLLECTION_NAME
-    );
+    const collection =
+      db.collection<MetronomeSettingsDocument>(COLLECTION_NAME);
 
     const existing = await collection.findOne({});
     if (!existing) {
@@ -56,9 +52,8 @@ export class SettingsService {
     const validated = updateMetronomeSettingsRequestSchema.parse(data);
 
     const db = await getDatabase();
-    const collection = db.collection<MetronomeSettingsDocument>(
-      COLLECTION_NAME
-    );
+    const collection =
+      db.collection<MetronomeSettingsDocument>(COLLECTION_NAME);
 
     const now = new Date();
     const updateData: Partial<MetronomeSettingsDocument> = {
@@ -80,8 +75,7 @@ export class SettingsService {
       }
     );
 
-    const document =
-      result?.value ??
+    const document = result?.value ??
       (await collection.findOne({})) ?? {
         ...DEFAULT_METRONOME_SETTINGS,
         createdAt: now,

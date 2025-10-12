@@ -81,8 +81,8 @@ export const MeditationGenerator: FC<MeditationGeneratorProps> = ({
                                 <li
                                     key={entry.path}
                                     className={`rounded-[18px] border px-4 py-3 text-sm transition-colors ${isActive
-                                            ? 'border-emerald-400/70 bg-emerald-50/80 text-emerald-900 shadow-[0_18px_45px_-32px_rgba(16,185,129,0.58)]'
-                                            : 'border-white/35 bg-white/30 text-emerald-800/80'
+                                        ? 'border-emerald-400/70 bg-emerald-50/80 text-emerald-900 shadow-[0_18px_45px_-32px_rgba(16,185,129,0.58)]'
+                                        : 'border-white/35 bg-white/30 text-emerald-800/80'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between gap-4">

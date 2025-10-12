@@ -271,12 +271,11 @@ export type GetMetronomeSettingsResponse = z.infer<
   typeof getMetronomeSettingsResponseSchema
 >;
 
-export const updateMetronomeSettingsRequestSchema = metronomeSettingsSchema.pick(
-  {
+export const updateMetronomeSettingsRequestSchema =
+  metronomeSettingsSchema.pick({
     periodMs: true,
     isMuted: true,
-  }
-);
+  });
 export type UpdateMetronomeSettingsRequest = z.infer<
   typeof updateMetronomeSettingsRequestSchema
 >;
