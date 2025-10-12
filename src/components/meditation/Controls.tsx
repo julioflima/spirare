@@ -6,12 +6,12 @@ import { FC } from 'react';
 interface ControlsProps {
     isFinalStage: boolean;
     isPaused: boolean;
-    onTogglePlay: () => void;
+    onTogglePause: () => void;
     onFinish: () => void;
     onRestart: () => void;
 }
 
-export const Controls: FC<ControlsProps> = ({ isFinalStage, isPaused, onTogglePlay, onFinish, onRestart }) => {
+export const Controls: FC<ControlsProps> = ({ isFinalStage, isPaused, onTogglePause, onFinish, onRestart }) => {
     if (isFinalStage) {
         return (
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -38,7 +38,7 @@ export const Controls: FC<ControlsProps> = ({ isFinalStage, isPaused, onTogglePl
         <div className="mt-6 flex justify-center">
             <button
                 type="button"
-                onClick={onTogglePlay}
+                onClick={onTogglePause}
                 className="inline-flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/55 bg-white/30 text-emerald-900 shadow-[0_20px_40px_-20px_rgba(34,197,94,0.45)] backdrop-blur-xl transition-transform duration-200 hover:scale-[1.05] hover:bg-white/45"
                 aria-label={isPaused ? 'Retomar meditação' : 'Pausar meditação'}
             >

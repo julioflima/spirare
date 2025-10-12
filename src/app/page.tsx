@@ -3,11 +3,17 @@
 import { useCategoriesQuery } from '@/providers';
 import { Lock, Play, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.removeQueries({ queryKey: ['meditation-session'] });
+  }, [queryClient]);
 
   const { data: categories = [], isLoading } = useCategoriesQuery();
 

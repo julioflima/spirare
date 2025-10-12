@@ -12,7 +12,6 @@ interface TimerPanelProps {
     progressPercent: number;
     beatActive: boolean;
     metronomePeriodMs: number;
-    ledActive: boolean;
     onMetronomePeriodChange: (value: number) => void;
     metronomeMin: number;
     metronomeMax: number;

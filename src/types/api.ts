@@ -16,6 +16,7 @@ import {
   updateThemeSchema,
   updateStructureSchema,
   updateMeditationsSchema,
+  metronomeSettingsSchema,
 } from "./database";
 
 // ============================================================================
@@ -96,6 +97,7 @@ export const allDatabaseDataSchema = z.object({
   structure: structureSchema,
   themes: z.array(themeSchema),
   songs: z.array(songSchema),
+  metronomeSettings: metronomeSettingsSchema.optional(),
 });
 export type AllDatabaseData = z.infer<typeof allDatabaseDataSchema>;
 
@@ -256,6 +258,35 @@ export const updateStructureResponseSchema = z.object({
 });
 export type UpdateStructureResponse = z.infer<
   typeof updateStructureResponseSchema
+>;
+
+// ============================================================================
+// Metronome Settings API Types
+// ============================================================================
+
+export const getMetronomeSettingsResponseSchema = z.object({
+  settings: metronomeSettingsSchema,
+});
+export type GetMetronomeSettingsResponse = z.infer<
+  typeof getMetronomeSettingsResponseSchema
+>;
+
+export const updateMetronomeSettingsRequestSchema = metronomeSettingsSchema.pick(
+  {
+    periodMs: true,
+    isMuted: true,
+  }
+);
+export type UpdateMetronomeSettingsRequest = z.infer<
+  typeof updateMetronomeSettingsRequestSchema
+>;
+
+export const updateMetronomeSettingsResponseSchema = z.object({
+  settings: metronomeSettingsSchema,
+  message: z.string(),
+});
+export type UpdateMetronomeSettingsResponse = z.infer<
+  typeof updateMetronomeSettingsResponseSchema
 >;
 
 // ============================================================================

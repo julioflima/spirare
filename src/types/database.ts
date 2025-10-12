@@ -70,6 +70,17 @@ const structurePhaseSpecificsSchema = z
   .record(z.string(), z.boolean())
   .default({});
 
+export const metronomeSettingsSchema = z.object({
+  _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
+  periodMs: z
+    .number()
+    .min(600, "Período mínimo é 600ms")
+    .max(1800, "Período máximo é 1800ms"),
+  isMuted: z.boolean().default(false),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
+
 export const structureSchema = z.object({
   _id: z.union([z.string(), z.instanceof(ObjectId)]).optional(),
   method: z.array(structureMethodItemSchema).default([]),
@@ -166,6 +177,9 @@ export const updateMeditationsSchema = meditationsSchema
 export const songCollectionSchema = z.array(songSchema);
 export const themeCollectionSchema = z.array(themeSchema);
 export const structureCollectionSchema = z.array(structureSchema);
+export const metronomeSettingsCollectionSchema = z.array(
+  metronomeSettingsSchema
+);
 
 // Type exports
 export type ContentItem = z.infer<typeof contentItemSchema>;
@@ -173,6 +187,7 @@ export type Song = z.infer<typeof songSchema>;
 export type Meditations = z.infer<typeof meditationsSchema>;
 export type Structure = z.infer<typeof structureSchema>;
 export type Theme = z.infer<typeof themeSchema>;
+export type MetronomeSettings = z.infer<typeof metronomeSettingsSchema>;
 
 export type CreateSong = z.infer<typeof createSongSchema>;
 export type UpdateSong = z.infer<typeof updateSongSchema>;

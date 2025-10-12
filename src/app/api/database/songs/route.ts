@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SongService } from "@/services/songsService";
-import { createSongSchema, updateSongSchema } from "@/types/database";
+import { createSongSchema } from "@/types/database";
 
 // GET /api/database/songs - Get all songs
 export async function GET() {

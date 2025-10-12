@@ -4,6 +4,7 @@ export * from "./useMeditationSessionQuery";
 export * from "./useThemesQuery";
 export * from "./useAllDatabaseDataQuery";
 export * from "./useDatabaseStatusQuery";
+export * from "./useMetronomeSettingsQuery";
 
 // Mutation providers
 export * from "./useAdminAuthMutation";
@@ -17,3 +18,4 @@ export * from "./useUpdateMeditationsMutation";
 export * from "./useUpdateStructureMutation";
 export * from "./useDatabaseOperationMutation";
 export * from "./useDatabaseActionMutation";
+export * from "./useUpdateMetronomeSettingsMutation";

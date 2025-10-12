@@ -13,6 +13,8 @@ interface MetronomeControls {
   start: () => void;
   stop: () => void;
   beatActive: boolean;
+  isMuted: boolean;
+  setMuted: (value: boolean) => void;
 }
 
 const MIN_BEEP_FREQUENCY = 520;
@@ -22,10 +24,12 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   const [periodMs, internalSetPeriod] = useState(initialPeriod);
   const [isPlaying, setIsPlaying] = useState(false);
   const [beatActive, setBeatActive] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   const contextRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const periodRef = useRef(initialPeriod);
+  const mutedRef = useRef(false);
 
   const ensureAudioContext = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -57,7 +61,7 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
     setBeatActive((previous) => !previous);
 
     const ctx = contextRef.current;
-    if (!ctx) {
+    if (!ctx || mutedRef.current) {
       return;
     }
 
@@ -126,6 +130,10 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
   ]);
 
   useEffect(() => {
+    mutedRef.current = isMuted;
+  }, [isMuted]);
+
+  useEffect(() => {
     return () => {
       clearCurrentInterval();
       contextRef.current?.close().catch(() => undefined);
@@ -140,5 +148,19 @@ export function useMetronome(initialPeriod: number = 1000): MetronomeControls {
     internalSetPeriod(clamped);
   }, []);
 
-  return { periodMs, setPeriodMs, isPlaying, toggle, start, stop, beatActive };
+  const setMuted = useCallback((value: boolean) => {
+    setIsMuted(value);
+  }, []);
+
+  return {
+    periodMs,
+    setPeriodMs,
+    isPlaying,
+    toggle,
+    start,
+    stop,
+    beatActive,
+    isMuted,
+    setMuted,
+  };
 }

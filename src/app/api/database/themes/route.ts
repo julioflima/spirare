@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ThemeService } from "@/services/themesService";
-import { createThemeSchema, updateThemeSchema } from "@/types/database";
+import { createThemeSchema } from "@/types/database";
 
 // GET /api/database/themes - Get all themes
 export async function GET() {
